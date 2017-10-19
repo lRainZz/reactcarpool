@@ -1,19 +1,17 @@
 import React from 'react';
 
-import StackNavigator from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 import { 
   StyleSheet, 
   Text, 
-  View, 
-  StatusBar 
+  Button
 } from 'react-native';
 
 export default class App extends React.Component {
   render () {
-    return <StackNav />;
+    return (<StackNav />);
   }
-
 }
 
 class HomeScreen extends React.Component {
@@ -39,7 +37,6 @@ class ProfileScreen extends React.Component {
     title: 'Profiles',
   };
   render () {
-    const { navigate } = this.props.navigation;
     return (
       <Text style={styles.headline}>This is a profile screen</Text>
     );
@@ -52,12 +49,6 @@ const StackNav = StackNavigator({
 });
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   headline: {
     color: '#787878',
     fontSize: 30
