@@ -17,10 +17,10 @@
 > *Points that are listed but not marked are seen as nice to have.*
 > ### Conditions / The App Must Provide... ###
 >
-> 1. a way to enter users with associated information such as
->    * **identification information (name / aka)**
->    * **notification information (email)**
->    * payment information
+ 1. a way to enter users with associated information such as
+    * **identification information (name / aka)**
+    * **notification information (email)**
+    * payment information
 > 
 > 1. a way to group users as a carpool so that
 >    * **all users of the carpool are take into consideration when calculating**
