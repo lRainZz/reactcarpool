@@ -15,17 +15,17 @@
 >
 > *Must have conditions are marked as fat text in the following texts.*
 > *Points that are listed but not marked are seen as nice to have.*
-> ### Conditions / The App Must Provide... ###
+> ### Conditions / The App Must Provide... ###  
 >
-> 1. a way to enter users with associated information such as
->    <br />**identification information (name / aka)**
->    <br />**notification information (email)**
->    <br />payment information
+> 1. a way to enter users with associated information such as  
+>    **identification information (name / aka)**  
+>    **notification information (email)**  
+>    payment information  
 > 
 > 1. a way to group users as a carpool so that
->    <br />**all users of the carpool are take into consideration when calculating**
->    <br />**the users can be managed separetly in the carpool for paymant and calculating** (e.g. sick-days, a user did only drive 4 out of 5 days)
->    <br />the users in the carpool can be notified about due payments
+>    <br /> **all users of the carpool are take into consideration when calculating**
+>    <br /> **the users can be managed separetly in the carpool for paymant and calculating** (e.g. sick-days, a user did only drive 4 out of 5 days)
+>    <br /> the users in the carpool can be notified about due payments
 >
 > 1. a way to calculate pricing by taking driving information into account by
 >    <br />**providing the possibilty to track driven distance**
