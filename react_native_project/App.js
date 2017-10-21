@@ -1,56 +1,60 @@
 import React from 'react';
 
-import { StackNavigator } from 'react-navigation';
+import { DrawerNavigator } from 'react-navigation';
 
 import { 
-  StyleSheet, 
-  Text, 
-  Button
+  StyleSheet,
+  Text,
+  View,
+  Platform
 } from 'react-native';
 
-export default class App extends React.Component {
+export default class CarpoolApp extends React.Component {
   render () {
-    return (<StackNav />);
+    return (
+      <View style = { styles.statusBarEscapeAndroid }>
+        <DrawNav />
+      </View>
+    );
   }
 }
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Home',
+    drawerLabel: 'Home',
   };
-  render () {
-    const { navigate } = this.props.navigation;
-    return (
-      <Button
-        title="goto profiles"
-        onPress={()=> 
-          navigate('Profile', { name: 'Profiles'})
-        }
-      />
-    );
 
+  render() {
+    return (
+        <Text>I'm a homescreen!</Text>
+    );
   }
 }
 
-class ProfileScreen extends React.Component {
+class OptionsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Profiles',
+    drawerLabel: 'Options',
   };
-  render () {
+  
+  render() {
     return (
-      <Text style={styles.headline}>This is a profile screen</Text>
+      <Text>I'm an options screen!</Text>
     );
   }
 }
 
-const StackNav = StackNavigator({
-  Home: {screen: HomeScreen},
-  Profile: {screen: ProfileScreen},
+const DrawNav = DrawerNavigator({
+  Home: {
+    screen: HomeScreen,
+  },
+  Opttions: {
+    screen: OptionsScreen,
+  }
 });
 
 const styles = StyleSheet.create({
-  headline: {
-    color: '#787878',
-    fontSize: 30
+  statusBarEscapeAndroid: {
+    marginTop: (Platform.OS == 'android') ? 24 : 0,
+    flex: 1
   }
 });
