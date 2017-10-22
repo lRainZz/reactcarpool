@@ -37,11 +37,17 @@
 
 ## Additionals ##
 >
-> * react-navigation (via npm) 
+> * Material design icons from https://www.materialpalette.com/icons  
+> * Material design colors from https://www.materialpalette.com/blue/light-blue  
 >
 
 ## Owners ##
 >
 > * Nicolas Heinen
 > * Felix Dubberke (lRainZz)
+>
+
+## Useful Info ##
+>
+> * When isntalling via npm fails on EPERM: error on renaming / moving, disable Antivirus / Windows Defender  
 >
