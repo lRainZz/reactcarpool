@@ -27,7 +27,7 @@
 > 1. a way to group users as a carpool so that  
 >    **all users of the carpool are take into consideration when calculating**  
 >    **the users can be managed separetly in the carpool for paymant and calculating** (days off)  
->    the users in the carpool can be notified about due payments  
+>    the users in the carpool can be notified about due payments via Email
 >
 > 1. a way to calculate pricing by taking driving information into account by  
 >    **providing the possibilty to track driven distance**  
