@@ -1,8 +1,7 @@
-# single module ignores of node_modules
-node_modules/*
-!node_modules/react-native-elements
-!node_modules/react-native-panel
-!node_modules/react-navigation
+node_modules
 
 .expo/
 npm-debug.*
+
+# no image sources
+*.psd

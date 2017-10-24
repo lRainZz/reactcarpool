@@ -6,6 +6,13 @@
 > current stage: v0.1
 >
 
+## Initial Use Information
+>
+> The project dependencies are not in the repo, but registered in the package.json.  
+> After checking out the project run "npm install" in the project directory.
+> This ensures that you have all dependencies with the right version.
+>
+
 ## Conditions And Concept ##
 >
 > ### Summary ###
@@ -27,7 +34,7 @@
 > 1. a way to group users as a carpool so that  
 >    **all users of the carpool are take into consideration when calculating**  
 >    **the users can be managed separetly in the carpool for paymant and calculating** (days off)  
->    the users in the carpool can be notified about due payments via Email
+>    the users in the carpool can be notified about due payments  
 >
 > 1. a way to calculate pricing by taking driving information into account by  
 >    **providing the possibilty to track driven distance**  
@@ -49,5 +56,6 @@
 
 ## Useful Info ##
 >
+> * Install new dependencies via "npm intall --save [package name]", thus not global and with dependency-reference in the package.json  
 > * When isntalling via npm fails on EPERM: error on renaming / moving, disable Antivirus / Windows Defender  
 >
