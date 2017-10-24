@@ -31,13 +31,14 @@ class CarpoolApp extends React.Component {
   render () {
     return (
       <View style = { styles.statusBarEscapeAndroid }>
+        {/* TODO: own class for application header, use in every screen*/}
         <View style={styles.applicationHeader}>
           <Icon
             style={styles.applicationHeaderButton}
             type='material'
             color='white'
             name='list'
-            onPress={() => this.props.navigation.navigate('DrawerToggle')}
+            // onPress={() => this.props.navigation.navigate('DrawerToggle')}
           />
         </View>
         <DrawNav />
@@ -129,6 +130,7 @@ class SideBar extends React.Component {
             source={require('./res/react_carpool_sidebar_bg.png')}
             style={{
               height: 120,
+              width: 370,
               alignSelf: "stretch",
               justifyContent: "center",
               alignItems: "center"
@@ -137,7 +139,7 @@ class SideBar extends React.Component {
             {/* sidebar logo */}
             <Image
               square
-              style={{ height: 80, width: 70 }}
+              style={{ height: 80, width: 80 }}
               source={require('./res/react_carpool_logo.png')}
             />
           </Image>
