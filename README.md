@@ -46,6 +46,16 @@
 >
 > * Material design icons from https://www.materialpalette.com/icons  
 > * Material design colors from https://www.materialpalette.com/blue/light-blue  
+>  
+> * Main colors are:  
+>> * RC Light Blue: #1976D2  
+>> * RC Blue:       #0220ff  
+>> * RC Purple:     #9600ff  
+>> * RC Pink:       #ff00ba 
+>> * RC Dark Text:  #303030  
+>> * RC Light Text: #ffffff  
+>  
+> * Default Android font is set to be 'Roboto'
 >
 
 ## Owners ##
