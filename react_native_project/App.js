@@ -10,12 +10,13 @@ import {
   Container, 
   Content, 
   List, 
-  ListItem 
+  ListItem,
+  Button
 } from 'native-base';
  
 import { 
   CheckBox,
-  Icon 
+  Icon,
 } from 'react-native-elements';
 
 import { 
@@ -31,39 +32,46 @@ class CarpoolApp extends React.Component {
   render () {
     return (
       <View style = { styles.statusBarEscapeAndroid }>
-        {/* TODO: own class for application header, use in every screen*/}
-        <View style={styles.applicationHeader}>
-          <Icon
-            style={styles.applicationHeaderButton}
-            type='material'
-            color='white'
-            name='list'
-            // onPress={() => this.props.navigation.navigate('DrawerToggle')}
-          />
-        </View>
         <DrawNav />
       </View>
     );
   }
 }
 
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    drawerLabel: 'Home',
-  };
+class ApplicationHeader extends React.Component {
+  render () {
+    return (
+      <View style={styles.applicationHeader}>
+        <Button
+          transparent
+          onPress={() => this.props.onHeadButtonPress()}
+        >
+          <Icon
+            style={styles.applicationHeaderButton}
+            type='material'
+            color='white'
+            size={40}
+            name='reorder'
+          />
+        </Button>
+        {this.props.children}
+      </View>
+    );
+  }
+}
 
+class HomeScreen extends React.Component {
   render() {
     return (
+      <Container>
+        <ApplicationHeader onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}/>
         <Text>I'm a homescreen!</Text>
+      </Container>
     );
   }
 }
 
 class OptionsScreen extends React.Component {
-  static navigationOptions = {
-    drawerLabel: 'Options',
-  };
-  
   state = {
     cbxStateImperialUnits: false,
     cbxStateStartInLast:   false
@@ -74,45 +82,49 @@ class OptionsScreen extends React.Component {
     const startInChecked  = this.state.cbxStateStartInLast; 
     
     return (
-      <ScrollView>
+      <Container>
+        <ApplicationHeader onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}/>
         
-        <Panel
-          header='Generic'
-          style={styles.optionHeader}
-        >
-          <CheckBox 
-            left
-            iconRight
-            style={styles.optionCheckbox}
-            title='Use imperial units'
-            checked={this.state.cbxStateImperialUnits}
-            onPress={() => this.setState({cbxStateImperialUnits: !imperialChecked})}
-          />
+        <ScrollView>
+          
+          <Panel
+            header='Generic'
+            style={styles.optionHeader}
+          >
+            <CheckBox 
+              left
+              iconRight
+              style={styles.optionCheckbox}
+              title='Use imperial units'
+              checked={this.state.cbxStateImperialUnits}
+              onPress={() => this.setState({cbxStateImperialUnits: !imperialChecked})}
+            />
 
-          <CheckBox 
-            left
-            iconRight
-            style={styles.optionCheckbox}
-            title='Start in last used carpool'
-            checked={this.state.cbxStateStartInLast}
-            onPress={() => this.setState({cbxStateStartInLast: !startInChecked})}
-          />
-        </Panel>  
-        
-        <Panel
-          header='Specific'
-          style={styles.optionHeader}
-        >
-          <Text>I'm an option</Text>
-        </Panel>
-        
-        <Panel
-          header='Other'
-          style={styles.optionHeader}
-        >
-          <Text>I'm an option</Text>
-        </Panel>
-      </ScrollView>
+            <CheckBox 
+              left
+              iconRight
+              style={styles.optionCheckbox}
+              title='Start in last used carpool'
+              checked={this.state.cbxStateStartInLast}
+              onPress={() => this.setState({cbxStateStartInLast: !startInChecked})}
+            />
+          </Panel>  
+          
+          <Panel
+            header='Specific'
+            style={styles.optionHeader}
+          >
+            <Text>I'm an option</Text>
+          </Panel>
+          
+          <Panel
+            header='Other'
+            style={styles.optionHeader}
+          >
+            <Text>I'm an option</Text>
+          </Panel>
+        </ScrollView>
+      </Container>
     );
   }
 }
@@ -127,10 +139,11 @@ class SideBar extends React.Component {
         <Content>
           {/* sidebar top background */}
           <Image
-            source={require('./res/react_carpool_sidebar_bg.png')}
+            source={require('./res/react_carpool_sidebar_background.png')}
             style={{
-              height: 120,
-              width: 370,
+              height: 200,
+              width: null,
+              resizeMode: 'stretch',
               alignSelf: "stretch",
               justifyContent: "center",
               alignItems: "center"
@@ -139,7 +152,10 @@ class SideBar extends React.Component {
             {/* sidebar logo */}
             <Image
               square
-              style={{ height: 80, width: 80 }}
+              style={{ 
+                height: 160, 
+                width: 160 
+              }}
               source={require('./res/react_carpool_logo.png')}
             />
           </Image>
@@ -149,7 +165,8 @@ class SideBar extends React.Component {
               return (
                 <ListItem
                   button
-                  onPress={() => this.props.navigation.navigate(data)}>
+                  onPress={() => this.props.navigation.navigate(data)}
+                >
                   <Text>{data}</Text>
                 </ListItem>
               );
@@ -165,9 +182,11 @@ const DrawNav = DrawerNavigator(
   {
     Home: {
       screen: HomeScreen,
+      drawerLabel: 'Home'
     },
     Options: {
       screen: OptionsScreen,
+      drawerLabel: 'Options'
     }
   },
   {
@@ -190,10 +209,10 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   optionCheckbox: {
-    color: '#fff'
+    
   },
   applicationHeaderButton: {
-    
+    justifyContent: 'center'
   }
 });
 
