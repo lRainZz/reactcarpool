@@ -40,26 +40,30 @@ class OptionsScreen extends React.Component {
                 <OptionItem 
                   optionText='Use imperial units'
                   optionHint='E.g. use mph instead of kph'
-                  onToggleOption={(value) => this.setState({imperialState: value})}
+                  onToggleOption={(value) => this.setState({imperialState: value })}
                   optionValue={this.state.imperialState}
+                  optionItemOnPress={() => this.setState({ imperialState: !this.state.imperialState })}
                 />
                 <OptionItem 
                   optionText='Start in last used carpool'
                   optionHint='Set the last used carpool as homescreen'
-                  onToggleOption={(value) => this.setState({ startInLastState: value})}
+                  onToggleOption={(value) => this.setState({ startInLastState: value })}
                   optionValue={this.state.startInLastState}
+                  optionItemOnPress={() => this.setState({ startInLastState: !this.state.startInLastState })}
                 />
                 <OptionItem 
                   optionText='Automatic payment notification'
                   optionHint='When price is calculated, automitcally send out notifications'
-                  onToggleOption={(value) => this.setState({ autoPaymentState: value})}
+                  onToggleOption={(value) => this.setState({ autoPaymentState: value })}
                   optionValue={this.state.autoPaymentState}
+                  optionItemOnPress={() => this.setState({ autoPaymentState: !this.state.autoPaymentState })}
                 />
                 <OptionItem 
                   optionText='Use dark theme'
                   optionHint=''
-                  onToggleOption={(value) => this.setState({ darkThemeState: value})}
+                  onToggleOption={(value) => this.setState({ darkThemeState: value })}
                   optionValue={this.state.darkThemeState}
+                  optionItemOnPress={() => this.setState({ darkThemeState: !this.state.darkThemeState })}
                 />
               </List>
               {/* iteratively not possible right now, because render is called multiple times an fucks up the onValueChange
@@ -102,7 +106,9 @@ class OptionsScreen extends React.Component {
 class OptionItem extends React.Component {
   render () {
     return (
-      <ListItem>
+      <ListItem
+        onPress={this.props.optionItemOnPress}
+      >
         <Body>
           <Text 
             style={[styles.optionText, styles.font]}
