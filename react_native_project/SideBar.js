@@ -17,18 +17,19 @@ class SideBar extends React.Component {
     return (
       <Container>
         <Content>
-          {/* sidebar top background */}
+          {/* sidebar top design */}
           <Image
             source={require('./res/react_carpool_sidebar_background.png')}
             style={styles.background}>
 
-            {/* sidebar logo */}
+            {/* logo */}
             <Image
               square
               style={styles.logo}
               source={require('./res/react_carpool_logo.png')}
             />
           </Image>
+          {/* Sidebar Content */}
           <List
             dataArray={routes}
             renderRow={data => {

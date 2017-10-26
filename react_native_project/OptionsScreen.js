@@ -2,14 +2,13 @@
 
 import React from 'react';
 
-import { Container } from 'native-base';
+import { Container, Content, List, ListItem, Body, Right } from 'native-base';
 
-import { ScrollView, StyleSheet, Text, Platform } from 'react-native';
+import { ScrollView, StyleSheet, Text, Platform, Switch } from 'react-native';
 
 import Panel from 'react-native-panel';
 
 import { CheckBox } from 'react-native-elements';
-
 
 // own modules:
 
@@ -20,79 +19,126 @@ import Header from './ApplicationHeader';
 
 class OptionsScreen extends React.Component {
   state = {
-    cbxStateImperialUnits: false,
-    cbxStateStartInLast:   false
-  }  
+    imperialState:    false,
+    startInLastState: false,
+    autoPaymentState: false,
+    darkThemeState:   false
+  };
 
   render() {
-    const imperialChecked = this.state.cbxStateImperialUnits;
-    const startInChecked  = this.state.cbxStateStartInLast; 
-      
     return (
       <Container>
-        <Header 
+        <Header
           onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}
           title='Options'
         />
-        
-        <ScrollView>
-          <Panel
-            header='General'
-            style={styles.optionHeader}
-          >
-            <CheckBox 
-              left
-              iconRight
-              style={styles.optionCheckbox}
-              title='Use imperial units'
-              textStyle={[styles.checkboxText, styles.font]}
-              checked={this.state.cbxStateImperialUnits}
-              onPress={() => this.setState({cbxStateImperialUnits: !imperialChecked})}
-            />
 
-            <CheckBox 
-              left
-              iconRight
-              style={styles.optionCheckbox}
-              title='Start in last used carpool'
-              textStyle={styles.checkboxText}
-              checked={this.state.cbxStateStartInLast}
-              onPress={() => this.setState({cbxStateStartInLast: !startInChecked})}
-            />
-          </Panel>  
-        
-          <Panel
-            header='Specific'
-            style={styles.optionHeader}
-          >
-            <Text>I'm an option</Text>
-          </Panel>
-          
-          <Panel
-            header='Other'
-            style={styles.optionHeader}
-          >
-            <Text>I'm an option</Text>
-          </Panel>
+        <ScrollView>
+          <Container>
+            <Content>
+              <List>
+                <OptionItem 
+                  optionText='Use imperial units'
+                  optionHint='E.g. use mph instead of kph'
+                  onToggleOption={(value) => this.setState({imperialState: value})}
+                  optionValue={this.state.imperialState}
+                />
+                <OptionItem 
+                  optionText='Start in last used carpool'
+                  optionHint='Set the last used carpool as homescreen'
+                  onToggleOption={(value) => this.setState({ startInLastState: value})}
+                  optionValue={this.state.startInLastState}
+                />
+                <OptionItem 
+                  optionText='Automatic payment notification'
+                  optionHint='When price is calculated, automitcally send out notifications'
+                  onToggleOption={(value) => this.setState({ autoPaymentState: value})}
+                  optionValue={this.state.autoPaymentState}
+                />
+                <OptionItem 
+                  optionText='Use dark theme'
+                  optionHint=''
+                  onToggleOption={(value) => this.setState({ darkThemeState: value})}
+                  optionValue={this.state.darkThemeState}
+                />
+              </List>
+              {/* iteratively not possible right now, because render is called multiple times an fucks up the onValueChange
+                <List
+                  dataArray={options}
+                  renderRow={data => {
+                    return (
+                      <ListItem>
+                        <Body>
+                          <Text 
+                            style={styles.optionText}
+                          >
+                            {data[0]}
+                          </Text>
+                          <Text 
+                            style={styles.optionHint}
+                          >
+                            {data[1]}
+                          </Text>
+                        </Body>
+                        <Right>
+                          <Switch
+                            onValueChange={(value) => this.setState({imperialState: value})}
+                            value={this.state[data[2]]}
+                          />
+                        </Right>
+                      </ListItem>
+                      
+                    );
+                  }}
+                /> */}
+            </Content>
+          </Container>
         </ScrollView>
       </Container>
     );
   }
 }
 
+class OptionItem extends React.Component {
+  render () {
+    return (
+      <ListItem>
+        <Body>
+          <Text 
+            style={[styles.optionText, styles.font]}
+          >
+            {this.props.optionText}
+          </Text>
+          <Text 
+            style={[styles.optionHint, styles.font]}
+          >
+            {this.props.optionHint}
+          </Text>
+        </Body>
+        <Right>
+          <Switch 
+            onValueChange={this.props.onToggleOption}
+            value={this.props.optionValue}
+          />
+        </Right>
+    </ListItem>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
-  optionCheckbox: {
-    padding: 10
+  optionText: {
+    marginLeft: 10,
+    fontSize: 22,
+    color: '#303030'
   },
-  optionHeader: {
+  optionHint: {
     marginLeft: 20,
-    marginTop: 10,
-  },
-  checkboxText: {
-    fontSize: 15
+    fontSize: 15,
+    color: '#9E9E9E'
   },
   font: {
-    fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
+    fontFamily: Platform.OS == 'android' ? 'Roboto' : ''
   }
 });
 

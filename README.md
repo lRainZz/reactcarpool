@@ -51,9 +51,12 @@
 >> * RC Light Blue: #1976D2  
 >> * RC Blue:       #0220ff  
 >> * RC Purple:     #9600ff  
->> * RC Pink:       #ff00ba 
->> * RC Dark Text:  #303030  
->> * RC Light Text: #ffffff  
+>> * RC Pink:       #ff00ba
+>  
+> * Text colors are:   
+>> * RC Text on bright ground: #303030  
+>> * RC Text on dark ground:   #ffffff  
+>> * RC Text for hints:        #9E9E9E  
 >  
 > * Default Android font is set to be 'Roboto'
 >
