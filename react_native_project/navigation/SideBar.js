@@ -10,7 +10,7 @@ import { Image, Text, StyleSheet, Platform } from 'react-native';
 
 // class:
 
-const routes = ['Home', 'Options'];
+const routes = ['Home', 'Carpools','Options'];
 
 class SideBar extends React.Component {
   render() {
@@ -19,14 +19,14 @@ class SideBar extends React.Component {
         <Content>
           {/* sidebar top design */}
           <Image
-            source={require('./res/react_carpool_sidebar_background.png')}
+            source={require('../res/react_carpool_sidebar_background.png')}
             style={styles.background}>
 
             {/* logo */}
             <Image
               square
               style={styles.logo}
-              source={require('./res/react_carpool_logo.png')}
+              source={require('../res/react_carpool_logo.png')}
             />
           </Image>
           {/* Sidebar Content */}

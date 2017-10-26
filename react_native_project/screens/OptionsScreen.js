@@ -10,9 +10,10 @@ import Panel from 'react-native-panel';
 
 import { CheckBox } from 'react-native-elements';
 
+
 // own modules:
 
-import Header from './ApplicationHeader';
+import Header from '../ApplicationHeader';
 
 
 // class:
