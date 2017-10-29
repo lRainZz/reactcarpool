@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Container, Content, List, ListItem, Body, Right } from 'native-base';
 
-import { ScrollView, StyleSheet, Text, Platform, Switch } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, Text, Platform, Switch } from 'react-native';
 
 import Panel from 'react-native-panel';
 
@@ -41,30 +41,78 @@ class OptionsScreen extends React.Component {
                 <OptionItem 
                   optionText='Use imperial units'
                   optionHint='E.g. use mph instead of kph'
-                  onToggleOption={(value) => this.setState({imperialState: value })}
-                  optionValue={this.state.imperialState}
-                  optionItemOnPress={() => this.setState({ imperialState: !this.state.imperialState })}
+                  onToggleOption={(value) => this.setState
+                  (
+                    {imperialState: value }, () => 
+                    {
+                      AsyncStorage.setItem('imperialState', this.state.imperialState);
+                    }
+                  )}
+                  optionValue={AsyncStorage.getItem('imperialState')}
+                  optionItemOnPress={() => this.setState
+                    (
+                      { imperialState: !this.state.imperialState },() => 
+                      {
+                        AsyncStorage.setItem('imperialState', this.state.imperialState);
+                      }
+                    )}
                 />
                 <OptionItem 
                   optionText='Start in last used carpool'
                   optionHint='Set the last used carpool as homescreen'
-                  onToggleOption={(value) => this.setState({ startInLastState: value })}
-                  optionValue={this.state.startInLastState}
-                  optionItemOnPress={() => this.setState({ startInLastState: !this.state.startInLastState })}
+                  onToggleOption={(value) => this.setState
+                  (
+                    {startInLastState: value }, () => 
+                    {
+                      AsyncStorage.setItem('startInLastState', this.state.startInLastState);
+                    }
+                  )}
+                  optionValue={AsyncStorage.getItem('startInLastState')}
+                  optionItemOnPress={() => this.setState
+                    (
+                      { startInLastState: !this.state.startInLastState },() => 
+                      {
+                        AsyncStorage.setItem('startInLastState', this.state.startInLastState);
+                      }
+                    )}
                 />
                 <OptionItem 
                   optionText='Automatic payment notification'
                   optionHint='When price is calculated, automitcally send out notifications'
-                  onToggleOption={(value) => this.setState({ autoPaymentState: value })}
-                  optionValue={this.state.autoPaymentState}
-                  optionItemOnPress={() => this.setState({ autoPaymentState: !this.state.autoPaymentState })}
+                  onToggleOption={(value) => this.setState
+                  (
+                    {autoPaymentState: value }, () => 
+                    {
+                      AsyncStorage.setItem('autoPaymentState', this.state.autoPaymentState);
+                    }
+                  )}
+                  optionValue={AsyncStorage.getItem('autoPaymentState')}
+                  optionItemOnPress={() => this.setState
+                    (
+                      { autoPaymentState: !this.state.autoPaymentState },() => 
+                      {
+                        AsyncStorage.setItem('autoPaymentState', this.state.autoPaymentState);
+                      }
+                    )}
                 />
                 <OptionItem 
                   optionText='Use dark theme'
                   optionHint=''
-                  onToggleOption={(value) => this.setState({ darkThemeState: value })}
-                  optionValue={this.state.darkThemeState}
-                  optionItemOnPress={() => this.setState({ darkThemeState: !this.state.darkThemeState })}
+                  onToggleOption={(value) => this.setState
+                  (
+                    {darkThemeState: value }, () => 
+                    {
+                      AsyncStorage.setItem('darkThemeState', this.state.darkThemeState);
+                    }
+                  )}
+                  optionValue={AsyncStorage.getItem('darkThemeState')}
+                  optionItemOnPress={() => this.setState
+                    (
+                      { darkThemeState: !this.state.darkThemeState },() => 
+                      {
+                        AsyncStorage.setItem('darkThemeState', this.state.darkThemeState);
+                      }
+                    )}
                 />
               </List>
               {/* iteratively not possible right now, because render is called multiple times an fucks up the onValueChange
