@@ -2,7 +2,11 @@
 
 import React from 'react';
 
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { Platform } from 'react-native';
+
+import { Icon } from 'react-native-elements';
+
+import { TabNavigator, StackNavigator, Text } from 'react-navigation';
 
 
 // own modules
@@ -19,17 +23,55 @@ import MembersScreen from '../screens/MembersScreen';
 const TabNav = TabNavigator (
   {
     Fillings: {
-      screen: FillingsScreen
+      screen: FillingsScreen,
+      navigationOptions: {
+        tabBarIcon: 
+        <Icon 
+          type='material'
+          color='white'
+          size={40}
+          name='local-gas-station'
+        />
+      }
     },
     Statistics: {
-      screen: StatisticsScreen
+      screen: StatisticsScreen,
+      navigationOptions: {
+        tabBarIcon: 
+        <Icon 
+          type='material'
+          color='white'
+          size={40}
+          name='trending-up'
+        />
+      }
     },
-    Memebers: {
-      screen: MembersScreen
+    Members: {
+      screen: MembersScreen,
+      navigationOptions: {
+        tabBarIcon: 
+        <Icon 
+          type='material'
+          color='white'
+          size={40}
+          name='person'
+        />
+      }
     }
   },
   {
-
+    tabBarPosition: 'top',
+    tabBarOptions: {
+      showIcon: true,
+      showLabel: false,
+      style: {
+        backgroundColor: '#1976D2'
+      },
+      iconStyle: {
+        width: 40,
+        height: 40
+      }
+    }
   }
 );
 
