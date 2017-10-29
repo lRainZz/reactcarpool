@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import { Text } from 'react-native';
+import {AsyncStorage, Button, Text } from 'react-native';
+import { Container, Content, List, ListItem, Body, Right } from 'native-base';
 
 
 //own modules
@@ -13,7 +14,35 @@ import { Text } from 'react-native';
 class FillingsScreen extends React.Component {
   render () {
     return (
-      <Text>Fillings go here</Text>
+      <Container>
+        <Text>Fillings go here</Text>
+
+        <Button
+          onPress=
+          {
+            () => 
+            {
+              AsyncStorage.setItem('imperialState', 'test');
+            }
+          }
+          title="Set"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+
+        <Button
+          onPress=
+          {
+            () => 
+            {
+            alert(await AsyncStorage.getItem('imperialState'));
+            }
+          }
+          title="Get"
+          color="#841584"
+          accessibilityLabel="Learn more about this purple button"
+        />
+      </Container>
     );
   }
 }
