@@ -10,7 +10,7 @@ import { Image, Text, StyleSheet, Platform } from 'react-native';
 
 // class:
 
-const routes = ['Home', 'Carpools','Options'];
+const routes = ['Home', 'Carpools','Options', 'Firebase'];
 
 class SideBar extends React.Component {
   render() {

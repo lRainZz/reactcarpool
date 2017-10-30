@@ -13,6 +13,8 @@ import OptionsScreen from '../screens/OptionsScreen';
 
 import CarpoolsScreen from '../screens/CarpoolsScreen';
 
+import FirebaseScreen from '../screens/FirebaseScreen';
+
 import SideBar from './SideBar';
 
 
@@ -28,6 +30,9 @@ const DrawNav = DrawerNavigator(
     },
     Options: {
       screen: OptionsScreen
+    },
+    Firebase: {
+      screen: FirebaseScreen
     }
   },
   {
