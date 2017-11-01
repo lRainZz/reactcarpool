@@ -4,7 +4,7 @@ import React,  {Component} from 'react';
 
 import { Container } from 'native-base';
 
-import { Text } from 'react-native';
+import { Text, Button} from 'react-native';
 
 import * as firebase from 'firebase';
 
@@ -26,14 +26,48 @@ import Header from '../ApplicationHeader';
   firebase.initializeApp(firebaseConfig );
 
   // Create a reference with .ref() instead of new Firebase(url)
-  const rootRef = firebase.database().ref();
-  const itemsRef = rootRef.child('items');
+  // const rootRef = firebase.database().ref();
+  // const itemsRef = rootRef.child('items');
+
+  // Get a reference to the database service
+  var database = firebase.database();
+
+  // function writeUserData(userId, name, email) 
+  // {
+  //   try
+  //   {
+  //     alert('here');
+  //     firebase.database().ref('users/' + userId).set({
+  //       username: name,
+  //       email: email
+  //     });
+  //   } catch(error)
+  //   {
+  //     console.error(error);
+  //   }
+  // }
 //-----------------------------------------------------------------------------------------
 
 
 // class
 
-class FirebaseScreen extends React.Component {
+class FirebaseScreen extends React.Component {  
+    
+  writeUserData(userId, name, email) 
+  {
+    try
+    {
+      alert('here');
+      firebase.database().ref('users/' + userId).set({
+        username: name,
+        email: email
+      });
+    } catch(error)
+    {
+      console.error(error);
+    }
+  }
+
   render () {
     return (
       <Container>
@@ -42,6 +76,11 @@ class FirebaseScreen extends React.Component {
           title='Firebase'  
         />
         <Text>Firebase go here</Text>
+        <Button
+          onPress={this.writeUserData.bind(this,'1','Test','test@gmail.com')}
+          title="Just do it!"
+          color="#841584"
+        />
       </Container>
     );
   }
