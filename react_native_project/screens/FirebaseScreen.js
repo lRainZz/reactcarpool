@@ -40,6 +40,7 @@ class FirebaseScreen extends React.Component {
     
   writeUserData(userId, name, email) 
   {
+    // Write UserData
     try
     {
       firebase.database().ref('users/' + userId).set({
@@ -52,19 +53,46 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  getUserData()
+  readUserData()
   {
+    // Read Username or Object
     try
     {
       var userId = '1'; //firebase.auth().currentUser.uid;
       firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) 
       {
         var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        return alert(username);
+        alert(username);
       });
     } catch(error)
     {
-      alert('Get2');
+      console.error(error);
+    }
+  }
+
+  updateUserData(userId, username, email) 
+  {
+    // Update users
+    try
+    {
+      var userData = {
+        username: username,
+        email: email
+      };
+    
+      // Get a key for a new User.
+      var newUserKey = firebase.database().ref().child('users').push().userId;
+      
+    
+      // Write the new user's data simultaneously in multiple lists.
+      var updates = {};
+      //updates['/users/' + newUserKey] = userData;
+      updates['/users/' + userId + '/'] = userData;
+    
+      return firebase.database().ref().update(updates);
+    } catch(error)
+    {
+      alert('error');
       console.error(error);
     }
   }
@@ -78,14 +106,19 @@ class FirebaseScreen extends React.Component {
         />
         <Text>Firebase go here</Text>
         <Button
-          onPress={this.writeUserData.bind(this,'1','Test','test@gmail.com')}
+          onPress={this.writeUserData.bind(this,'1' /*firebase.auth().currentUser.uid;*/,'Test','test@gmail.com')}
           title="Set!"
           color="blue"
         />
         <Button
-          onPress={this.getUserData.bind(this)}
+          onPress={this.readUserData.bind(this)}
           title="Get!"
           color="orange"
+        />
+        <Button
+          onPress={this.updateUserData.bind(this, '1' /*firebase.auth().currentUser.uid;*/, 'UpdatedUsername','UpdatedEmail')}
+          title="Update!"
+          color="red"
         />
       </Container>
     );
