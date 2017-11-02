@@ -31,21 +31,6 @@ import Header from '../ApplicationHeader';
 
   // Get a reference to the database service
   var database = firebase.database();
-
-  // function writeUserData(userId, name, email) 
-  // {
-  //   try
-  //   {
-  //     alert('here');
-  //     firebase.database().ref('users/' + userId).set({
-  //       username: name,
-  //       email: email
-  //     });
-  //   } catch(error)
-  //   {
-  //     console.error(error);
-  //   }
-  // }
 //-----------------------------------------------------------------------------------------
 
 
@@ -57,13 +42,29 @@ class FirebaseScreen extends React.Component {
   {
     try
     {
-      alert('here');
       firebase.database().ref('users/' + userId).set({
         username: name,
         email: email
       });
     } catch(error)
     {
+      console.error(error);
+    }
+  }
+
+  getUserData()
+  {
+    try
+    {
+      var userId = '1'; //firebase.auth().currentUser.uid;
+      firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) 
+      {
+        var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
+        return alert(username);
+      });
+    } catch(error)
+    {
+      alert('Get2');
       console.error(error);
     }
   }
@@ -78,8 +79,13 @@ class FirebaseScreen extends React.Component {
         <Text>Firebase go here</Text>
         <Button
           onPress={this.writeUserData.bind(this,'1','Test','test@gmail.com')}
-          title="Just do it!"
-          color="#841584"
+          title="Set!"
+          color="blue"
+        />
+        <Button
+          onPress={this.getUserData.bind(this)}
+          title="Get!"
+          color="orange"
         />
       </Container>
     );
