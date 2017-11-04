@@ -11,6 +11,8 @@ import { StyleSheet, View } from 'react-native';
 
 import DrawNav from './navigation/DrawNav';
 
+import Login from './screens/LoginScreen';
+
 
 // class:
 
@@ -32,4 +34,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CarpoolApp;
+export default Login;

@@ -112,6 +112,7 @@ class FillingsScreen extends React.Component {
   }
 }
 
+ // TODO: use native-base card for better design
 class FillingsItem extends React.Component {
   render () {
     return (
