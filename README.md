@@ -58,6 +58,8 @@
 >> * RC Text on dark ground:   #ffffff  
 >> * RC Text for hints:        #9E9E9E  
 >  
+>> * React original blue: #61dafb
+>
 > * Default Android font is set to be 'Roboto'
 >
 

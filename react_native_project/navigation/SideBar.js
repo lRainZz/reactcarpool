@@ -6,7 +6,9 @@ import { Container, Content, List, ListItem } from 'native-base';
 
 import { Image, Text, StyleSheet, Platform } from 'react-native';
 
+
 // own modules:
+
 
 // class:
 
@@ -45,6 +47,8 @@ class SideBar extends React.Component {
               );
             }}
           />
+
+          {/* Logout (?) */}
         </Content>
       </Container>
     );
