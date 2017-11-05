@@ -56,7 +56,7 @@ class Login extends Component {
             blurOnSubmit={false}
             withRef={true}
             onSubmitEditing={() => this.passwordInputRef.focus()}
-            onChangeText={(value) => this.setState({ email: value })}
+            onChangeText={(value) => this.setState({ email: value })} //Get Email to FragmentState
             isEnabled={!isLoading}
           />
           <LoginInput
@@ -67,14 +67,14 @@ class Login extends Component {
             returnKeyType={'done'}
             secureTextEntry={true}
             withRef={true}
-            onChangeText={(value) => this.setState({ password: value })}
+            onChangeText={(value) => this.setState({ password: value })} //Get Password to FragmentState
             isEnabled={!isLoading}
           />
         </View>
         <View style={styles.footer}>
           <View ref={(ref) => this.buttonRef = ref} animation={'fadeIn'} duration={600} delay={400}>
             <LoginButton
-              onPress={() => onLoginPress(email, password)}
+              onPress={() => onLoginPress(email, password)} //Call Function '_doLogin' in Fragment: App.js
               isEnabled={isValid}
               isLoading={isLoading}
               buttonStyle={styles.loginButton}

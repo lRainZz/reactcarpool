@@ -8,6 +8,8 @@ import { Text, Button} from 'react-native';
 
 import * as firebase from 'firebase';
 
+import sha256 from 'sha256';
+
 
 //own modules
 
@@ -36,19 +38,44 @@ import Header from '../ApplicationHeader';
 
 // class
 
-class FirebaseScreen extends React.Component {  
+class FirebaseScreen extends React.Component { 
+  
+  createUser(Password, Email, FirstName, LastName, ZipCode, City)
+  {
+    try
+    {
+      firebase.auth().createUserWithEmailAndPassword(Email, Password).catch(function(error) 
+      {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+    }catch(error)
+    {
+      alert('error');
+      console.error(error);
+    }
+  }
     
-  writeUserData(userId, name, email) 
+  writeUserData(Password, Email, FirstName, LastName, ZipCode, City) 
   {
     // Write UserData
     try
     {
-      firebase.database().ref('users/' + userId).set({
-        username: name,
-        email: email
+      // Get a key for a new User.
+      var key = firebase.database().ref().push().key;
+      firebase.database().ref('Users/' + key).set({
+        Password: Password,
+        Email: Email,
+        FirstName: FirstName,
+        LastName: LastName,
+        ZipCode: ZipCode,
+        City: City
       });
     } catch(error)
     {
+      alert('error');
       console.error(error);
     }
   }
@@ -58,36 +85,38 @@ class FirebaseScreen extends React.Component {
     // Read Username or Object
     try
     {
-      var userId = '1'; //firebase.auth().currentUser.uid;
-      firebase.database().ref('/users/' + userId).once('value').then(function(snapshot) 
+      var UserID = firebase.auth().currentUser.uid;
+      firebase.database().ref('/Users/' + UserID).once('value').then(function(snapshot) 
       {
-        var username = (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        alert(username);
+        var Email = (snapshot.val() && snapshot.val().Email) || 'Anonymous';
+        alert(Email);
       });
     } catch(error)
     {
+      alert('error');
       console.error(error);
     }
   }
 
-  updateUserData(userId, username, email) 
+  updateUserData(Password, Email, FirstName, LastName, ZipCode, City) 
   {
     // Update users
     try
     {
+      var UserID = firebase.auth().currentUser.uid;
       var userData = {
-        username: username,
-        email: email
+        Password: Password,
+        Email: Email,
+        FirstName: FirstName,
+        LastName: LastName,
+        ZipCode: ZipCode,
+        City: City
       };
-    
-      // Get a key for a new User.
-      var newUserKey = firebase.database().ref().child('users').push().userId;
-      
     
       // Write the new user's data simultaneously in multiple lists.
       var updates = {};
-      //updates['/users/' + newUserKey] = userData;
-      updates['/users/' + userId + '/'] = userData;
+      //updates['/users/' + newUserKey] = userData; --If syncronous second Update on other Table is necessary
+      updates['/Users/' + UserID + '/'] = userData;
     
       return firebase.database().ref().update(updates);
     } catch(error)
@@ -106,7 +135,12 @@ class FirebaseScreen extends React.Component {
         />
         <Text>Firebase go here</Text>
         <Button
-          onPress={this.writeUserData.bind(this,'1' /*firebase.auth().currentUser.uid;*/,'Test','test@gmail.com')}
+          onPress={this.createUser.bind(this, sha256('Password'), 'Email', 'FirstName', 'LastName', 'ZipCode', 'City')}
+          title="Create!"
+          color="green"
+        />
+        <Button
+          onPress={this.writeUserData.bind(this, sha256('Password'), 'Email', 'FirstName', 'LastName', 'ZipCode', 'City')}
           title="Set!"
           color="blue"
         />
@@ -116,7 +150,7 @@ class FirebaseScreen extends React.Component {
           color="orange"
         />
         <Button
-          onPress={this.updateUserData.bind(this, '1' /*firebase.auth().currentUser.uid;*/, 'UpdatedUsername','UpdatedEmail')}
+          onPress={this.updateUserData.bind(this, sha256('Updated_Password'), 'Updated_Email', 'Updated_FirstName', 'Updated_LastName', 'Updated_ZipCode', 'Updated_City')}
           title="Update!"
           color="red"
         />
