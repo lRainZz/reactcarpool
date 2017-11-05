@@ -8,20 +8,6 @@ import { StyleSheet, View } from 'react-native';
 
 import Toast from 'react-native-simple-toast';
 
-import * as admin from "firebase-admin";
-
-//Firebase-Admin-------------------------------------------------
-var admin = require("firebase-admin");
-
-var serviceAccount = require("./fahrgemeinschaft-22833-firebase-adminsdk-zu2xt-dfb0694ffb.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://fahrgemeinschaft-22833.firebaseio.com"
-});
-//---------------------------------------------------------------
-
-
 // own modules:
 
 import DrawNav from './navigation/DrawNav';
@@ -44,16 +30,7 @@ class CarpoolApp extends React.Component {
     usernameInDatabase = true; //Check for existing User
 
     //Firebase-Conn---------------------------------------------------------
-    admin.auth().getUserByEmail(email)
-    .then(function(userRecord) {
-      // See the UserRecord reference doc for the contents of userRecord.
-      console.log("Successfully fetched user data:", userRecord.toJSON());
-      usernameInDatabase = true;
-    })
-    .catch(function(error) {
-      usernameInDatabase = false;
-      console.log("Error fetching user data:", error);
-    });
+    
     //Firebase-Conn---------------------------------------------------------
 
     // start loading for animation
