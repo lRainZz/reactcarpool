@@ -49,17 +49,23 @@ class CarpoolApp extends React.Component {
 
   _FirebaseLoginFunction = async (email, password) => {
     //Firebase-Conn---------------------------------------------------------
+
+    var UserInDataBase;
+    var PasswordTrue;
+
     try{
       await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
         if (snap.val()){
-          var FirebaseSnapshot = snap.val();
-          var Userkey = FirebaseSnapshot.User.key;
-          UserInDataBase = true;
-          if (password == FirebaseSnapshot.User.Password){
-            PasswordTrue = true;
-          } else{
-            PasswordTrue = false;
-          }
+          snap.forEach(function(childSnapshot) {
+            var SnapshotKey = childSnapshot.key;
+            var Userkey = snap.child(SnapshotKey).child("key").val();
+            UserInDataBase = true;
+            if (password == snap.child(SnapshotKey).child("Password").val()){
+              PasswordTrue = true;
+            } else{
+              PasswordTrue = false;
+            }
+          });
         }else{
           UserInDataBase = false;
         }
@@ -103,10 +109,6 @@ class CarpoolApp extends React.Component {
   }
 
   _doLogin = (email, password) => {
-
-    var UserInDataBase;
-    var PasswordTrue;
-
     // start loading for animation
     this.setState({ isLoading: true })
     
@@ -121,11 +123,19 @@ class CarpoolApp extends React.Component {
     try{
       await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
         if (snap.val()){
-          var FirebaseSnapshot = snap.val();
+          console.log('Email in Use');
           newUserSuccess = false;
         }else{
           //do Sign up
-
+          // Get a key for a new User.
+          var key = firebase.database().ref().push().key;
+          firebase.database().ref('Users/' + key).set({
+            key: key,
+            Password: password,
+            Email: email,
+            FullName: fullName,
+            ZipCode: zipCode
+          });
           newUserSuccess = true;
         }
       });
@@ -160,7 +170,7 @@ class CarpoolApp extends React.Component {
     // start loading for animation
     this.setState({ isLoading: true })    
     
-    this._FirebaseLoginFunction(email, sha256(password), fullName, zipCode)
+    this._FirebaseSignupFunction(email, sha256(password), fullName, zipCode)
   }
 
   

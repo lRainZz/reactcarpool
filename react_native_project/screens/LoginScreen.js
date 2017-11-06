@@ -1,166 +1,167 @@
 // external modules:
 
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import { StyleSheet, Image, Keyboard, Dimensions, View, KeyboardAvoidingView } from 'react-native';
+import { TouchableHighlight, Dimensions, KeyboardAvoidingView, LayoutAnimation, Platform, StyleSheet, UIManager } from 'react-native'
 
-import { Constants } from 'expo';
-
-import { Container, Form, Item, Input, Label } from 'native-base';
-
-import { Button } from 'react-native-elements';
-
-import sha256 from 'sha256';
+import { Image, View } from 'react-native-animatable'
 
 
 // own modules:
+
+import react_carpool_logo from '../res/react_carpool_logo.png';
+
+import react_carpool_login_background from '../res/react_carpool_login_background.png';
+
+import OpeningScreen from './loginModules/Opening';
+
+import SignupScreen from './loginModules/Signup';
+
+import LoginScreen from './loginModules/Login';
 
 
 // class:
 
 class Login extends React.Component {
-  state = {
-    username: '',
-    password: '',
-    hash: ''
+
+  static propTypes = {
+    isLoggedIn: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    signup: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
+    onLoginAnimationCompleted: PropTypes.func.isRequired
   }
-  
+
+  state = {
+    visibleScreen: null // login | signup
+  }
+
+  componenWillUpdate (nextProps) {
+    if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
+      this._hideLoginScreen()
+    }
+  }
+
+  _hideLoginScreen = async () => {
+      await this._setVisibleForm(null)
+      await this.logoImgRef.fadeOut(800)
+      this.props.onLoginAnimationCompleted()
+  }
+
+  _setVisibleScreen = async (visibleScreen) => {
+    if (this.state.visibleScreen && this.formRef && this.formRef.hideForm) {
+      await this.formRef.hideForm()
+    }
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring)
+    this.setState({ visibleScreen })
+  }
+
   render () {
+    const { isLoggedIn, isLoading, signup, login } = this.props
+    const { visibleScreen } = this.state
+    const formStyle = (!visibleScreen) ? { borderWidth: 0 } : { borderWidth: 1 }
+
     return(
-      <Container
-        onPress={()=> Keyboard.dismiss()}
+      <TouchableHighlight
+        onPress={() => this._setVisibleScreen(null)}
+        style={{flex: 1}}
+        activeOpacity={100}
       >
-        <View style = {styles.statusBarEscapeAndroid} />
-        <Image
-          source={require('../res/react_carpool_login_background.png')}
-          style={styles.backgroundImage}
+        <Image 
+          source={react_carpool_login_background}
+          style={styles.loginPage}
         >
-          <Container
-            style={styles.loginTop}
+          <View
+            animation={'fadeIn'}
+            duration={1200}
+            delay={200}
+            style={styles.logoView}
           >
             <Image
-              square 
-              source={require('../res/react_carpool_logo.png')}
+              animation={'pulse'}
+              duration={5000}
+              delay={0}
+              iterationCount={'infinite'}
+
+              ref={(ref) => this.logoImgRef = ref}
               style={styles.logo}
+              source={react_carpool_logo}
             />
-          </Container>
-
+          </View>
+          {(!visibleScreen && !isLoggedIn) && (
+            <OpeningScreen
+              onCreateAccountPress={() => this._setVisibleScreen('signup')}
+              onSignInPress={() => this._setVisibleScreen('login')}
+            />
+          )}
           <KeyboardAvoidingView
-            behavior='padding'
-            style={styles.loginBottom}
+            keyboardVerticalOffset={-80}
+            behavior={'padding'}
+            style={[formStyle, styles.loginSignup]}
           >
-            <Form
-              style={styles.loginForm}
-            >
-              <Item
-                floatingLabel
-                rounded='true'
-                style={[styles.loginItem, styles.shadow]}
-              >
-                <Label
-                  // native-base label only suport inline style....
-                  style={{
-                    marginLeft: 20,
-                    fontSize: 14
-                    }}
-                > Username</Label>
-                <Input 
-                  style={styles.loginInput}
-                  onChangeText={(value) => this.setState({username: value})}
-                />
-              </Item>
+            {(visibleScreen === 'signup') && (
+              <SignupScreen
+                animation={'slideInUp'}
+                delay={0}
+                duration={300}
 
-              <Item
-                floatingLabel
-                rounded='true'
-                style={[styles.loginItem, styles.shadow]}
-              >
-                <Label
-                  // native-base label only suport inline style....
-                  style={{
-                    marginLeft: 20,
-                    fontSize: 14
-                    }}
-                >Password</Label>
-                <Input 
-                  style={styles.loginInput}
-                  secureTextEntry={true}
-                  onChangeText={(value) => this.setState({
-                    password: value,
-                    hash: sha256(value)
-                  })}
-                />
-              </Item>
-            </Form>
-
-            <Button 
-                title= 'Login'
-                color='#fff'
-                backgroundColor= '#0220ff'
-                fontSize={20}
-                buttonStyle={[styles.loginButton, styles.shadow]}
-                onPress={() => alert(this.state.username + ':' + this.state.hash)}
+                ref={(ref) => this.formRef = ref}
+                onLoginLinkPress={() => this._setVisibleScreen('login')}
+                onSignupPress={signup}
+                isLoading={isLoading}
               />
+            )}
+            {(visibleScreen === 'login') && (
+              <LoginScreen
+                animation={'slideInUp'}
+                delay={0}
+                duration={300}
+
+                ref={(ref) => this.formRef = ref}
+                onSignupLinkPress={() => this._setVisibleScreen('signup')}
+                onLoginPress={login}
+                isLoading={isLoading}
+              />
+            )}
           </KeyboardAvoidingView>
         </Image>
-      </Container>
+      </TouchableHighlight>
     );
   }
+
 }
 
 var width = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-const styles = StyleSheet.create ({
-  loginTop: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  loginBottom: {
-    flex: 3,
-    justifyContent: 'center'
-  },
-  backgroundImage: {
+const styles = StyleSheet.create({
+  loginPage: {
+    flex: 1,
+    flexDirection: 'column',
     width: width,
-    height: height
+    height: height,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    padding: 15
+  },
+  logoView: {
+    flex: 1,
+    width: '100%',
+    alignSelf: 'center',
   },
   logo: {
-    height: 180, 
-    width: 180 
+    flex: 1,
+    width: 250,
+    height: null,
+    alignSelf: 'center',
+    marginVertical: 30,
+    resizeMode: 'contain'
   },
-  loginForm: {
-    width: '90%',
-    alignItems: 'center',
-  },
-  loginItem: {
-    backgroundColor: '#fff',
-    alignSelf: 'center'
-  },
-  loginLabel: {
-    marginLeft: 30
-  },
-  loginButton: {
-    height: 60,
-    borderRadius: 30,
-    marginTop: 15,
-    marginBottom: 15
-  },
-  statusBarEscapeAndroid: {
-    height: Constants.statusBarHeight + 1, // '+ 1' fix for border bug
-    backgroundColor: '#ff00ba',
-  },
-  loginInput: {
-    marginLeft: 30,
-    fontSize: 18
-  },
-  shadow: {
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.8,
-    // shadowRadius: 2,
-    elevation: 3
+  loginSignup: {
+    backgroundColor: '#1976D2',
+    borderColor: '#fff'
   }
-});
+})
 
 export default Login;
