@@ -4,9 +4,12 @@ import React from 'react';
 
 import { Constants } from 'expo';
 
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import Toast from 'react-native-simple-toast';
+
+import { View } from 'react-native-animatable';
+
 
 // own modules:
 
@@ -78,10 +81,8 @@ class CarpoolApp extends React.Component {
   }
 
   _LoginFunction = (UserInDataBase, PasswordTrue) => {
-    if (UserInDataBase) 
-    {
-      if (PasswordTrue) 
-      {
+    if (UserInDataBase) {
+      if (PasswordTrue) {
 
         // grant login
         this.setState({ 
@@ -90,21 +91,23 @@ class CarpoolApp extends React.Component {
           isLoading: false
         })
 
-      } else 
-      {
+      } else  {
+        
         // stop loading
         this.setState({
           isLoading: false
         });
         Toast.show('I can\'t remember my passwords either :/');
+      
       }
-    } else 
-    {
+    } else {
+
       // stop loading
       this.setState({
         isLoading: false
       });
       Toast.show('Seems like you\'re new here.');
+    
     }
   }
 
@@ -189,7 +192,14 @@ class CarpoolApp extends React.Component {
         <View style = {[styles.statusBarEscapeAndroid, statusBarColor]} />
 
         {(this.state.isAppReady) && (
-          <DrawNav />
+          <View
+            style={{flex: 1}}
+            animation={'fadeIn'}
+            delay={0}
+            duration={1000}
+          >
+            <DrawNav />
+          </View>
         )}
 
         {(!this.state.isAppReady) && (
@@ -198,7 +208,6 @@ class CarpoolApp extends React.Component {
             signup={this._doSignup}
             isLoggedIn={this.state.isLoggedIn}
             isLoading={this.state.isLoading}
-            onLoginAnimationCompleted={() => this.setState({ isAppReady: true })}
           />
         )}
       </View>      

@@ -6,6 +6,8 @@ import { TouchableHighlight, Dimensions, KeyboardAvoidingView, LayoutAnimation, 
 
 import { Image, View } from 'react-native-animatable'
 
+import Toast from 'react-native-simple-toast';
+
 
 // own modules:
 
@@ -28,24 +30,18 @@ class Login extends React.Component {
     isLoggedIn: PropTypes.bool.isRequired,
     isLoading: PropTypes.bool.isRequired,
     signup: PropTypes.func.isRequired,
-    login: PropTypes.func.isRequired,
-    onLoginAnimationCompleted: PropTypes.func.isRequired
+    login: PropTypes.func.isRequired
   }
 
   state = {
-    visibleScreen: null // login | signup
+    visibleScreen: null,
+    boredomCount: 0
   }
 
-  componenWillUpdate (nextProps) {
-    if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
-      this._hideLoginScreen()
-    }
-  }
-
-  _hideLoginScreen = async () => {
-      await this._setVisibleForm(null)
-      await this.logoImgRef.fadeOut(800)
-      this.props.onLoginAnimationCompleted()
+  _onScreenChange = async (nextScreen) => {
+    await this._setVisibleScreen(nextScreen)
+    await this.logoRef.bounceIn(800)
+    this.setState({boredomCount: (this.state.boredomCount + 1)})
   }
 
   _setVisibleScreen = async (visibleScreen) => {
@@ -60,11 +56,15 @@ class Login extends React.Component {
   render () {
     const { isLoggedIn, isLoading, signup, login } = this.props
     const { visibleScreen } = this.state
-    const formStyle = (!visibleScreen) ? { borderWidth: 0 } : { borderWidth: 1 }
+
+    if (this.state.boredomCount >= 14) {
+      this.setState({boredomCount: 0})
+      Toast.show('A little bit bored, are we?', Toast.LONG);
+    }
 
     return(
       <TouchableHighlight
-        onPress={() => this._setVisibleScreen(null)}
+        onPress={() => this._onScreenChange(null)}
         style={{flex: 1}}
         activeOpacity={100}
       >
@@ -73,10 +73,12 @@ class Login extends React.Component {
           style={styles.loginPage}
         >
           <View
-            animation={'fadeIn'}
+            animation={'bounceIn'}
             duration={1200}
-            delay={200}
+            delay={0}
             style={styles.logoView}
+
+            ref={(ref) => this.logoRef = ref}
           >
             <Image
               animation={'pulse'}
@@ -84,47 +86,32 @@ class Login extends React.Component {
               delay={0}
               iterationCount={'infinite'}
 
-              ref={(ref) => this.logoImgRef = ref}
               style={styles.logo}
               source={react_carpool_logo}
             />
           </View>
           {(!visibleScreen && !isLoggedIn) && (
             <OpeningScreen
-              onCreateAccountPress={() => this._setVisibleScreen('signup')}
-              onSignInPress={() => this._setVisibleScreen('login')}
+              onCreateAccountPress={() => this._onScreenChange('signup')}
+              onSignInPress={() => this._onScreenChange('login')}
             />
           )}
-          <KeyboardAvoidingView
-            keyboardVerticalOffset={-80}
-            behavior={'padding'}
-            style={[formStyle, styles.loginSignup]}
-          >
             {(visibleScreen === 'signup') && (
               <SignupScreen
-                animation={'slideInUp'}
-                delay={0}
-                duration={300}
-
                 ref={(ref) => this.formRef = ref}
-                onLoginLinkPress={() => this._setVisibleScreen('login')}
+                onLoginLinkPress={() => this._onScreenChange('login')}
                 onSignupPress={signup}
                 isLoading={isLoading}
               />
             )}
             {(visibleScreen === 'login') && (
               <LoginScreen
-                animation={'slideInUp'}
-                delay={0}
-                duration={300}
-
                 ref={(ref) => this.formRef = ref}
-                onSignupLinkPress={() => this._setVisibleScreen('signup')}
+                onSignupLinkPress={() => this._onScreenChange('signup')}
                 onLoginPress={login}
                 isLoading={isLoading}
               />
             )}
-          </KeyboardAvoidingView>
         </Image>
       </TouchableHighlight>
     );
@@ -157,10 +144,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 30,
     resizeMode: 'contain'
-  },
-  loginSignup: {
-    backgroundColor: '#1976D2',
-    borderColor: '#fff'
   }
 })
 
