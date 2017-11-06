@@ -31,7 +31,7 @@
 >    **notification information (email)**  
 >    payment information  
 >
-> 1. a way to authenticate users
+> 1. a way to authenticate users  
 >    **via identification information and hashed password information**  
 > 
 > 1. a way to group users as a carpool so that  
@@ -51,7 +51,7 @@
 > 2. Additional nice-to-haves:  
 >    achievements for driven distance, filled up fuel etc.  
 >    integrated animations in general (user interaction and app behavior)  
->    options to set: e.g. another theme, set  different units (kmh / mph), use last opened, auto payment etc.  
+>    options to set: e.g. another theme, set  different units (kmh / mph), use last opened, auto payment reminder etc.  
 >
 
 ## Additionals ##
