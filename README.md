@@ -25,11 +25,14 @@
 > *Must have conditions are marked as fat text in the following texts.*  
 > *Points that are listed but not marked are seen as nice to have.*
 > ### Conditions / The App Must Provide... ###
->
+>  
 > 1. a way to enter users with associated information such as  
 >    **identification information (name / aka)**  
 >    **notification information (email)**  
 >    payment information  
+>
+> 1. a way to authenticate users
+>    **via identification information and hashed password information**  
 > 
 > 1. a way to group users as a carpool so that  
 >    **all users of the carpool are take into consideration when calculating**  
@@ -41,11 +44,20 @@
 >    **providing the possibilty to track filled up fuel as well as fuel price**  
 >    providing the possibilty to set up a flat rate for distance and/or time  
 > 
+> 1. a way to save and preserve data  
+>    **in a database (local)**  
+>    via availability through a remote databse (e.g. firebase)  
+>
+> 2. Additional nice-to-haves:  
+>    achievements for driven distance, filled up fuel etc.  
+>    integrated animations in general (user interaction and app behavior)  
+>    options to set: e.g. another theme, set  different units (kmh / mph), use last opened, auto payment etc.  
+>
 
 ## Additionals ##
 >
-> * Material design icons from https://www.materialpalette.com/icons  
-> * Material design colors from https://www.materialpalette.com/blue/light-blue  
+> * Material design icons https://www.materialpalette.com/icons  
+> * Material design colors https://www.materialpalette.com/blue/light-blue  
 >  
 > * Main colors are:  
 >> * RC Light Blue: #1976D2  
@@ -53,15 +65,15 @@
 >> * RC Purple:     #9600ff  
 >> * RC Pink:       #ff00ba
 >  
+>  
 > * Text colors are:   
 >> * RC Text on bright ground: #303030  
 >> * RC Text on dark ground:   #ffffff  
 >> * RC Text for hints:        #9E9E9E  
 >  
->> * React original blue: #61dafb
->
+>  
 > * Default Android font is set to be 'Roboto'
->
+>  
 
 ## Owners ##
 >
@@ -72,5 +84,5 @@
 ## Useful Info ##
 >
 > * Install new dependencies via "npm intall --save [package name]", thus not global and with dependency-reference in the package.json  
-> * When isntalling via npm fails on EPERM: error on renaming / moving, disable Antivirus / Windows Defender  
->
+> * When isntalling via npm fails on EPERM: error on renaming / moving, disable Antivirus / Windows Defender or try npm cache lean, as well as deleting all "package-lock.js"  
+>  

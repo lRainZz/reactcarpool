@@ -12,7 +12,7 @@ import Toast from 'react-native-simple-toast';
 
 import DrawNav from './navigation/DrawNav';
 
-import Login from './screens/LoginTestScreen';
+import Login from './screens/LoginScreen';
 
 import sha256 from 'sha256';
 
