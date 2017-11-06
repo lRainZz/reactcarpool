@@ -12,7 +12,7 @@ import Toast from 'react-native-simple-toast';
 
 import DrawNav from './navigation/DrawNav';
 
-import Login from './screens/LoginTestScreen';
+import Login from './screens/LoginScreen';
 
 import sha256 from 'sha256';
 
@@ -47,7 +47,7 @@ class CarpoolApp extends React.Component {
     isAppReady: false
   }
 
-  _FirebaseFuncton = async (email, password) => {
+  _FirebaseLoginFunction = async (email, password) => {
     //Firebase-Conn---------------------------------------------------------
     try{
       await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
@@ -102,7 +102,6 @@ class CarpoolApp extends React.Component {
     }
   }
 
-
   _doLogin = (email, password) => {
 
     var UserInDataBase;
@@ -111,29 +110,57 @@ class CarpoolApp extends React.Component {
     // start loading for animation
     this.setState({ isLoading: true })
     
-    this._FirebaseFuncton(email, sha256(password))
+    this._FirebaseLoginFunction(email, sha256(password))
   }
 
-  _doSignup = (email, password, fullName) => {
-    
-    // start loading for animation
-    this.setState({ isLoading: true })
-    
-    // save data to db
 
-    if (newUserSuccess) {
-      this.setState({ 
-        isAppReady: true,
-        isLoggedIn: true,
-        isLoading: false
-      })
-    } else {
+
+  _FirebaseSignupFunction = async (email, password, fullName, zipCode) => {
+    //Firebase-Conn---------------------------------------------------------
+    var newUserSuccess;
+    try{
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
+        if (snap.val()){
+          var FirebaseSnapshot = snap.val();
+          newUserSuccess = false;
+        }else{
+          //do Sign up
+
+          newUserSuccess = true;
+        }
+      });
+      this._SignupFunction(newUserSuccess);
+    } catch(error){
+      console.error(error);
+    }
+    //Firebase-Conn---------------------------------------------------------   
+  }
+
+  
+  _SignupFunction = (newUserSuccess) => {
+    if (newUserSuccess) 
+    {
+        this.setState({ 
+          isAppReady: true,
+          isLoggedIn: true,
+          isLoading: false
+        })
+    } else 
+    {
       // stop loading
       this.setState({
         isLoading: false
       });
-      Toast.show('Somthing wen\'t wrong. Try again.');
+      Toast.show('This Email is already in use.');
     }
+  }
+
+  _doSignup = (email, password, fullName, zipCode) => {
+
+    // start loading for animation
+    this.setState({ isLoading: true })    
+    
+    this._FirebaseLoginFunction(email, sha256(password), fullName, zipCode)
   }
 
   
