@@ -14,6 +14,29 @@ import DrawNav from './navigation/DrawNav';
 
 import Login from './screens/LoginTestScreen';
 
+import sha256 from 'sha256';
+
+console.disableYellowBox = true;
+
+
+//Firebase---------------------------------------------------------------------------------
+import * as firebase from 'firebase';
+//Initialize Firebase
+const firebaseConfig  = {
+  apiKey: "AIzaSyDtR2LpBDSbEISKF_iv562aj7rYmBuXovA",
+  authDomain: "fahrgemeinschaft-22833.firebaseapp.com",
+  databaseURL: "https://fahrgemeinschaft-22833.firebaseio.com",
+  storageBucket: "fahrgemeinschaft-22833.appspot.com"
+};
+firebase.initializeApp(firebaseConfig);
+
+// Create a reference with .ref() instead of new Firebase(url)
+const rootRef = firebase.database().ref();
+
+// Get a reference to the database service
+var database = firebase.database();
+//-----------------------------------------------------------------------------------------
+
 
 // class:
 
@@ -24,21 +47,34 @@ class CarpoolApp extends React.Component {
     isAppReady: false
   }
 
-  _doLogin = (email, password) => {
-    // debug
-    checkpasswordToUser = true; //Function Call needed for Authentication
-    usernameInDatabase = true; //Check for existing User
-
+  _FirebaseFuncton = async (email, password) => {
     //Firebase-Conn---------------------------------------------------------
-    
-    //Firebase-Conn---------------------------------------------------------
+    try{
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
+        if (snap.val()){
+          var FirebaseSnapshot = snap.val();
+          var Userkey = FirebaseSnapshot.User.key;
+          UserInDataBase = true;
+          if (password == FirebaseSnapshot.User.Password){
+            PasswordTrue = true;
+          } else{
+            PasswordTrue = false;
+          }
+        }else{
+          UserInDataBase = false;
+        }
+      });
+      this._LoginFunction(UserInDataBase, PasswordTrue);
+    } catch(error){
+      console.error(error);
+    }
+    //Firebase-Conn---------------------------------------------------------   
+  }
 
-    // start loading for animation
-    this.setState({ isLoading: true })
-
-    if (usernameInDatabase) 
+  _LoginFunction = (UserInDataBase, PasswordTrue) => {
+    if (UserInDataBase) 
     {
-      if (checkpasswordToUser) 
+      if (PasswordTrue) 
       {
 
         // grant login
@@ -64,6 +100,18 @@ class CarpoolApp extends React.Component {
       });
       Toast.show('Seems like you\'re new here.');
     }
+  }
+
+
+  _doLogin = (email, password) => {
+
+    var UserInDataBase;
+    var PasswordTrue;
+
+    // start loading for animation
+    this.setState({ isLoading: true })
+    
+    this._FirebaseFuncton(email, sha256(password))
   }
 
   _doSignup = (email, password, fullName) => {

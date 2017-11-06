@@ -26,7 +26,8 @@ class Signup extends Component {
   state = {
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
+    zipCode: ''
   }
 
   hideForm = async () => {
@@ -40,14 +41,25 @@ class Signup extends Component {
   }
 
   render () {
-    const { email, password, fullName } = this.state
+    const { email, password, fullName, zipCode } = this.state
     const { isLoading, onLoginLinkPress, onSignupPress } = this.props
-    const isValid = email !== '' && password !== '' && fullName !== ''
+    const isValid = email !== '' && password !== '' && fullName !== '' && zipCode !== ''
     return (
       <View style={styles.container}>
         <View style={styles.form} ref={(ref) => this.formRef = ref}>
           <LoginInput
-            ref={(ref) => this.mobileInputRef = ref}
+            ref={(ref) => this.zipCodeInputRef = ref}
+            placeholder={'ZipCode'}
+            editable={!isLoading}
+            returnKeyType={'next'}
+            blurOnSubmit={false}
+            withRef={true}
+            onSubmitEditing={() => this.FullNameInputRef.focus()}
+            onChangeText={(value) => this.setState({ zipCode: value })}
+            isEnabled={!isLoading}
+          />
+          <LoginInput
+            ref={(ref) => this.FullNameInputRef = ref}
             placeholder={'Full name'}
             editable={!isLoading}
             returnKeyType={'next'}
@@ -83,7 +95,7 @@ class Signup extends Component {
         <View style={styles.footer}>
           <View ref={(ref) => this.buttonRef = ref} animation={'fadeIn'} duration={600} delay={400}>
             <LoginButton
-              onPress={() => onSignupPress(email, password, fullName)}
+              onPress={() => onSignupPress(email, password, fullName, zipCode)}
               isEnabled={isValid}
               isLoading={isLoading}
               buttonStyle={styles.createAccountButton}

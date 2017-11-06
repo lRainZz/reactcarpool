@@ -19,20 +19,20 @@ import Header from '../ApplicationHeader';
 
 //Firebase---------------------------------------------------------------------------------
   //Initialize Firebase
-  const firebaseConfig  = {
-    apiKey: "AIzaSyDtR2LpBDSbEISKF_iv562aj7rYmBuXovA",
-    authDomain: "fahrgemeinschaft-22833.firebaseapp.com",
-    databaseURL: "https://fahrgemeinschaft-22833.firebaseio.com",
-    storageBucket: "fahrgemeinschaft-22833.appspot.com"
-  };
-  firebase.initializeApp(firebaseConfig );
+  // const firebaseConfig  = {
+  //   apiKey: "AIzaSyDtR2LpBDSbEISKF_iv562aj7rYmBuXovA",
+  //   authDomain: "fahrgemeinschaft-22833.firebaseapp.com",
+  //   databaseURL: "https://fahrgemeinschaft-22833.firebaseio.com",
+  //   storageBucket: "fahrgemeinschaft-22833.appspot.com"
+  // };
+  // firebase.initializeApp(firebaseConfig);
 
   // Create a reference with .ref() instead of new Firebase(url)
   // const rootRef = firebase.database().ref();
   // const itemsRef = rootRef.child('items');
 
   // Get a reference to the database service
-  var database = firebase.database();
+  // var database = firebase.database();
 //-----------------------------------------------------------------------------------------
 
 
@@ -58,20 +58,19 @@ class FirebaseScreen extends React.Component {
     }
   }
     
-  writeUserData(Password, Email, FirstName, LastName, ZipCode, City) 
+  writeUserData(Password, Email, FullName, ZipCode) 
   {
     // Write UserData
     try
     {
       // Get a key for a new User.
       var key = firebase.database().ref().push().key;
-      firebase.database().ref('Users/' + key).set({
+      firebase.database().ref('Users/User').set({
+        key: key,
         Password: Password,
         Email: Email,
-        FirstName: FirstName,
-        LastName: LastName,
-        ZipCode: ZipCode,
-        City: City
+        FullName: FullName,
+        ZipCode: ZipCode
       });
     } catch(error)
     {
@@ -98,7 +97,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  updateUserData(Password, Email, FirstName, LastName, ZipCode, City) 
+  updateUserData(Password, Email, FullName, ZipCode) 
   {
     // Update users
     try
@@ -107,10 +106,8 @@ class FirebaseScreen extends React.Component {
       var userData = {
         Password: Password,
         Email: Email,
-        FirstName: FirstName,
-        LastName: LastName,
-        ZipCode: ZipCode,
-        City: City
+        FullName: FullName,
+        ZipCode: ZipCode
       };
     
       // Write the new user's data simultaneously in multiple lists.
@@ -135,12 +132,12 @@ class FirebaseScreen extends React.Component {
         />
         <Text>Firebase go here</Text>
         <Button
-          onPress={this.createUser.bind(this, sha256('Password'), 'Email', 'FirstName', 'LastName', 'ZipCode', 'City')}
+          onPress={this.createUser.bind(this, sha256('Password'), 'Email', 'FullName', 'ZipCode')}
           title="Create!"
           color="green"
         />
         <Button
-          onPress={this.writeUserData.bind(this, sha256('Password'), 'Email', 'FirstName', 'LastName', 'ZipCode', 'City')}
+          onPress={this.writeUserData.bind(this, sha256('Password'), 'Email', 'FullName', 'ZipCode')}
           title="Set!"
           color="blue"
         />
