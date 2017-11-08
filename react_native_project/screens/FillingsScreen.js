@@ -2,18 +2,16 @@
 
 import React from 'react';
 
-import { Text, StyleSheet, Platform ,View } from 'react-native';
+import { Text, StyleSheet, Platform ,View, FlatList } from 'react-native';
 
-import { Container, Content, Header, Footer, Left, Boy, Right } from 'native-base';
-
-import { Icon, Divider } from 'react-native-elements';
+import { Container } from 'native-base';
 
 import FloatingButton from 'react-native-action-button';
 
-import FillingsModal from 'react-native-modal'
-
 
 //own modules
+
+import FillingsItem from './fillingsModules/fillingsItem';
 
 
 // class
@@ -73,8 +71,13 @@ class FillingsScreen extends React.Component {
       <Container>
         {/*<Text>Fillings go here</Text>*/}
         {/* FillingsArray */}
+
+        <FlatList>
+
+
+        </FlatList>
         
-        <FillingsItem
+        {/* <FillingsItem
           fillingDate={thisFilling.date}
           fillingTotalPrice={this.getTotalPrice(thisFilling.consumption, thisFilling.tripmeter, thisFilling.fuelprice)}
           fillingPricePerPerson={this.getPersonalPrice(this.props.fillingTotalPrice, 4, true)}
@@ -82,89 +85,14 @@ class FillingsScreen extends React.Component {
           fillingAvgConsumption={thisFilling.consumption}
           fillingFuelPrice={thisFilling.fuelprice}
           fillingDrivenDays={thisFilling.drivendays}
-        />
+        /> */}
 
-
+        {/* TODO: use fab from react-native-elements/base */}
         <FloatingButton
           buttonColor='#1976D2'
           style={[/*styles.floatingButton, styles.font*/]}
           onPress={() => this._showFillingsModal()}
         />
-        <FillingsModal
-          isVisible={this.fillingsModalVisible}
-          avoidKeyboard={true}
-          children= {
-          <View
-            style={{flex: 1}}
-          >
-            <Text>Hello World</Text>
-          </View>
-          }
-        >
-          <View
-            style={{flex: 1}}
-          >
-            <Text>Hello World</Text>
-          </View>
-        </FillingsModal>
-      </Container>
-    );
-  }
-}
-
- // TODO: use native-base card for better design
-class FillingsItem extends React.Component {
-  render () {
-    return (
-      <Container
-        style={styles.fillingsItemContainer}
-      >
-        <Container
-          style={styles.fillingsItemHeader}
-        >
-          <Text
-            style={styles.fillingsItemHeaderDate}
-          >{this.props.fillingDate}</Text>
-          <Text>
-            {this.props.fillingPricePerPerson}
-          </Text>
-          
-          <Text
-            style={styles.fillingsItemTotal}
-          >
-      	    {this.props.fillingTotalPrice}
-          </Text>
-          <Icon 
-            type='material'
-            color='#303030'
-            size={30}
-            name='info'
-            style={styles.fillingsItemIcon}
-          />
-        </Container>
-
-        <Divider style={styles.fillingsItemDivider} />
-
-        <Container
-          style={styles.fillingsItemContent}
-        >
-          <Container
-            style={styles.fillingsItemContentColumn}
-          >
-            <Text>{this.props.fillingTripmeter} km</Text>
-            <Text>{this.props.fillingAvgConsumption} l/100 km</Text>
-          </Container>
-          <Container
-            style={styles.fillingsItemContentColumn}
-          >
-            <Text>{this.props.fillingFuelPrice} €</Text>
-          </Container>
-          <Container
-            style={styles.fillingsItemContentColumn}
-          >
-            <Text>{this.props.fillingDrivenDays} d</Text>
-          </Container>
-        </Container>
       </Container>
     );
   }

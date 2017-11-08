@@ -39,8 +39,16 @@ class Login extends React.Component {
   }
 
   _onScreenChange = async (nextScreen) => {
+
+    let currentScreen = this.state.visibleScreen
     await this._setVisibleScreen(nextScreen)
-    await this.logoRef.bounceIn(800)
+    
+    // do not show animation when screen does not change
+    if (((currentScreen == null) && (nextScreen != null)) ||
+        ((currentScreen != null) && (nextScreen == null))) {
+      await this.logoRef.fadeIn(500)
+    }
+
     this.setState({boredomCount: (this.state.boredomCount + 1)})
   }
 
