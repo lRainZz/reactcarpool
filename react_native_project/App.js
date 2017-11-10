@@ -22,6 +22,9 @@ import sha256 from 'sha256';
 console.disableYellowBox = true;
 
 
+const GLOBALS = require('./globals');
+
+
 //Firebase---------------------------------------------------------------------------------
 import * as firebase from 'firebase';
 //Initialize Firebase
@@ -44,12 +47,14 @@ var database = firebase.database();
 // class:
 
 class CarpoolApp extends React.Component {
+  KEY = '';
+
   state = {
     isLoggedIn: false,
     isLoading: false,
-    // isAppReady: true,
+    // isAppReady: false,
     // debug:
-    isAppReady: true
+    isAppReady: false
   }
 
   _FirebaseLoginFunction = async (email, password) => {
@@ -67,6 +72,7 @@ class CarpoolApp extends React.Component {
             UserInDataBase = true;
             if (password == snap.child(SnapshotKey).child("Password").val()){
               PasswordTrue = true;
+              GLOBALS.UserKey = Userkey;
             } else{
               PasswordTrue = false;
             }
@@ -85,7 +91,6 @@ class CarpoolApp extends React.Component {
   _LoginFunction = (UserInDataBase, PasswordTrue) => {
     if (UserInDataBase) {
       if (PasswordTrue) {
-
         // grant login
         this.setState({ 
           isAppReady: true,
@@ -133,14 +138,26 @@ class CarpoolApp extends React.Component {
         }else{
           //do Sign up
           // Get a key for a new User.
-          var key = firebase.database().ref().push().key;
-          firebase.database().ref('Users/' + key).set({
-            key: key,
+          KEY = firebase.database().ref().push().key;
+          firebase.database().ref('Users/' + KEY).set({
+            key: KEY,
             Password: password,
             Email: email,
             FullName: fullName,
             ZipCode: zipCode
           });
+          //Set globals default
+          GLOBALS.Options.UseImperialUnits = false;
+          GLOBALS.Options.UseLastCarpool = false;
+          GLOBALS.Options.UseAutoPayment = false;
+          GLOBALS.Options.UseDarkTheme = false;
+          firebase.database().ref('Options/' + KEY).set({
+            UseImperialUnits: false,
+            UseLastCarpool: false,
+            UseAutoPayment: false,
+            UseDarkTheme: false
+          });
+          GLOBALS.UserKey = KEY;
           newUserSuccess = true;
         }
       });
@@ -155,11 +172,11 @@ class CarpoolApp extends React.Component {
   _SignupFunction = (newUserSuccess) => {
     if (newUserSuccess) 
     {
-        this.setState({ 
-          isAppReady: true,
-          isLoggedIn: true,
-          isLoading: false
-        })
+      this.setState({ 
+        isAppReady: true,
+        isLoggedIn: true,
+        isLoading: false
+      })
     } else 
     {
       // stop loading

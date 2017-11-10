@@ -4,11 +4,15 @@ import React from 'react';
 
 import { Container, Content, List, ListItem, Body, Right } from 'native-base';
 
-import { AsyncStorage, ScrollView, StyleSheet, Text, Platform, Switch } from 'react-native';
+import { AsyncStorage, ScrollView, StyleSheet, Text, Platform, Switch, View } from 'react-native';
 
 import Panel from 'react-native-panel';
 
 import { CheckBox } from 'react-native-elements';
+
+const GLOBALS = require('../globals');
+
+import * as firebase from 'firebase';
 
 
 // own modules:
@@ -19,14 +23,53 @@ import Header from '../ApplicationHeader';
 // class:
 
 class OptionsScreen extends React.Component {
-  state = {
-    imperialState:    false,
-    startInLastState: false,
-    autoPaymentState: false,
-    darkThemeState:   false
-  };
-
-  render() {
+  
+  componentDidMount = async () => { //componentDidMount is triggered onInit ==> Warning: do not change the FunctionName: "componentDidMount"
+    try{
+      await firebase.database().ref('/Users/' + GLOBALS.UserKey).once('value')
+        .then((snap) => {
+          if (snap.val()){
+            firebase.database().ref('/Options/' + GLOBALS.UserKey).once('value')
+              .then((snapshot) =>
+              {
+                //Get from Firebase
+                UseImperialUnits = (snapshot.val() && snapshot.val().UseImperialUnits) || false;
+                UseLastCarpool = (snapshot.val() && snapshot.val().UseLastCarpool) || false;
+                UseAutoPayment = (snapshot.val() && snapshot.val().UseAutoPayment) || false;
+                UseDarkTheme = (snapshot.val() && snapshot.val().UseDarkTheme) || false;
+                //Set globals
+                GLOBALS.Options.UseImperialUnits = UseImperialUnits;
+                GLOBALS.Options.UseLastCarpool = UseLastCarpool;
+                GLOBALS.Options.UseAutoPayment = UseAutoPayment;
+                GLOBALS.Options.UseDarkTheme = UseDarkTheme;
+                this.setState({
+                  UseImperialUnits: UseImperialUnits,
+                  UseLastCarpool: UseLastCarpool,
+                  UseAutoPayment: UseAutoPayment,
+                  UseDarkTheme: UseDarkTheme,
+                });
+              });
+          }else{
+            //No Connection
+            UseImperialUnits = GLOBALS.Options.UseImperialUnits;
+            UseLastCarpool = GLOBALS.Options.UseLastCarpool;
+            UseAutoPayment = GLOBALS.Options.UseAutoPayment;
+            UseDarkTheme = GLOBALS.Options.UseDarkTheme;
+            this.setState({
+              UseImperialUnits: UseImperialUnits,
+              UseLastCarpool: UseLastCarpool,
+              UseAutoPayment: UseAutoPayment,
+              UseDarkTheme: UseDarkTheme,
+            });
+          }
+      });
+      //this.callSetter();
+    } catch(error){
+      console.error(error);
+    }
+  }
+  
+  render () {
     return (
       <Container>
         <Header
@@ -38,117 +81,117 @@ class OptionsScreen extends React.Component {
           <Container>
             <Content>
               <List>
-                <OptionItem 
-                  optionText='Use imperial units'
-                  optionHint='E.g. use mph instead of kph'
-                  onToggleOption={(value) => this.setState
-                  (
-                    {imperialState: value }, () => 
-                    {
-                      AsyncStorage.setItem('imperialState', this.state.imperialState);
-                    }
-                  )}
-                  optionValue={AsyncStorage.getItem('imperialState')}
-                  optionItemOnPress={() => this.setState
-                    (
-                      { imperialState: !this.state.imperialState },() => 
-                      {
-                        AsyncStorage.setItem('imperialState', this.state.imperialState);
-                      }
-                    )}
-                />
-                <OptionItem 
+              <OptionItem
+                optionText='Use imperial units'
+                optionHint='E.g. use mph instead of kph'
+                onToggleOption={(value) => this.setStorageUseImperialUnits(value)}
+                optionValue={GLOBALS.Options.UseImperialUnits} //Important: This is the same Variable as "UseImperialUnits"
+                optionItemOnPress=
+                {
+                  () => this.setState({ "UseImperialUnits": GLOBALS.Options.UseImperialUnits}) //Important: This is the same Variable as "UseImperialUnits"
+                }
+              />
+                <OptionItem
                   optionText='Start in last used carpool'
                   optionHint='Set the last used carpool as homescreen'
-                  onToggleOption={(value) => this.setState
-                  (
-                    {startInLastState: value }, () => 
-                    {
-                      AsyncStorage.setItem('startInLastState', this.state.startInLastState);
-                    }
-                  )}
-                  optionValue={AsyncStorage.getItem('startInLastState')}
-                  optionItemOnPress={() => this.setState
-                    (
-                      { startInLastState: !this.state.startInLastState },() => 
-                      {
-                        AsyncStorage.setItem('startInLastState', this.state.startInLastState);
-                      }
-                    )}
+                  onToggleOption={(value) => this.setStorageUseLastCarpool(value)}
+                  optionValue={GLOBALS.Options.UseLastCarpool} //Important: This is the same Variable as "UseLastCarpool"
+                  optionItemOnPress=
+                  {
+                    () => this.setState({ "UseLastCarpool": GLOBALS.Options.UseLastCarpool}) //Important: This is the same Variable as "UseLastCarpool"
+                  }
                 />
-                <OptionItem 
+                <OptionItem
                   optionText='Automatic payment notification'
                   optionHint='When price is calculated, automitcally send out notifications'
-                  onToggleOption={(value) => this.setState
-                  (
-                    {autoPaymentState: value }, () => 
-                    {
-                      AsyncStorage.setItem('autoPaymentState', this.state.autoPaymentState);
-                    }
-                  )}
-                  optionValue={AsyncStorage.getItem('autoPaymentState')}
-                  optionItemOnPress={() => this.setState
-                    (
-                      { autoPaymentState: !this.state.autoPaymentState },() => 
-                      {
-                        AsyncStorage.setItem('autoPaymentState', this.state.autoPaymentState);
-                      }
-                    )}
+                  onToggleOption={(value) => this.setStorageUseAutoPayment(value)}
+                  optionValue={GLOBALS.Options.UseAutoPayment} //Important: This is the same Variable as "UseAutoPayment"
+                  optionItemOnPress=
+                  {
+                    () => this.setState({ "UseAutoPayment": GLOBALS.Options.UseAutoPayment}) //Important: This is the same Variable as "UseAutoPayment"
+                  }
                 />
-                <OptionItem 
+                <OptionItem
                   optionText='Use dark theme'
                   optionHint=''
-                  onToggleOption={(value) => this.setState
-                  (
-                    {darkThemeState: value }, () => 
-                    {
-                      AsyncStorage.setItem('darkThemeState', this.state.darkThemeState);
-                    }
-                  )}
-                  optionValue={AsyncStorage.getItem('darkThemeState')}
-                  optionItemOnPress={() => this.setState
-                    (
-                      { darkThemeState: !this.state.darkThemeState },() => 
-                      {
-                        AsyncStorage.setItem('darkThemeState', this.state.darkThemeState);
-                      }
-                    )}
+                  onToggleOption={(value) => this.setStorageUseDarkTheme(value)}
+                  optionValue={GLOBALS.Options.UseDarkTheme} //Important: This is the same Variable as "UseDarkTheme"
+                  optionItemOnPress=
+                  {
+                    () => this.setState({ "UseDarkTheme": GLOBALS.Options.UseDarkTheme}) //Important: This is the same Variable as "UseDarkTheme"
+                  }
                 />
               </List>
-              {/* iteratively not possible right now, because render is called multiple times an fucks up the onValueChange
-                <List
-                  dataArray={options}
-                  renderRow={data => {
-                    return (
-                      <ListItem>
-                        <Body>
-                          <Text 
-                            style={styles.optionText}
-                          >
-                            {data[0]}
-                          </Text>
-                          <Text 
-                            style={styles.optionHint}
-                          >
-                            {data[1]}
-                          </Text>
-                        </Body>
-                        <Right>
-                          <Switch
-                            onValueChange={(value) => this.setState({imperialState: value})}
-                            value={this.state[data[2]]}
-                          />
-                        </Right>
-                      </ListItem>
-                      
-                    );
-                  }}
-                /> */}
             </Content>
           </Container>
         </ScrollView>
       </Container>
     );
+  }
+      
+  
+  setStorageUseImperialUnits = (value) =>
+  {
+    //this.setState({value});
+    try 
+    { 
+      GLOBALS.Options.UseImperialUnits = value;
+      this.setState({UseImperialUnits: value});
+      firebase.database().ref('Options/' + GLOBALS.UserKey).update({
+        UseImperialUnits: value
+      });
+    } catch (error) 
+    { 
+      console.error(error);
+    }
+  }
+
+  setStorageUseLastCarpool = (value) =>
+  {
+    //this.setState({value}); 
+    try 
+    { 
+      GLOBALS.Options.UseLastCarpool = value;
+      this.setState({UseLastCarpool: value});
+      firebase.database().ref('Options/' + GLOBALS.UserKey).update({
+        UseLastCarpool: value
+      });
+    } catch (error) 
+    { 
+      console.error(error);
+    }
+  }
+  
+  setStorageUseAutoPayment = (value) =>
+  {
+    //this.setState({value}); 
+    try 
+    { 
+      GLOBALS.Options.UseAutoPayment = value;
+      this.setState({UseAutoPayment: value});
+      firebase.database().ref('Options/' + GLOBALS.UserKey).update({
+        UseAutoPayment: value
+      });
+    } catch (error) 
+    { 
+      console.error(error);
+    }
+  }
+  
+  setStorageUseDarkTheme = (value) =>
+  {
+    //this.setState({value}); 
+    try 
+    { 
+      GLOBALS.Options.UseDarkTheme = value;
+      this.setState({UseDarkTheme: value});
+      firebase.database().ref('Options/' + GLOBALS.UserKey).update({
+        UseDarkTheme: value
+      });
+    } catch (error) 
+    { 
+      console.error(error);
+    }
   }
 }
 
