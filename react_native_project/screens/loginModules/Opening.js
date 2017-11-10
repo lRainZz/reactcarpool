@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8
   },
   signInButton: {
-    // backgroundColor: '#1976D2',
     backgroundColor: '#0220ff',
     borderWidth: 1,
     borderColor: '#fff'
