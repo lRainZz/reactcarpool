@@ -43,7 +43,7 @@ class FillingsItemStatistic extends React.Component {
           firstValue={tripmeter}
           firstUnit={distanceUnit}
 
-          secondValueDesc={'with an avg. of '}
+          secondValueDesc={'with an avg. '}
           secondValue={avgConsumption}
           secondUnit={volumeUnit + '/' + distanceUnit}
         />

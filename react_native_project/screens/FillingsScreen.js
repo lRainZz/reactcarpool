@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Text, StyleSheet, Platform ,View, FlatList, Button } from 'react-native';
 
-import { Container } from 'native-base';
+import { Container, Fab, Icon } from 'native-base';
 
 import FloatingButton from 'react-native-action-button';
 
@@ -52,6 +52,10 @@ class FillingsScreen extends React.Component {
     return totalPrice.toFixed(2);
   }
 
+  _addNewFilling =  (fillingObject) => {
+
+  }
+
   render () {
     const { fillingsArray } = this.state
     const fillingsAvailable = ((fillingsArray.length > 0 ))
@@ -82,20 +86,23 @@ class FillingsScreen extends React.Component {
           />
         )}
 
-        {/* TODO: use fab from react-native-elements/base */}
-        <FloatingButton
-          buttonColor='#1976D2'
-          style={[/*styles.floatingButton, styles.font*/]}
-          onPress={() => alert(noFillings)}
-        />
+        <Fab
+          style={styles.fab}
+          onPress={() => ''}
+        >
+          <Icon
+            name='add'
+            color='white'
+          />
+        </Fab>
       </Container>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  floatingButton: {
-    fontSize: 20
+  fab: {
+    backgroundColor: '#1976D2'
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''

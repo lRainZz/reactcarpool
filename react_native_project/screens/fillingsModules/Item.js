@@ -29,7 +29,10 @@ class FillingsItem extends React.Component {
     avgConsumption: PropTypes.number.isRequired,
     fuelPrice:      PropTypes.number.isRequired,
     drivenDays:     PropTypes.number.isRequired,
-    carpoolMembers: PropTypes.number.isRequired
+    carpoolMembers: PropTypes.number.isRequired,
+
+    // edit event
+    onPressEdit:    PropTypes.function
   }
 
   _getPersonalPrice = (totalPrice, personCount, doRound) => {
@@ -72,7 +75,7 @@ class FillingsItem extends React.Component {
             color='white'
             size={25}
             name='mode-edit'
-            style={[styles.edit, styles.debug]}
+            style={styles.edit}
             iconStyle={{margin: 5}}
             onPress={() => ''}
           />
@@ -93,7 +96,7 @@ class FillingsItem extends React.Component {
           style={styles.bottom}
         >
           <StatView
-            outerStyle={[styles.stats, styles.debug]}
+            outerStyle={styles.debug}
             tripmeter={tripmeter}
             avgConsumption={avgConsumption}
             fuelPrice={fuelPrice}
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     // box-shadow
+    //ios
     borderWidth: 1,
     borderColor: '#ddd',
     borderBottomWidth: 0,
@@ -121,17 +125,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
+    // android
     elevation: 3,
   },
   top: {
     flexDirection: 'row',
-    minHeight: 40,
-    margin: 5
+    minHeight: 40
   },
   date: {
     textAlign: 'left',
     flex: 4,
-    fontSize: 23,
+    fontSize: 18,
     color: '#303030',
     alignSelf: 'center',
     paddingLeft: 10
@@ -139,8 +143,8 @@ const styles = StyleSheet.create({
   personalPrice: {
     fontWeight: 'bold',
     textAlign: 'right',
-    flex: 4,
-    fontSize: 28,
+    flex: 5,
+    fontSize: 25,
     alignSelf: 'center',
     color: '#303030'
   },
@@ -152,13 +156,14 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginRight: 10,
     flex: 3,
-    fontSize: 20,
+    fontSize: 18,
     alignSelf: 'center',
     color: '#303030'
   },
   edit: {
     borderRadius: 25,
     margin: 5,
+    marginRight: 10,
     padding: 5,
     backgroundColor: '#1976D2'
   },
@@ -182,9 +187,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#9E9E9E',
     textAlign: 'center'
-  },
-  stats: {
-    margin: 5
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
