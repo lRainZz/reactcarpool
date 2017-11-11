@@ -2,16 +2,18 @@
 
 import React from 'react';
 
-import { Text, StyleSheet, Platform ,View, FlatList, Button } from 'react-native';
+import { Text, StyleSheet, ScrollView, Platform ,View, FlatList } from 'react-native';
 
-import { Container, Fab, Icon } from 'native-base';
+import { Fab, Icon } from 'native-base';
 
-import FloatingButton from 'react-native-action-button';
+import Modal from 'react-native-simple-modal';
 
 
 //own modules
 
 import FillingsItem from './fillingsModules/Item';
+
+import ModalView from './fillingsModules/ModalView';
 
 
 // class
@@ -19,7 +21,8 @@ import FillingsItem from './fillingsModules/Item';
 class FillingsScreen extends React.Component {
   
   state = {
-    // array representing fillings with: odometer, tripmeter, price, quantity, fuel sort, driven days
+    addFillingsVisible: false,
+
     // newest item always in first place -> use unshift array to add items
     fillingsArray: 
       [
@@ -57,50 +60,61 @@ class FillingsScreen extends React.Component {
   }
 
   render () {
-    const { fillingsArray } = this.state
+    const { fillingsArray, addFillingsVisible, fabVisible } = this.state
     const fillingsAvailable = ((fillingsArray.length > 0 ))
 
     return (
-      <Container>
+      <View
+        style={styles.container}
+      >
+        <ScrollView>
+          {(!fillingsAvailable) && (
+            <View />
+          )}
 
-        {(!fillingsAvailable) && (
-          <View />
-        )}
-
-        {(fillingsAvailable) && (
-          <FlatList
-            data={fillingsArray}
-            renderItem={({item}) => 
-              <FillingsItem
-                ref={(ref) => this.CurrentItemRef = ref}
-                id={item.id}
-                date={item.date}
-                total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
-                tripmeter={item.tripmeter}
-                avgConsumption={item.consumption}
-                fuelPrice={item.fuelPrice}
-                drivenDays={item.drivenDays}
-                carpoolMembers={4}
-              />
-            }
-          />
-        )}
+          {(fillingsAvailable) && (
+            <FlatList
+              style={styles.listContainer}
+              data={fillingsArray}
+              renderItem={({item}) => 
+                <FillingsItem
+                  ref={(ref) => this.CurrentItemRef = ref}
+                  id={item.id}
+                  date={item.date}
+                  total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
+                  tripmeter={item.tripmeter}
+                  avgConsumption={item.consumption}
+                  fuelPrice={item.fuelPrice}
+                  drivenDays={item.drivenDays}
+                  carpoolMembers={4}
+                />
+              }
+            />
+          )}
+        </ScrollView>
 
         <Fab
           style={styles.fab}
-          onPress={() => ''}
+          onPress={() => this.setState({addFillingsVisible : true})}
         >
           <Icon
             name='add'
             color='white'
           />
         </Fab>
-      </Container>
+        <Modal 
+          open={addFillingsVisible}
+          modalDidClose={() => this.setState({addFillingsVisible : false})}
+        />
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   fab: {
     backgroundColor: '#1976D2'
   },
