@@ -47,7 +47,7 @@ class ModalView extends React.Component {
           />
           <Button 
             title='ADD'
-            onPress={(filling) => onSubmit(filling)}
+            onPress={() => onSubmit(filling)}
           />
         </View>
       </View>
