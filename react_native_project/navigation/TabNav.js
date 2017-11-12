@@ -61,6 +61,7 @@ const TabNav = TabNavigator (
   },
   {
     tabBarPosition: 'top',
+    swipeEnabled: false,
     tabBarOptions: {
       showIcon: true,
       showLabel: false,

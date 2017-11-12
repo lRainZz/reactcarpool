@@ -15,17 +15,20 @@ import ValueUnit from './valueUnit';
 
 class FillingsItemStatistic extends React.Component {
   static propTypes = {
+    filling:        PropTypes.object.isRequired,
+
     tripmeter:      PropTypes.number.isRequired,
     avgConsumption: PropTypes.number.isRequired,
     fuelPrice:      PropTypes.number.isRequired,
     drivenDays:     PropTypes.number.isRequired,
     carpoolMembers: PropTypes.number.isRequired,
+
     outerStyle:     PropTypes.style
 
   }
 
   render () {
-    const { tripmeter, avgConsumption, fuelPrice, drivenDays, carpoolMembers, outerStyle } = this.props
+    const { filling, outerStyle } = this.props
 
     const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
     const volumeUnit   = (/* optionImperial*/ true) ? 'L' : 'GAL'
@@ -40,11 +43,11 @@ class FillingsItemStatistic extends React.Component {
           containerStyle={styles.section}
           
           firstValueDesc={'a distance of '}
-          firstValue={tripmeter}
+          firstValue={filling.tripmeter}
           firstUnit={distanceUnit}
 
           secondValueDesc={'with an avg. '}
-          secondValue={avgConsumption}
+          secondValue={filling.avgConsumption}
           secondUnit={volumeUnit + '/' + distanceUnit}
         />
 
@@ -54,11 +57,11 @@ class FillingsItemStatistic extends React.Component {
           containerStyle={styles.section}
 
           firstValueDesc={'in '}
-          firstValue={drivenDays}
+          firstValue={filling.drivenDays}
           firstUnit={dayUnit}
           
           secondValueDesc={'for '}
-          secondValue={fuelPrice}
+          secondValue={filling.fuelPrice}
           secondUnit={priceUnit + '/' + volumeUnit}
         />
       </View>

@@ -8,6 +8,8 @@ import { View } from 'react-native-animatable';
 
 import { Icon } from 'react-native-elements';
 
+import Swipeout from 'react-native-swipeout';
+
 
 // own modules
 
@@ -18,6 +20,8 @@ import StatView from './ItemStatistics';
  
 class FillingsItem extends React.Component {
   static propTypes = {
+    filling: PropTypes.object.isRequired,
+    
     // identification
     id:             PropTypes.number.isRequired,
     // upper part
@@ -32,7 +36,12 @@ class FillingsItem extends React.Component {
     carpoolMembers: PropTypes.number.isRequired,
 
     // edit event
-    onPressEdit:    PropTypes.function
+    onPressEdit:    PropTypes.function,
+    onPressDelete:  PropTypes.function
+  }
+
+  state = {
+    currentItem: null
   }
 
   _getPersonalPrice = (totalPrice, personCount, doRound) => {
@@ -46,65 +55,86 @@ class FillingsItem extends React.Component {
   }
   
   render () {
-    const { id, date, total, tripmeter, avgConsumption, fuelPrice, drivenDays, carpoolMembers } = this.props
+    const { carpoolMembers, onPressEdit, onPressDelete, total, filling } = this.props
+
+    const SwipeDelete = [
+      {
+        onPress: () => onPressDelete(filling),
+        backgroundColor: '#fff',
+        component: 
+          <View
+            style={styles.deleteContainer}
+          >
+            <Icon 
+              name='delete-forever'
+              type='material'
+              size={30}
+              style={styles.delete}
+              color='white'
+            />
+          </View>
+      }
+    ]
     
     return (
-      <View
-        animation={'slideInUp'}
-        delay={0}
-        duration={300}
-        style={styles.container}
+      <Swipeout
+        right={SwipeDelete}
+        autoClose={true}
+        backgroundColor={'#fff'}
       >
         <View
-          style={[styles.top, styles.debug]}
+          animation={'slideInUp'}
+          delay={0}
+          duration={300}
+          style={styles.container}
         >
-          <Text
-            style={[styles.date, styles.debug]}
-          >{date}</Text>
-          
-          <Text
-            style={[styles.personalPrice, styles.debug]}
-          >{this._getPersonalPrice(total, carpoolMembers, true)} € <Text style={styles.personalPriceSuffix}>P.P.</Text></Text>
+          <View
+            style={[styles.top, styles.debug]}
+          >
+            <Text
+              style={[styles.date, styles.debug]}
+            >{filling.date}</Text>
+            
+            <Text
+              style={[styles.personalPrice, styles.debug]}
+            >{this._getPersonalPrice(total, carpoolMembers, true)} € <Text style={styles.personalPriceSuffix}>P.P.</Text></Text>
 
-          <Text
-            style={[styles.total, styles.debug]}
-          >{total} €</Text>
+            <Text
+              style={[styles.total, styles.debug]}
+            >{total} €</Text>
 
-          <Icon 
-            type='material'
-            color='white'
-            size={25}
-            name='mode-edit'
-            style={styles.edit}
-            iconStyle={{margin: 5}}
-            onPress={() => ''}
-          />
-        </View>
-
-        <View 
-          style={styles.divider}
-        >
-          <View style={styles.seperator}/>
-          <View style={styles.seperatorText}>
-            <Text style={[styles.font, styles.seperatorCaption]}>BASED ON</Text>
-            <Text style={[styles.font, styles.seperatorCaption]}>{carpoolMembers} PEOPLE DROVE</Text>
+            <Icon 
+              type='material'
+              color='white'
+              size={25}
+              name='mode-edit'
+              style={styles.edit}
+              iconStyle={{margin: 5}}
+              onPress={() => ''}
+            />
           </View>
-          <View style={styles.seperator}/>
-        </View>
 
-        <View
-          style={styles.bottom}
-        >
-          <StatView
-            outerStyle={styles.debug}
-            tripmeter={tripmeter}
-            avgConsumption={avgConsumption}
-            fuelPrice={fuelPrice}
-            drivenDays={drivenDays}
-            carpoolMembers={carpoolMembers}
-          />
+          <View 
+            style={styles.divider}
+          >
+            <View style={styles.seperator}/>
+            <View style={styles.seperatorText}>
+              <Text style={[styles.font, styles.seperatorCaption]}>BASED ON</Text>
+              <Text style={[styles.font, styles.seperatorCaption]}>{carpoolMembers} PEOPLE DROVE</Text>
+            </View>
+            <View style={styles.seperator}/>
+          </View>
+
+          <View
+            style={styles.bottom}
+          >
+            <StatView
+              outerStyle={styles.debug}
+              filling={filling}
+            />
+          </View>
         </View>
-      </View>
+      </Swipeout>
     );
   }
 }
@@ -191,7 +221,16 @@ const styles = StyleSheet.create({
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
   },
-
+  deleteContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  delete: {
+    backgroundColor: '#F44336',
+    padding: 10,
+    borderRadius: 35 
+  },
 
   debug: {
     // set border with to '1' to debug UI-flex

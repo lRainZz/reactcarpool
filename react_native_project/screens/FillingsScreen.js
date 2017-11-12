@@ -72,7 +72,7 @@ class FillingsScreen extends React.Component {
       incomplete = true;
     }
 
-    alert(fillingObject.tripmeter);
+    alert(incomplete);
 
     if (!incomplete) {
       let fillings = this.state.fillingsArray;
@@ -81,6 +81,17 @@ class FillingsScreen extends React.Component {
     } else {
       Toast.show('Please insert all values to continue.', Toast.LONG);
     }
+  }
+
+  _deleteFilling = (filling) => {
+    let fillings = this.state.fillingsArray
+    let index    = fillings.indexOf(filling)
+
+    fillings.splice(index, 1)
+
+    this.setState({fillingsArray: fillings})
+
+    alert(this.state.fillingsArray)
   }
 
   render () {
@@ -103,14 +114,10 @@ class FillingsScreen extends React.Component {
               data={fillingsArray}
               renderItem={({item}) => 
                 <FillingsItem
-                  id={item.id}
-                  date={item.date}
+                  filling={item}
                   total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
-                  tripmeter={item.tripmeter}
-                  avgConsumption={item.consumption}
-                  fuelPrice={item.fuelPrice}
-                  drivenDays={item.drivenDays}
                   carpoolMembers={4}
+                  onPressDelete={(filling) => this._deleteFilling(filling)}
                 />
               }
             />
