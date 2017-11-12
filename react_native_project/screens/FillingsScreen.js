@@ -2,11 +2,15 @@
 
 import React from 'react';
 
-import { Text, StyleSheet, ScrollView, Platform ,View, FlatList } from 'react-native';
+import { Text, StyleSheet, ScrollView, Platform, FlatList } from 'react-native';
 
 import { Fab, Icon } from 'native-base';
 
+import { View } from 'react-native-animatable';
+
 import Modal from 'react-native-simple-modal';
+
+import Toast from 'react-native-simple-toast';
 
 
 //own modules
@@ -22,7 +26,7 @@ class FillingsScreen extends React.Component {
   
   state = {
     addFillingsVisible: false,
-
+    fabVisible: true,
     // newest item always in first place -> use unshift array to add items
     fillingsArray: 
       [
@@ -55,13 +59,34 @@ class FillingsScreen extends React.Component {
     return totalPrice.toFixed(2);
   }
 
-  _addNewFilling =  (fillingObject) => {
+  _addNewFilling = (fillingObject) => {
+    let incomplete = false;
+      
+    if (   
+        (fillingObject.tripmeter   == null)
+     || (fillingObject.consumption == null)
+     || (fillingObject.fuelPrice   == null)
+     || (fillingObject.drivenDays  == null)
+     || (fillingObject.date        == null)
+        ) {
+      incomplete = true;
+    }
 
+    alert(fillingObject.tripmeter);
+
+    if (!incomplete) {
+      let fillings = this.state.fillingsArray;
+      fillings.unshift(fillingObject);
+      this.setState({addFillingsVisible: false, fillingsArray: fillings});
+    } else {
+      Toast.show('Please insert all values to continue.', Toast.LONG);
+    }
   }
 
   render () {
     const { fillingsArray, addFillingsVisible, fabVisible } = this.state
     const fillingsAvailable = ((fillingsArray.length > 0 ))
+    const fabVisibleStyle   = (fabVisible) ? {} : {height: 0, width: 0}
 
     return (
       <View
@@ -78,7 +103,6 @@ class FillingsScreen extends React.Component {
               data={fillingsArray}
               renderItem={({item}) => 
                 <FillingsItem
-                  ref={(ref) => this.CurrentItemRef = ref}
                   id={item.id}
                   date={item.date}
                   total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
@@ -94,18 +118,24 @@ class FillingsScreen extends React.Component {
         </ScrollView>
 
         <Fab
-          style={styles.fab}
-          onPress={() => this.setState({addFillingsVisible : true})}
+          style={[styles.fab, fabVisibleStyle]}
+          onPress={() => this.setState({addFillingsVisible : true, fabVisible: false})}
         >
           <Icon
             name='add'
             color='white'
           />
         </Fab>
+
         <Modal 
           open={addFillingsVisible}
-          modalDidClose={() => this.setState({addFillingsVisible : false})}
-        />
+          modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
+        >
+          <ModalView 
+            onSubmit={(filling) => this._addNewFilling(filling)}
+            onCancel={() => this.setState({addFillingsVisible: false})}
+          />
+        </Modal>
       </View>
     );
   }
