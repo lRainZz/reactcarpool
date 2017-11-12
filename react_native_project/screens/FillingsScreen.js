@@ -72,15 +72,17 @@ class FillingsScreen extends React.Component {
       incomplete = true;
     }
 
-    alert(incomplete);
-
     if (!incomplete) {
       let fillings = this.state.fillingsArray;
+
       fillings.unshift(fillingObject);
+      
       this.setState({addFillingsVisible: false, fillingsArray: fillings});
     } else {
       Toast.show('Please insert all values to continue.', Toast.LONG);
     }
+
+    alert(this.state.fillingsArray)
   }
 
   _deleteFilling = (filling) => {
@@ -90,8 +92,6 @@ class FillingsScreen extends React.Component {
     fillings.splice(index, 1)
 
     this.setState({fillingsArray: fillings})
-
-    alert(this.state.fillingsArray)
   }
 
   render () {
@@ -111,6 +111,7 @@ class FillingsScreen extends React.Component {
           {(fillingsAvailable) && (
             <FlatList
               style={styles.listContainer}
+              extraData={this.state}
               data={fillingsArray}
               renderItem={({item}) => 
                 <FillingsItem
