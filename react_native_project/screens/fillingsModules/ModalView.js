@@ -9,6 +9,7 @@ import { Button } from 'react-native-elements';
 
 // own modules
 
+import Input from './fillingsModules/InputComponent';
 
 // class
 
@@ -40,21 +41,39 @@ class ModalView extends React.Component {
         <View
         style={styles.contentContainer}
         >
-          {/* 5 inputs:
+          {/* 
+            5 inputs:
               tripmeter,
               consumption,
               fuelprice,
               drivenDays,
               date (datePicker)
-          
-            use loginInput
           */}
 
-          <View>
-            
-          </View>
+          <Input 
+            bottomSeperator={true}
+            title={'TRIPMETER'}
+          />
 
+          <Input 
+            bottomSeperator={true}
+            title={'CONSUMPTION'}
+          />
 
+          <Input 
+            bottomSeperator={true}
+            title={'FUELPRICE'}
+          />
+
+          <Input 
+            bottomSeperator={true}
+            title={'DRIVENDAYS'}
+          />
+
+          <Input
+            title={'DATE'}
+            // customInput={'datepicker'}
+          />
 
         </View>
 
