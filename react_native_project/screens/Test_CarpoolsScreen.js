@@ -60,13 +60,14 @@ class FirebaseScreen extends React.Component {
   {
     try
     {      
-      // Get a key for a new UserCarpool.
+      // Get a key for a new Carpool.
       KEY = firebase.database().ref().push().key;
       firebase.database().ref('Carpools/' + KEY).set({
         key: KEY,
         MaxPlace: MaxPlace
       });
       
+      // Get a key for a new UserCarpool.
       UserCarpoolKEY = firebase.database().ref().push().key;
       firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
         key: UserCarpoolKEY,
@@ -81,22 +82,49 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  inviteToCarpool = async () => 
+  inviteToCarpool = async (InviteEmail, CarpoolKey) => 
   {
     try
     {
-      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value')
+      var isInvitable = true;
+      //Check if User exists
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(InviteEmail).once('value')
       .then((snapshot) =>
       {
-        if (snap.val()){
-
+        if (snapshot.val()){
+          snapshot.forEach(function(childSnapshot) {
+            var InviteKEY = childSnapshot.key;
+            //Check for all Users in Carpool
+            firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+            .then((snapshot2) =>
+            {
+              snapshot2.forEach(function(childSnapshot2) {
+                if (InviteKEY == childSnapshot2.child('UserKey').val()){
+                  isInvitable = false;
+                }
+              })
+              if (isInvitable){
+                // Get a key for a new UserCarpool.
+                UserCarpoolKEY = firebase.database().ref().push().key;
+                firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
+                  key: UserCarpoolKEY,
+                  CarpoolKey: CarpoolKey,
+                  UserKey: InviteKEY,
+                  Invite: '1',
+                  Active: '0'
+                });
+              }else{
+                console.log('User is already in the Carpool');
+              }
+            });
+          });
         }else{
-          Toast.show('Email does not belong to a existing User!', Toast.LONG);          
+          console.log('Email does not belong to a existing User!');          
         }
       });
     }catch(error)
     {
-      
+      console.error(error);
     }
   }
 
@@ -189,7 +217,7 @@ class FirebaseScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this)}
+          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-Kyolr1zp76cECXMhepV'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
           color="orange"
         />
