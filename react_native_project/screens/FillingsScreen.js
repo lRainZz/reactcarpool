@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    borderRadius: 10
+    // borderRadius: 10,
+    backgroundColor: '#fff'
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''

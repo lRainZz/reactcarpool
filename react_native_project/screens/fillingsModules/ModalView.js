@@ -34,6 +34,11 @@ class ModalView extends React.Component {
     const { onSubmit, onCancel } = this.props
     const { filling } = this.state
 
+    const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
+    const volumeUnit   = (/* optionImperial*/ true) ? 'L' : 'GAL'
+    const priceUnit    = (/* optionImperial*/ true) ? '€' : '$'
+    const dayUnit      = 'DAYS' // (/* optionImperial*/ true) ? 'Tagen' : 'days'
+
     return (
       <View
         style={styles.container}
@@ -49,33 +54,49 @@ class ModalView extends React.Component {
               drivenDays,
               date (datePicker)
           */}
-          
+
           <ModalInput 
             bottomSeperator={true}
-            title={'TRIPMETER'}
+            placeholder={'760'}
+            keyboardType={'numeric'}
+            title={'DRIVEN DISTANCE:'}
             titleStyle={styles.inputText}
+            inputSuffix={distanceUnit}
+            returnKeyType={'next'}
           />
 
           <ModalInput 
             bottomSeperator={true}
-            title={'CONSUMPTION'}
+            placeholder={'7.3'}
+            keyboardType={'numeric'}
+            title={'AVERAGE FUEL CONSUMPTION:'}
             titleStyle={styles.inputText}
+            inputSuffix={volumeUnit + '/' + distanceUnit}
+            returnKeyType={'next'}
           />
 
           <ModalInput 
             bottomSeperator={true}
-            title={'FUELPRICE'}
+            placeholder={'1.329'}
+            keyboardType={'numeric'}
+            title={'FUEL PRICE:'}
             titleStyle={styles.inputText}
+            inputSuffix={priceUnit + '/' + volumeUnit}
+            returnKeyType={'next'}
           />
 
           <ModalInput 
             bottomSeperator={true}
-            title={'DRIVENDAYS'}
+            placeholder={'4'}
+            keyboardType={'numeric'}
+            title={'DAYS DRIVEN:'}
             titleStyle={styles.inputText}
+            inputSuffix={dayUnit}
+            returnKeyType={'done'}
           />
 
           <ModalInput
-            title={'DATE'}
+            title={'DATE OF FILLING:'}
             titleStyle={styles.inputText}
             customInput={<Text>Hello World</Text>}
           />
@@ -128,10 +149,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1976D2'
   },
   inputText: {
-    margin: 5,
+    marginHorizontal: 5,
     color: '#303030',
     fontWeight: 'bold'
   },
+
+
 
   debug: {
     borderWidth: 0,

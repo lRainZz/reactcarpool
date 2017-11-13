@@ -19,6 +19,8 @@ class InputComponent extends React.Component {
     title:      PropTypes.string.isRequired,
     titleStyle: PropTypes.object,
 
+    inputSuffix: PropTypes.string,
+
     customInput: PropTypes.object
   }
 
@@ -27,7 +29,7 @@ class InputComponent extends React.Component {
   }
 
   render () {
-    const { title, titleStyle, customInput, ...otherProps } = this.props
+    const { inputSuffix, title, titleStyle, customInput, ...otherProps } = this.props
     const { isFocused } = this.state
 
     const topSeperator    = (false || this.props,topSeperator)
@@ -46,7 +48,6 @@ class InputComponent extends React.Component {
             style={styles.seperator}
           />
         )}
-        
 
         <View
           style={styles.content}
@@ -58,19 +59,26 @@ class InputComponent extends React.Component {
           {customInput}
 
           {(!customInput) && (
-            <TextInput
-              ref={(ref) => this.textInputRef = ref}
-              autoCapitalize={'none'}
-              autoCorrect={false}
-              style={styles.textInput}
-              maxLength={32}
-              underlineColorAndroid={'white'}
-              placeholderTextColor={'rgba(255,255,255,0.4)'}
-              selectionColor={'black'}
-              onFocus={() => this.setState({ isFocused: true })}
-              onBlur={() => this.setState({ isFocused: false })}
-              {...otherProps}
-            />
+            <View
+              style={styles.inputContainer}
+            >
+              <TextInput
+                ref={(ref) => this.textInputRef = ref}
+                autoCapitalize={'none'}
+                autoCorrect={false}
+                style={styles.textInput}
+                maxLength={32}
+                underlineColorAndroid={'transparent'}
+                placeholderTextColor={'rgba(255,255,255,0.4)'}
+                selectionColor={'black'}
+                onFocus={() => this.setState({ isFocused: true })}
+                onBlur={() => this.setState({ isFocused: false })}
+                {...otherProps}
+              />
+              <Text
+                style={[styles.inputSuffix, styles.font]}
+              >{inputSuffix}</Text>
+            </View>
           )}
         </View>
 
@@ -100,13 +108,25 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%'
   },
+  inputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center'
+  },
+  inputSuffix: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#9E9E9E',
+    alignSelf: 'center'
+  },
   textInput: {
     flex: 1,
     color: 'black',
-    height: 35,
-    marginBottom: 5,
-    padding: 10,
-    fontSize: 20
+    fontSize: 20,
+    textAlign: 'right',
+    alignSelf: 'center',
+    marginHorizontal: 5
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
