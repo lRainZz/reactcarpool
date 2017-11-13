@@ -8,6 +8,8 @@ import { Text, Button} from 'react-native';
 
 import * as firebase from 'firebase';
 
+const GLOBALS = require('../globals');
+
 //own modules
 
 import Header from '../ApplicationHeader';
@@ -15,9 +17,88 @@ import Header from '../ApplicationHeader';
 
 // class
 
+//Firebase by User-------------------------------------------------------------
+// await firebase.database().ref('/Options/' + GLOBALS.UserKey).once('value')
+// .then((snapshot) =>
+// {
+//    if (snap.val()){
+
+//    }else{
+
+//    }
+// });
+//------------------------------------------------------------------------------
+
+//Firebase by Email-------------------------------------------------------------
+// await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value')
+// .then((snapshot) =>
+// {
+//    if (snap.val()){
+
+//    }else{
+
+//    }
+// });
+//------------------------------------------------------------------------------
+
+//Firebase set------------------------------------------------------------------
+// firebase.database().ref('Users/' + KEY).set({
+//   key: KEY,
+//   Password: password
+// });
+//------------------------------------------------------------------------------
+
+//Firebase update------------------------------------------------------------------
+// firebase.database().ref('Options/' + GLOBALS.UserKey).update({
+//   UseImperialUnits: value
+// });
+//------------------------------------------------------------------------------
+
 class FirebaseScreen extends React.Component { 
   
-  createNewCarpool()
+  createNewCarpool = async (MaxPlace) => 
+  {
+    try
+    {      
+      // Get a key for a new UserCarpool.
+      KEY = firebase.database().ref().push().key;
+      firebase.database().ref('Carpools/' + KEY).set({
+        key: KEY,
+        MaxPlace: MaxPlace
+      });
+      firebase.database().ref('UserCarpools/' + KEY).set({
+        key: KEY,
+        CarpoolKey: KEY,
+        UserKey: GLOBALS.UserKey,
+        Invite: '0',
+        Active: '1'
+      });
+    }catch(error)
+    {
+      console.error(error);
+    }
+  }
+
+  inviteToCarpool = async () => 
+  {
+    try
+    {
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value')
+      .then((snapshot) =>
+      {
+        if (snap.val()){
+
+        }else{
+          Toast.show('Email does not belong to a existing User!', Toast.LONG);          
+        }
+      });
+    }catch(error)
+    {
+      
+    }
+  }
+
+  joinCarpool = async () => 
   {
     try
     {
@@ -28,7 +109,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  inviteToCarpool()
+  checkForInvite = async () => 
   {
     try
     {
@@ -39,7 +120,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  joinCarpool()
+  CheckForJoin = async () => 
   {
     try
     {
@@ -50,7 +131,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  checkForInvite()
+  acceptInvite = async () => 
   {
     try
     {
@@ -61,7 +142,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  CheckForJoin()
+  acceptJoin = async () => 
   {
     try
     {
@@ -72,29 +153,7 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  acceptInvite()
-  {
-    try
-    {
-      alert('Test successfull!');
-    }catch(error)
-    {
-      
-    }
-  }
-
-  acceptJoin()
-  {
-    try
-    {
-      alert('Test successfull!');
-    }catch(error)
-    {
-      
-    }
-  }
-
-  deleteCarpool()
+  deleteCarpool = async () => 
   {
     try
     {
@@ -123,14 +182,14 @@ class FirebaseScreen extends React.Component {
         </Text>
 
         <Button
-          onPress={this.createNewCarpool.bind(this)}
+          onPress={this.createNewCarpool.bind(this, '4'/*max. Sitzplatzanzahl*/)}
           title="Create new Carpool"
-          color="orange"
+          color="green"
         />
         <Button
           onPress={this.inviteToCarpool.bind(this)}
           title="Invite someone to carpool"
-          color="red"
+          color="orange"
         />
         <Button
           onPress={this.joinCarpool.bind(this)}
