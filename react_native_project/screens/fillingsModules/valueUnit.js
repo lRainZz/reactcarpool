@@ -12,16 +12,16 @@ import { View, StyleSheet, Text, Platform } from 'react-native';
 
 class ValueUnitContainer extends React.Component {
   static propTypes = {
-    firstValue:  PropTypes.number.isRequired,
-    secondValue: PropTypes.number.isRequired,
+    firstValue:  PropTypes.number,
+    secondValue: PropTypes.number,
 
-    firstUnit:   PropTypes.string.isRequired,
-    secondUnit:  PropTypes.string.isRequired,
+    firstUnit:   PropTypes.string,
+    secondUnit:  PropTypes.string,
 
     firstValueDesc:  PropTypes.string,
     secondValueDesc: PropTypes.string,
 
-    containerStyle: PropTypes.style
+    containerStyle: PropTypes.object
   } 
   
   render() {   

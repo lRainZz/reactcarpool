@@ -42,6 +42,7 @@ class LoginInput extends Component {
             underlineColorAndroid={'transparent'}
             placeholderTextColor={'rgba(255,255,255,0.4)'}
             selectionColor={'white'}
+            editable={true}
             onFocus={() => this.setState({ isFocused: true })}
             onBlur={() => this.setState({ isFocused: false })}
             {...otherProps}

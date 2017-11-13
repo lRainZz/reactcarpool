@@ -30,6 +30,7 @@
     "react-native-elements": "^0.17.0",
     "react-native-firebase": "^3.0.6",
     "react-native-modal": "^4.1.0",
+    "react-native-modal-datetime-picker": "^4.13.0",
     "react-native-panel": "^1.0.3",
     "react-native-simple-modal": "^7.0.0",
     "react-native-simple-toast": "0.0.7",

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "slug" : "ReactCarpool",
     "sdkVersion": "21.0.0"
   }
 }

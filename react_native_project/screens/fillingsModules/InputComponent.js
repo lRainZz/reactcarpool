@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 
-import { Text, TextInout, View, StyleSheet } from 'react-native';
+import { Text, TextInput, View, StyleSheet, Platform } from 'react-native';
 
 
 // own modules
@@ -17,9 +17,9 @@ class InputComponent extends React.Component {
     bottomSeperator: PropTypes.bool,
 
     title:      PropTypes.string.isRequired,
-    titleStyle: PropTypes.style,
+    titleStyle: PropTypes.object,
 
-    customInput: PropTypes.Component
+    customInput: PropTypes.object
   }
 
   state = {
@@ -28,9 +28,10 @@ class InputComponent extends React.Component {
 
   render () {
     const { title, titleStyle, customInput, ...otherProps } = this.props
+    const { isFocused } = this.state
 
-    const topSeperator    = false || this.props,topSeperator
-    const bottomSeperator = false || this.props.bottomSeperator
+    const topSeperator    = (false || this.props,topSeperator)
+    const bottomSeperator = (false || this.props.bottomSeperator)
     const borderColor     = isFocused ? 'white' : 'rgba(255,255,255,0.4)'
     
 
@@ -47,33 +48,32 @@ class InputComponent extends React.Component {
         )}
         
 
-        <View>
+        <View
+          style={styles.content}
+        >
           <Text
-            style={titleStyle}
+            style={[titleStyle, styles.font]}
           >{title}</Text>
 
-          {(customInput) && (
-            <customInput 
-              {...otherProps}
-            />
-          )}
+          {customInput}
 
           {(!customInput) && (
             <TextInput
               ref={(ref) => this.textInputRef = ref}
               autoCapitalize={'none'}
               autoCorrect={false}
-              style={[styles.textInput, { color }]}
+              style={styles.textInput}
               maxLength={32}
-              underlineColorAndroid={'transparent'}
+              underlineColorAndroid={'white'}
               placeholderTextColor={'rgba(255,255,255,0.4)'}
-              selectionColor={'white'}
+              selectionColor={'black'}
               onFocus={() => this.setState({ isFocused: true })}
               onBlur={() => this.setState({ isFocused: false })}
               {...otherProps}
             />
           )}
         </View>
+
         {(bottomSeperator) && (
           <View
             style={styles.seperator}
@@ -86,15 +86,31 @@ class InputComponent extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center'
+  },
+  content:{
+    flex: 1,
+    justifyContent: 'center'
   },
   seperator: {
-    flex: 1,
-    borderColor: '#0220ff',
+    borderColor: '#1976D2',
     borderWidth: StyleSheet.hairlineWidth,
     height: StyleSheet.hairlineWidth,
-    width: '90%'
-  }
+    alignSelf: 'center',
+    width: '100%'
+  },
+  textInput: {
+    flex: 1,
+    color: 'black',
+    height: 35,
+    marginBottom: 5,
+    padding: 10,
+    fontSize: 20
+  },
+  font: {
+    fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
+  },
 
 })
 

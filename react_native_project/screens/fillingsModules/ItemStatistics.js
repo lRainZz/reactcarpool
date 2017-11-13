@@ -17,13 +17,13 @@ class FillingsItemStatistic extends React.Component {
   static propTypes = {
     filling:        PropTypes.object.isRequired,
 
-    tripmeter:      PropTypes.number.isRequired,
-    avgConsumption: PropTypes.number.isRequired,
-    fuelPrice:      PropTypes.number.isRequired,
-    drivenDays:     PropTypes.number.isRequired,
-    carpoolMembers: PropTypes.number.isRequired,
+    tripmeter:      PropTypes.number,
+    avgConsumption: PropTypes.number,
+    fuelPrice:      PropTypes.number,
+    drivenDays:     PropTypes.number,
+    carpoolMembers: PropTypes.number,
 
-    outerStyle:     PropTypes.style
+    outerStyle:     PropTypes.object
 
   }
 

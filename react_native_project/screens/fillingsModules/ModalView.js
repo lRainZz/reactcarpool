@@ -9,7 +9,7 @@ import { Button } from 'react-native-elements';
 
 // own modules
 
-import Input from './fillingsModules/InputComponent';
+import ModalInput from './InputComponent';
 
 // class
 
@@ -21,12 +21,12 @@ class ModalView extends React.Component {
   
   state = {
     filling: {
-      'id'         : 2,// null, // any
-      'tripmeter'  : 820, // null, // number
-      'consumption': 7.2, // null, // number
-      'fuelPrice'  : 1.329, // null, // number
-      'drivenDays' : 4, // null, // number
-      'date'       : '15.01.2017' // null  // string
+      'id'         : null, // any
+      'tripmeter'  : null, // number
+      'consumption': null, // number
+      'fuelPrice'  : null, // number
+      'drivenDays' : null, // number
+      'date'       : null  // string
     }
   }
   
@@ -39,7 +39,7 @@ class ModalView extends React.Component {
         style={styles.container}
       >
         <View
-        style={styles.contentContainer}
+          style={styles.contentContainer}
         >
           {/* 
             5 inputs:
@@ -49,30 +49,35 @@ class ModalView extends React.Component {
               drivenDays,
               date (datePicker)
           */}
-
-          <Input 
+          
+          <ModalInput 
             bottomSeperator={true}
             title={'TRIPMETER'}
+            titleStyle={styles.inputText}
           />
 
-          <Input 
+          <ModalInput 
             bottomSeperator={true}
             title={'CONSUMPTION'}
+            titleStyle={styles.inputText}
           />
 
-          <Input 
+          <ModalInput 
             bottomSeperator={true}
             title={'FUELPRICE'}
+            titleStyle={styles.inputText}
           />
 
-          <Input 
+          <ModalInput 
             bottomSeperator={true}
             title={'DRIVENDAYS'}
+            titleStyle={styles.inputText}
           />
 
-          <Input
+          <ModalInput
             title={'DATE'}
-            // customInput={'datepicker'}
+            titleStyle={styles.inputText}
+            customInput={<Text>Hello World</Text>}
           />
 
         </View>
@@ -122,9 +127,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#1976D2'
   },
+  inputText: {
+    margin: 5,
+    color: '#303030',
+    fontWeight: 'bold'
+  },
 
   debug: {
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: '#000'
   }
 })
