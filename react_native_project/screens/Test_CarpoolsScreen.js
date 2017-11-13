@@ -66,8 +66,10 @@ class FirebaseScreen extends React.Component {
         key: KEY,
         MaxPlace: MaxPlace
       });
-      firebase.database().ref('UserCarpools/' + KEY).set({
-        key: KEY,
+      
+      UserCarpoolKEY = firebase.database().ref().push().key;
+      firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
+        key: UserCarpoolKEY,
         CarpoolKey: KEY,
         UserKey: GLOBALS.UserKey,
         Invite: '0',
