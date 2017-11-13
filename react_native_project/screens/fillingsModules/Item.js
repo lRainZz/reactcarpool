@@ -22,20 +22,11 @@ class FillingsItem extends React.Component {
   static propTypes = {
     filling: PropTypes.object.isRequired,
     
-    // identification
     id:             PropTypes.number.isRequired,
-    // upper part
     isPayed:        PropTypes.bool.isRequired,
-    date:           PropTypes.string.isRequired,
     total:          PropTypes.number.isRequired,
-    // lower part
-    tripmeter:      PropTypes.number.isRequired,
-    avgConsumption: PropTypes.number.isRequired,
-    fuelPrice:      PropTypes.number.isRequired,
-    drivenDays:     PropTypes.number.isRequired,
     carpoolMembers: PropTypes.number.isRequired,
 
-    // edit event
     onPressEdit:    PropTypes.function,
     onPressDelete:  PropTypes.function
   }

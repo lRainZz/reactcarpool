@@ -6,6 +6,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 import { Button } from 'react-native-elements';
 
+
 // own modules
 
 
@@ -36,18 +37,45 @@ class ModalView extends React.Component {
       <View
         style={styles.container}
       >
-        <Text>Hello World</Text>
+        <View
+        style={styles.contentContainer}
+        >
+          {/* 5 inputs:
+              tripmeter,
+              consumption,
+              fuelprice,
+              drivenDays,
+              date (datePicker)
+          
+            use loginInput
+          */}
+
+          <View>
+            
+          </View>
+
+
+
+        </View>
 
         <View
-          style={styles.buttonContainer}
+          style={[styles.buttonContainer, styles.debug]}
         >
           <Button 
             title='CANCEL'
+            fontWeight='bold'
+            fontSize={18}
             onPress={onCancel}
+            containerViewStyle={styles.buttonBase}
+            buttonStyle={styles.button}
           />
           <Button 
             title='ADD'
+            fontWeight='bold'
+            fontSize={18}
             onPress={() => onSubmit(filling)}
+            containerViewStyle={styles.buttonBase}
+            buttonStyle={styles.button}
           />
         </View>
       </View>
@@ -56,8 +84,29 @@ class ModalView extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    borderRadius: 10
+  },
+  contentContainer: {
+    flex: 11
+  },
   buttonContainer: {
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'row',
+    padding: 5
+  },
+  buttonBase: {
+    flex: 1
+  },
+  button: {
+    flex: 1,
+    backgroundColor: '#1976D2'
+  },
+
+  debug: {
+    borderWidth: 1,
+    borderColor: '#000'
   }
 })
 

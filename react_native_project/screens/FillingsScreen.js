@@ -81,8 +81,6 @@ class FillingsScreen extends React.Component {
     } else {
       Toast.show('Please insert all values to continue.', Toast.LONG);
     }
-
-    alert(this.state.fillingsArray)
   }
 
   _deleteFilling = (filling) => {
@@ -138,6 +136,7 @@ class FillingsScreen extends React.Component {
         <Modal 
           open={addFillingsVisible}
           modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
+          modalStyle={styles.modalContainer}
         >
           <ModalView 
             onSubmit={(filling) => this._addNewFilling(filling)}
@@ -155,6 +154,10 @@ const styles = StyleSheet.create({
   },
   fab: {
     backgroundColor: '#1976D2'
+  },
+  modalContainer: {
+    flex: 1,
+    borderRadius: 10
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
