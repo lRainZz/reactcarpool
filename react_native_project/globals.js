@@ -5,5 +5,14 @@ module.exports = {
         UseLastCarpool: false,
         UseAutoPayment: false,
         UseDarkTheme: false,
-    }
+    },
+    Carpools: {
+
+    },
+    UserCarpools: {
+
+    },
+    Creator: {
+
+    },
 }

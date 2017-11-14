@@ -75,11 +75,40 @@ class FirebaseScreen extends React.Component {
         CarpoolKey: KEY,
         UserKey: GLOBALS.UserKey,
         Invite: '0',
-        Active: '1',
         Join: '0',
         Creator: '1',
         Date: CurrentDate,
       });
+
+      //Generate Files in global.js
+      JSONExport_Carpool = {
+        KEY: {
+          key: KEY,
+          MaxPlace: MaxPlace
+        }
+      }
+
+      JSONExport_UserCarpools = {
+        UserCarpoolKEY: {
+          key: UserCarpoolKEY,
+          CarpoolKey: KEY,
+          UserKey: GLOBALS.UserKey,
+          Invite: '0',
+          Join: '0',
+          Creator: '1',
+          Date: CurrentDate
+        }
+      }
+
+      JSONExport_Creator = {
+        CarpoolKey: {
+
+        }
+      }
+      //Set globals
+      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+      GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
     }catch(error)
     {
       console.error(error);
@@ -116,7 +145,6 @@ class FirebaseScreen extends React.Component {
                   CarpoolKey: CarpoolKey,
                   UserKey: InviteKEY,
                   Invite: '1',
-                  Active: '0',
                   Join: '0',
                   Creator: '0',
                   Date: CurrentDate,
@@ -154,7 +182,6 @@ class FirebaseScreen extends React.Component {
             CarpoolKey: CarpoolKey,
             UserKey: GLOBALS.UserKey,
             Invite: '0',
-            Active: '0',
             Join: '1',
             Creator: '0',
             Date: CurrentDate,
@@ -173,7 +200,49 @@ class FirebaseScreen extends React.Component {
   {
     try
     {
-      alert('Test successfull!');
+      //Check if Carpool exists
+      await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+      .then((snapshot) =>
+      {
+        snapshot.forEach(async function(childSnapshot) {
+          if (childSnapshot.child('Invite').val() == '1'){
+            CarpoolKey = snapshot.child(childSnapshot.key).child("CarpoolKey").val();
+            UserCarpoolKey = childSnapshot.key;
+            //Get Creator
+            await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+            .then((snapshot2) =>
+            {
+              snapshot2.forEach(async function(childSnapshot2) {
+                if (childSnapshot2.child('Creator').val() == '1'){
+                  CreatorKey = snapshot2.child(childSnapshot2.key).child("UserKey").val();
+                  //Get Name of Creator
+                  await firebase.database().ref('/Users/' + CreatorKey).once('value')
+                  .then((snapshot3) =>
+                  {
+                    let Fullname = snapshot3.val().FullName
+                    console.log(Fullname + ' has invited you.');
+
+
+
+                    // YES - NO Frage:
+                    let AcceptInvite = true; // oder false bei Einladungsablehnung
+                    if (AcceptInvite){                      
+                      firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
+                        Invite: '0'
+                      });
+                    }else{
+                      firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
+                    }
+
+
+
+                  });
+                }
+              });
+            });
+          }
+        });
+      });      
     }catch(error)
     {
       
@@ -184,7 +253,29 @@ class FirebaseScreen extends React.Component {
   {
     try
     {
-      alert('Test successfull!');
+      let CarpoolArray = [];
+      let InviteArray = [];
+      let counter = 1;
+      GLOBALS.Creator.forEach(function(element) {
+        CarpoolArray[counter] = element.key;
+        counter = counter + 1;
+      });
+      //Check if Carpool exists
+      CarpoolArray.forEach(async function(CarpoolElement) {
+        await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolElement.key).once('value')
+        .then((snapshot) =>
+        {
+          let InviteCounter = 1;
+          snapshot.forEach(function(childSnapshot) {
+            if (childSnapshot.child('Join').val() == '1'){
+              InviteArray[InviteCounter] = childSnapshot;
+              InviteCounter = InviteCounter + 1;
+            }
+          });
+        });
+      });
+      
+      console.log(InviteArray[0]);
     }catch(error)
     {
       
