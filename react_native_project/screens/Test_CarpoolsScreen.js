@@ -69,12 +69,16 @@ class FirebaseScreen extends React.Component {
       
       // Get a key for a new UserCarpool.
       UserCarpoolKEY = firebase.database().ref().push().key;
+      CurrentDate = firebase.database.ServerValue.TIMESTAMP;
       firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
         key: UserCarpoolKEY,
         CarpoolKey: KEY,
         UserKey: GLOBALS.UserKey,
         Invite: '0',
-        Active: '1'
+        Active: '1',
+        Join: '0',
+        Creator: '1',
+        Date: CurrentDate,
       });
     }catch(error)
     {
@@ -106,12 +110,16 @@ class FirebaseScreen extends React.Component {
               if (isInvitable){
                 // Get a key for a new UserCarpool.
                 UserCarpoolKEY = firebase.database().ref().push().key;
+                CurrentDate = firebase.database.ServerValue.TIMESTAMP;
                 firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
                   key: UserCarpoolKEY,
                   CarpoolKey: CarpoolKey,
                   UserKey: InviteKEY,
                   Invite: '1',
-                  Active: '0'
+                  Active: '0',
+                  Join: '0',
+                  Creator: '0',
+                  Date: CurrentDate,
                 });
               }else{
                 console.log('User is already in the Carpool');
@@ -128,14 +136,36 @@ class FirebaseScreen extends React.Component {
     }
   }
 
-  joinCarpool = async () => 
+  joinCarpool = async (CarpoolKey) => 
   {
     try
     {
-      alert('Test successfull!');
+      var isInvitable = true;
+      //Check if Carpool exists
+      await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+      .then((snapshot) =>
+      {
+        if (snapshot.val()){
+          // Get a key for a new UserCarpool.
+          UserCarpoolKEY = firebase.database().ref().push().key;
+          CurrentDate = firebase.database.ServerValue.TIMESTAMP;
+          firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
+            key: UserCarpoolKEY,
+            CarpoolKey: CarpoolKey,
+            UserKey: GLOBALS.UserKey,
+            Invite: '0',
+            Active: '0',
+            Join: '1',
+            Creator: '0',
+            Date: CurrentDate,
+          });          
+        }else{
+          console.log('This Carpool does not exist.');
+        }
+      });
     }catch(error)
     {
-      
+      console.error(error);
     }
   }
 
@@ -194,6 +224,17 @@ class FirebaseScreen extends React.Component {
     }
   }
 
+  checkForPlace = async () => 
+  {
+    try
+    {
+      alert('Test successfull!');
+    }catch(error)
+    {
+      
+    }
+  }
+
   render () {
     return (
       <Container>
@@ -217,19 +258,19 @@ class FirebaseScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-Kyolr1zp76cECXMhepV'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
+          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-KytZuneengE6c24VYlB'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
-          color="orange"
+          color="green"
         />
         <Button
-          onPress={this.joinCarpool.bind(this)}
+          onPress={this.joinCarpool.bind(this, '-KytZuneengE6c24VYlB'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
           title="Ask to join Carpool"
-          color="red"
+          color="green"
         />
         <Button
           onPress={this.checkForInvite.bind(this)}
           title="Check for invite"
-          color="red"
+          color="orange"
         />
         <Button
           onPress={this.CheckForJoin.bind(this)}
@@ -249,6 +290,11 @@ class FirebaseScreen extends React.Component {
         <Button
           onPress={this.deleteCarpool.bind(this)}
           title="Delete Carpool"
+          color="red"
+        />
+        <Button
+          onPress={this.checkForPlace.bind(this)}
+          title="Check if Carpool has a place left"
           color="red"
         />
       </Container>
