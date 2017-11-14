@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Text, StyleSheet, ScrollView, Platform, FlatList } from 'react-native';
+import { Text, StyleSheet, ScrollView, Platform, FlatList, KeyboardAvoidingView } from 'react-native';
 
 import { Fab, Icon } from 'native-base';
 
@@ -133,16 +133,22 @@ class FillingsScreen extends React.Component {
           />
         </Fab>
 
-        <Modal 
-          open={addFillingsVisible}
-          modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
-          modalStyle={styles.modalContainer}
-        >
-          <ModalView 
-            onSubmit={(filling) => this._addNewFilling(filling)}
-            onCancel={() => this.setState({addFillingsVisible: false})}
-          />
-        </Modal>
+          <Modal 
+            open={addFillingsVisible}
+            modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
+            modalStyle={styles.modalContainer}
+          >
+            <KeyboardAvoidingView
+              style={{flex: 1}}
+              keyboardVerticalOffset={50}
+              behavior={'padding'}
+            >
+              <ModalView 
+                onSubmit={(filling) => this._addNewFilling(filling)}
+                onCancel={() => this.setState({addFillingsVisible: false})}
+              />
+              </KeyboardAvoidingView>
+          </Modal>     
       </View>
     );
   }

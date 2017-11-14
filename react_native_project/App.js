@@ -52,10 +52,10 @@ class CarpoolApp extends React.Component {
   state = {
     isLoggedIn: false,
     isLoading: false,
-    // isAppReady: false,
+    isAppReady: false,
     
     // debug:
-    isAppReady: false
+    isAppReady: true
   }
 
   _FirebaseLoginFunction = async (email, password) => {

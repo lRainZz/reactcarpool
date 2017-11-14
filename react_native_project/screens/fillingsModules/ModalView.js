@@ -2,14 +2,19 @@
 
 import React, { PropTypes } from 'react';
 
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 
 import { Button } from 'react-native-elements';
+
+import DatePicker from 'react-native-modal-datetime-picker';
+
+import moment from 'moment';
 
 
 // own modules
 
 import ModalInput from './InputComponent';
+
 
 // class
 
@@ -27,12 +32,35 @@ class ModalView extends React.Component {
       'fuelPrice'  : null, // number
       'drivenDays' : null, // number
       'date'       : null  // string
-    }
+    },
+
+    isDateTimePickerVisible: false
+  }
+
+  _showDatePicker = () => {this.setState({isDateTimePickerVisible: true})}
+
+  _hideDatePicker = () => {this.setState({isDateTimePickerVisible: false})}
+
+  _saveDateToFilling = (date) => {
+    let updateFilling = this.state.filling
+
+    updateFilling.date = moment(date).format('DD.MM.YYYY')
+
+    this.setState({filling: updateFilling, isDateTimePickerVisible: false})
+  }
+
+  _updateFilling = (key, value) => {
+    let updateFilling = this.state.filling
+
+    updateFilling[key] = value
+
+    this.setState({filling: updateFilling})
   }
   
   render () {
     const { onSubmit, onCancel } = this.props
-    const { filling } = this.state
+    const { filling, isDateTimePickerVisible } = this.state
+    const Touchable = (Platform.OS == 'android') ? TouchableNativeFeedback : TouchableOpacity
 
     const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
     const volumeUnit   = (/* optionImperial*/ true) ? 'L' : 'GAL'
@@ -63,6 +91,7 @@ class ModalView extends React.Component {
             titleStyle={styles.inputText}
             inputSuffix={distanceUnit}
             returnKeyType={'next'}
+            onChangeText={(text) => this._updateFilling('tripmeter', text)}
           />
 
           <ModalInput 
@@ -73,6 +102,7 @@ class ModalView extends React.Component {
             titleStyle={styles.inputText}
             inputSuffix={volumeUnit + '/' + distanceUnit}
             returnKeyType={'next'}
+            onChangeText={(text) => this._updateFilling('consumption', text)}
           />
 
           <ModalInput 
@@ -83,6 +113,7 @@ class ModalView extends React.Component {
             titleStyle={styles.inputText}
             inputSuffix={priceUnit + '/' + volumeUnit}
             returnKeyType={'next'}
+            onChangeText={(text) => this._updateFilling('fuelPrice', text)}
           />
 
           <ModalInput 
@@ -90,15 +121,37 @@ class ModalView extends React.Component {
             placeholder={'4'}
             keyboardType={'numeric'}
             title={'DAYS DRIVEN:'}
-            titleStyle={styles.inputText}
+            titleStyle={[styles.inputText, styles.debug]}
             inputSuffix={dayUnit}
             returnKeyType={'done'}
+            onChangeText={(text) => this._updateFilling('drivenDays', text)}
           />
 
           <ModalInput
+            bottomSeperator={true}
             title={'DATE OF FILLING:'}
-            titleStyle={styles.inputText}
-            customInput={<Text>Hello World</Text>}
+            titleStyle={[styles.inputText, styles.debug]}
+            customInput={
+              <View
+                style={[styles.dateContainer, styles.debug]}
+              >
+                <Touchable
+                  onPress={this._showDatePicker}
+                  style={[styles.touchable, styles.debug]}
+                >
+                  <Text
+                    style={[styles.dateText, styles.debug]}
+                  >{filling.date || ''}<Text
+                    style={styles.dateSuffix}
+                  >{(filling.date == null) ? 'SELECT A DATE' : ' DATE'}</Text></Text>
+                </Touchable>
+                <DatePicker 
+                  isVisible={isDateTimePickerVisible}
+                  onConfirm={this._saveDateToFilling}
+                  onCancel={this._hideDatePicker}
+                />
+              </View>
+            }
           />
 
         </View>
@@ -107,17 +160,19 @@ class ModalView extends React.Component {
           style={[styles.buttonContainer, styles.debug]}
         >
           <Button 
-            title='CANCEL'
-            fontWeight='bold'
+            title={'CANCEL'}
+            fontWeight={'bold'}
             fontSize={18}
+            color={'#1976D2'}
             onPress={onCancel}
             containerViewStyle={styles.buttonBase}
             buttonStyle={styles.button}
           />
           <Button 
-            title='ADD'
-            fontWeight='bold'
+            title={'ADD'}
+            fontWeight={'bold'}
             fontSize={18}
+            color={'#1976D2'}
             onPress={() => onSubmit(filling)}
             containerViewStyle={styles.buttonBase}
             buttonStyle={styles.button}
@@ -146,13 +201,33 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#1976D2'
+    backgroundColor: '#fff',
+    color: '#1976D2'
   },
   inputText: {
     marginHorizontal: 5,
     color: '#303030',
     fontWeight: 'bold'
   },
+  dateContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },  
+  touchable: {
+    flex: 1
+  }, 
+  dateText: {
+    fontSize: 20,
+    color: 'black',
+    textAlign: 'right'
+  },  
+  dateSuffix: {
+    fontSize: 20,
+    color: '#9E9E9E',
+    textAlign: 'right',
+    fontWeight: 'bold',
+    alignSelf: 'flex-end'
+  },  
 
 
 
