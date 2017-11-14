@@ -101,7 +101,7 @@ class FillingsItem extends React.Component {
               name='mode-edit'
               style={styles.edit}
               iconStyle={{margin: 5}}
-              onPress={() => ''}
+              onPress={() => onPressEdit(filling)}
             />
           </View>
 

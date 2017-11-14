@@ -27,6 +27,8 @@ class FillingsScreen extends React.Component {
   state = {
     addFillingsVisible: false,
     fabVisible: true,
+
+    editFilling: null,
     // newest item always in first place -> use unshift array to add items
     fillingsArray: 
       [
@@ -59,9 +61,13 @@ class FillingsScreen extends React.Component {
     return totalPrice.toFixed(2);
   }
 
-  _addNewFilling = (fillingObject) => {
+  _addFilling = (fillingObject) => {
     let incomplete = false;
-      
+    
+    let fillings = this.state.fillingsArray
+    let index = null
+    let update = false
+
     if (   
         (fillingObject.tripmeter   == null)
      || (fillingObject.consumption == null)
@@ -73,9 +79,18 @@ class FillingsScreen extends React.Component {
     }
 
     if (!incomplete) {
-      let fillings = this.state.fillingsArray;
 
-      fillings.unshift(fillingObject);
+      for (var filling in fillings) {
+        if (filling.id == fillingObject.id) {
+          index = fillings.indexOf(filling)
+          fillings[index] = fillingObject
+          update = true
+        }
+      }
+      
+      if (!update) {
+        fillings.unshift(fillingObject);
+      }
       
       this.setState({addFillingsVisible: false, fillingsArray: fillings});
     } else {
@@ -92,8 +107,12 @@ class FillingsScreen extends React.Component {
     this.setState({fillingsArray: fillings})
   }
 
+  _updateFilling = (updateFilling) => {
+    this.setState({editFilling: updateFilling, addFillingsVisible: true})
+  }
+
   render () {
-    const { fillingsArray, addFillingsVisible, fabVisible } = this.state
+    const { fillingsArray, addFillingsVisible, fabVisible, editFilling } = this.state
     const fillingsAvailable = ((fillingsArray.length > 0 ))
     const fabVisibleStyle   = (fabVisible) ? {} : {height: 0, width: 0}
 
@@ -117,6 +136,8 @@ class FillingsScreen extends React.Component {
                   total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
                   carpoolMembers={4}
                   onPressDelete={(filling) => this._deleteFilling(filling)}
+                  onPressEdit={(filling) => this._updateFilling(filling)}
+                  editFilling={editFilling}
                 />
               }
             />
@@ -144,7 +165,7 @@ class FillingsScreen extends React.Component {
               behavior={'padding'}
             >
               <ModalView 
-                onSubmit={(filling) => this._addNewFilling(filling)}
+                onSubmit={(filling) => this._addFilling(filling)}
                 onCancel={() => this.setState({addFillingsVisible: false})}
               />
               </KeyboardAvoidingView>
