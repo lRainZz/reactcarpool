@@ -54,7 +54,7 @@ import Header from '../ApplicationHeader';
 // });
 //------------------------------------------------------------------------------
 
-class FirebaseScreen extends React.Component { 
+class Test_CarpoolScreen extends React.Component { 
   
   createNewCarpool = async (MaxPlace) => 
   {
@@ -208,6 +208,7 @@ class FirebaseScreen extends React.Component {
           if (childSnapshot.child('Invite').val() == '1'){
             CarpoolKey = snapshot.child(childSnapshot.key).child("CarpoolKey").val();
             UserCarpoolKey = childSnapshot.key;
+            CurrentDate = snapshot.child(childSnapshot.key).child("Date").val();
             //Get Creator
             await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
             .then((snapshot2) =>
@@ -217,11 +218,10 @@ class FirebaseScreen extends React.Component {
                   CreatorKey = snapshot2.child(childSnapshot2.key).child("UserKey").val();
                   //Get Name of Creator
                   await firebase.database().ref('/Users/' + CreatorKey).once('value')
-                  .then((snapshot3) =>
+                  .then(async function(snapshot3) 
                   {
                     let Fullname = snapshot3.val().FullName
                     console.log(Fullname + ' has invited you.');
-
 
 
                     // YES - NO Frage:
@@ -230,12 +230,37 @@ class FirebaseScreen extends React.Component {
                       firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
                         Invite: '0'
                       });
+
+                      //Generate Files in global.js
+                      await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
+                      .then((snapshot4) =>
+                      {
+                        JSONExport_Carpool = {
+                          CarpoolKey: {
+                            key: CarpoolKey,
+                            MaxPlace: snapshot4.child(CarpoolKey).child("MaxPlace").val()
+                          }
+                        }
+
+                        JSONExport_UserCarpools = {
+                          UserCarpoolKey: {
+                            key: UserCarpoolKey,
+                            CarpoolKey: CarpoolKey,
+                            UserKey: GLOBALS.UserKey,
+                            Invite: '0',
+                            Join: '0',
+                            Creator: '0',
+                            Date: CurrentDate
+                          }
+                        }
+                      });
+                      
+                      //Set globals
+                      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
                     }else{
                       firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
                     }
-
-
-
                   });
                 }
               });
@@ -245,7 +270,7 @@ class FirebaseScreen extends React.Component {
       });      
     }catch(error)
     {
-      
+      console.log(error);
     }
   }
 
@@ -253,36 +278,94 @@ class FirebaseScreen extends React.Component {
   {
     try
     {
-      let CarpoolArray = [];
-      let InviteArray = [];
-      let counter = 1;
-      GLOBALS.Creator.forEach(function(element) {
-        CarpoolArray[counter] = element.key;
-        counter = counter + 1;
-      });
-      //Check if Carpool exists
-      CarpoolArray.forEach(async function(CarpoolElement) {
-        await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolElement.key).once('value')
-        .then((snapshot) =>
-        {
-          let InviteCounter = 1;
-          snapshot.forEach(function(childSnapshot) {
-            if (childSnapshot.child('Join').val() == '1'){
-              InviteArray[InviteCounter] = childSnapshot;
+      await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+      .then((snapshot) =>
+      {
+        let counter = 1;
+        let CarpoolArray = [];
+        let InviteArray = [];
+        let InviteUserCarpoolArray = [];
+        let InviteDateArray = [];
+        snapshot.forEach(async function(childSnapshot) {
+          if (childSnapshot.child('Creator').val() == '1'){
+            CarpoolArray[counter] = childSnapshot.child('CarpoolKey').val()
+            counter = counter +1;
+          }
+        });
+        CarpoolArray.forEach(async function(CarpoolElement) {
+          await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolElement).once('value')
+          .then((snapshot1) =>
+          {
+            let InviteCounter = 1;
+            snapshot1.forEach(function(childSnapshot1) {
+              if (childSnapshot1.child('Join').val() == '1'){
+                InviteArray[InviteCounter] = childSnapshot1.child('UserKey').val();
+                InviteUserCarpoolArray[InviteCounter] = childSnapshot1.child('key').val();
+                InviteDateArray[InviteCounter] = childSnapshot1.child('Date').val();
+                InviteCounter = InviteCounter + 1;
+              }
+            });
+            InviteCounter = 1;
+            InviteArray.forEach(async function(InviteElement) {
+              await firebase.database().ref().child('Users').orderByChild('key').equalTo(InviteElement).once('value')
+              .then(async function(snapshot2) 
+              {
+                UserName = snapshot2.child(InviteElement).child("FullName").val();
+                console.log(UserName + ' wants to join your Carpool');
+
+                                     
+                // YES - NO Frage:
+                let AcceptJoin = true; // oder false bei Ablehnung
+                UserCarpoolKey = InviteUserCarpoolArray[InviteCounter];
+                CurrentDate = InviteDateArray[InviteCounter];
+                if (AcceptJoin){
+                  firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
+                    Join: '0'
+                  });
+
+                  //Generate Files in global.js
+                  await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolElement).once('value')
+                  .then((snapshot4) =>
+                  {
+                    JSONExport_Carpool = {
+                      CarpoolElement: {
+                        key: CarpoolElement,
+                        MaxPlace: snapshot4.child(CarpoolElement).child("MaxPlace").val()
+                      }
+                    }
+
+                    JSONExport_UserCarpools = {
+                      UserCarpoolKey: {
+                        key: UserCarpoolKey,
+                        CarpoolKey: CarpoolElement,
+                        UserKey: InviteElement,
+                        Invite: '0',
+                        Join: '0',
+                        Creator: '0',
+                        Date: CurrentDate
+                      }
+                    }
+                  });
+                  
+                  //Set globals
+                  GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                  GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+                }else{
+                  firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
+                }
+              });
               InviteCounter = InviteCounter + 1;
-            }
+            });
           });
         });
       });
-      
-      console.log(InviteArray[0]);
     }catch(error)
     {
-      
+      console.log(error);
     }
   }
 
-  acceptInvite = async () => 
+  checkForPlace = async () => 
   {
     try
     {
@@ -292,8 +375,8 @@ class FirebaseScreen extends React.Component {
       
     }
   }
-
-  acceptJoin = async () => 
+  
+  leaveCarpool = async () => 
   {
     try
     {
@@ -305,17 +388,6 @@ class FirebaseScreen extends React.Component {
   }
 
   deleteCarpool = async () => 
-  {
-    try
-    {
-      alert('Test successfull!');
-    }catch(error)
-    {
-      
-    }
-  }
-
-  checkForPlace = async () => 
   {
     try
     {
@@ -349,33 +421,33 @@ class FirebaseScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-KytZuneengE6c24VYlB'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
+          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-Kyu3z6QTCUvACc26fC0'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
           color="green"
         />
         <Button
-          onPress={this.joinCarpool.bind(this, '-KytZuneengE6c24VYlB'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
+          onPress={this.joinCarpool.bind(this, '-Kyu3z6QTCUvACc26fC0'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
           title="Ask to join Carpool"
           color="green"
         />
         <Button
           onPress={this.checkForInvite.bind(this)}
           title="Check for invite"
-          color="orange"
+          color="green"
         />
         <Button
           onPress={this.CheckForJoin.bind(this)}
           title="Check for join intention"
-          color="red"
+          color="green"
         />
         <Button
-          onPress={this.acceptInvite.bind(this)}
-          title="Accept invite"
-          color="red"
+          onPress={this.checkForPlace.bind(this)}
+          title="Check if Carpool has a place left"
+          color="orange"
         />
         <Button
-          onPress={this.acceptJoin.bind(this)}
-          title="Accept join"
+          onPress={this.leaveCarpool.bind(this)}
+          title="Leave Carpool"
           color="red"
         />
         <Button
@@ -383,14 +455,9 @@ class FirebaseScreen extends React.Component {
           title="Delete Carpool"
           color="red"
         />
-        <Button
-          onPress={this.checkForPlace.bind(this)}
-          title="Check if Carpool has a place left"
-          color="red"
-        />
       </Container>
     );
   }
 }
 
-export default FirebaseScreen;
+export default Test_CarpoolScreen;
