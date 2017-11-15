@@ -55,7 +55,7 @@ class CarpoolApp extends React.Component {
     isAppReady: false,
     
     // debug:
-    isAppReady: true
+    //isAppReady: true
   }
 
   _FirebaseLoginFunction = async (email, password) => {
