@@ -226,7 +226,7 @@ class Test_CarpoolScreen extends React.Component {
 
                     // YES - NO Frage:
                     let AcceptInvite = true; // oder false bei Einladungsablehnung
-                    if (AcceptInvite){                      
+                    if (AcceptInvite){
                       firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
                         Invite: '0'
                       });
@@ -365,18 +365,32 @@ class Test_CarpoolScreen extends React.Component {
     }
   }
 
-  checkForPlace = async () => 
+  checkForPlace = async (CarpoolKey) => 
   {
     try
     {
-      alert('Test successfull!');
+      await firebase.database().ref('/Carpools/' + CarpoolKey).once('value')
+      .then(async function(snapshot)
+      {        
+        MaxPlace = snapshot.val().MaxPlace;
+        CurrentPlaceTaken = 0;
+        await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+        .then((snapshot1) =>
+        {        
+          snapshot1.forEach((childSnapshot) => {
+            CurrentPlaceTaken = CurrentPlaceTaken + 1;
+          });
+        });
+        FreePlace = (MaxPlace - CurrentPlaceTaken);
+        console.log('There are ' + FreePlace + ' place(s) left.');
+      });      
     }catch(error)
     {
-      
+      console.log(error);
     }
   }
   
-  leaveCarpool = async () => 
+  leaveCarpool = async (CarpoolKey) => 
   {
     try
     {
@@ -387,7 +401,7 @@ class Test_CarpoolScreen extends React.Component {
     }
   }
 
-  deleteCarpool = async () => 
+  deleteCarpool = async (CarpoolKey) => 
   {
     try
     {
@@ -441,17 +455,17 @@ class Test_CarpoolScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.checkForPlace.bind(this)}
+          onPress={this.checkForPlace.bind(this, '-Kyu3z6QTCUvACc26fC0'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
           title="Check if Carpool has a place left"
+          color="green"
+        />
+        <Button
+          onPress={this.leaveCarpool.bind(this, '-Kyu3z6QTCUvACc26fC0'/*CarpoolKey der verlassen werden soll*/)}
+          title="Leave Carpool"
           color="orange"
         />
         <Button
-          onPress={this.leaveCarpool.bind(this)}
-          title="Leave Carpool"
-          color="red"
-        />
-        <Button
-          onPress={this.deleteCarpool.bind(this)}
+          onPress={this.deleteCarpool.bind(this, '-Kyu3z6QTCUvACc26fC0'/*CarpoolKey der gelöscht werden soll*/)}
           title="Delete Carpool"
           color="red"
         />
