@@ -27,14 +27,15 @@ class ModalView extends React.Component {
   }
   
   state = {
-    filling: (({
+    filling: this.props.editFilling ||
+    {
       'id'         : null, // any
       'tripmeter'  : null, // number
       'consumption': null, // number
       'fuelPrice'  : null, // number
       'drivenDays' : null, // number
       'date'       : null  // string
-    }) || editFilling),
+    },
 
     isDateTimePickerVisible: false
   }

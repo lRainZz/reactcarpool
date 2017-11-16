@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Text, StyleSheet, ScrollView, Platform, FlatList, KeyboardAvoidingView } from 'react-native';
+import { Button, Text, StyleSheet, ScrollView, Platform, FlatList, KeyboardAvoidingView } from 'react-native';
 
 import { Fab, Icon } from 'native-base';
 
@@ -62,8 +62,7 @@ class FillingsScreen extends React.Component {
   }
 
   _addFilling = (fillingObject) => {
-    let incomplete = false;
-    
+    let incomplete = false;  
     let fillings = this.state.fillingsArray
     let index = null
     let update = false
@@ -80,11 +79,16 @@ class FillingsScreen extends React.Component {
 
     if (!incomplete) {
 
-      for (var filling in fillings) {
-        if (filling.id == fillingObject.id) {
+      // documentation disapproves use of for...in
+      // for (var filling in fillings) {
+      for (var i1 = 0; i1 < fillings.length; i1++) {  
+        let currentFilling = fillings[i1]
+        
+        if (currentFilling.id == fillingObject.id) {
           index = fillings.indexOf(filling)
           fillings[index] = fillingObject
           update = true
+          break;
         }
       }
       
@@ -184,7 +188,6 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    // borderRadius: 10,
     backgroundColor: '#fff'
   },
   font: {

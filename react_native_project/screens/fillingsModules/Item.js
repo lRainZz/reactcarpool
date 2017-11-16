@@ -120,7 +120,6 @@ class FillingsItem extends React.Component {
             style={styles.bottom}
           >
             <StatView
-              outerStyle={styles.debug}
               filling={filling}
             />
           </View>

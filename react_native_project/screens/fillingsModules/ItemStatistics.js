@@ -11,19 +11,12 @@ import { Icon } from 'react-native-elements';
 
 import ValueUnit from './valueUnit';
 
+
 // class
 
 class FillingsItemStatistic extends React.Component {
   static propTypes = {
-    filling:        PropTypes.object.isRequired,
-
-    tripmeter:      PropTypes.number,
-    avgConsumption: PropTypes.number,
-    fuelPrice:      PropTypes.number,
-    drivenDays:     PropTypes.number,
-    carpoolMembers: PropTypes.number,
-
-    outerStyle:     PropTypes.object
+    filling:        PropTypes.object.isRequired
 
   }
 
@@ -37,7 +30,7 @@ class FillingsItemStatistic extends React.Component {
 
     return (
       <View 
-        style={[outerStyle, styles.container]}
+        style={styles.container}
       >
         <ValueUnit 
           containerStyle={styles.section}
@@ -47,7 +40,7 @@ class FillingsItemStatistic extends React.Component {
           firstUnit={distanceUnit}
 
           secondValueDesc={'with an avg. '}
-          secondValue={filling.avgConsumption}
+          secondValue={filling.consumption}
           secondUnit={volumeUnit + '/' + distanceUnit}
         />
 
@@ -80,15 +73,8 @@ const styles = StyleSheet.create ({
   seperator: {
     borderWidth: StyleSheet.hairlineWidth,
     width: StyleSheet.hairlineWidth,
-    borderColor: '#1976D2'
-  },
-  sectionText: {
-    color: '#303030', 
-    fontSize: 20,
-    textAlign: 'right'
-  },
-  font: {
-    fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
+    borderColor: '#1976D2',
+    marginBottom: 5
   }
 })
 
