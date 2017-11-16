@@ -13,6 +13,8 @@ import moment from 'moment';
 
 // own modules
 
+const GLOBALS = require ('../../globals');
+
 import ModalInput from './InputComponent';
 
 
@@ -64,11 +66,13 @@ class ModalView extends React.Component {
     const { onSubmit, onCancel, editFilling } = this.props
     const { filling, isDateTimePickerVisible } = this.state
     const Touchable = (Platform.OS == 'android') ? TouchableNativeFeedback : TouchableOpacity
+    const imperial = GLOBALS.UseImperialUnits
 
-    const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
-    const volumeUnit   = (/* optionImperial*/ true) ? 'L' : 'GAL'
-    const priceUnit    = (/* optionImperial*/ true) ? '€' : '$'
-    const dayUnit      = 'DAYS' // (/* optionImperial*/ true) ? 'Tagen' : 'days'
+    const distanceUnit    = (imperial) ? 'KM'   : 'MI'
+    const volumeUnit      = (imperial) ? 'L'    : 'GAL'
+    const consumptionUnit = (imperial) ? 'L/KM' : 'MPG'
+    const priceUnit       = (imperial) ? '€'    : '$'
+    const dayUnit         = 'DAYS' // (/* optionImperial*/ true) ? 'Tagen' : 'days'
 
     return (
       <View
@@ -95,7 +99,7 @@ class ModalView extends React.Component {
             keyboardType={'numeric'}
             title={'AVERAGE FUEL CONSUMPTION:'}
             titleStyle={styles.inputText}
-            inputSuffix={volumeUnit + '/' + distanceUnit}
+            inputSuffix={consumptionUnit}
             returnKeyType={'next'}
             onChangeText={(text) => this._updateFilling('consumption', text)}
             value={(filling.consumption === null) ? '' : String(filling.consumption)}
