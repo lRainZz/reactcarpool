@@ -67,25 +67,23 @@ class FillingsScreen extends React.Component {
     let index = null
     let update = false
 
-    if (   
-        (fillingObject.tripmeter   == null)
-     || (fillingObject.consumption == null)
-     || (fillingObject.fuelPrice   == null)
-     || (fillingObject.drivenDays  == null)
-     || (fillingObject.date        == null)
-        ) {
-      incomplete = true;
+    for (key in fillingObject) {
+      let value = fillingObject[key]
+      
+      if ( value === null || value === '') {
+        incomplete = true
+      }
     }
 
     if (!incomplete) {
 
-      // documentation disapproves use of for...in
+      // documentation disapproves use of for...in for arrays
       // for (var filling in fillings) {
       for (var i1 = 0; i1 < fillings.length; i1++) {  
         let currentFilling = fillings[i1]
         
         if (currentFilling.id == fillingObject.id) {
-          index = fillings.indexOf(filling)
+          index = fillings.indexOf(currentFilling)
           fillings[index] = fillingObject
           update = true
           break;
@@ -96,7 +94,7 @@ class FillingsScreen extends React.Component {
         fillings.unshift(fillingObject);
       }
       
-      this.setState({addFillingsVisible: false, fillingsArray: fillings});
+      this.setState({addFillingsVisible: false, fillingsArray: fillings, editFilling: null});
     } else {
       Toast.show('Please insert all values to continue.', Toast.LONG);
     }
@@ -168,7 +166,8 @@ class FillingsScreen extends React.Component {
               keyboardVerticalOffset={50}
               behavior={'padding'}
             >
-              <ModalView 
+              <ModalView
+                editFilling={editFilling} 
                 onSubmit={(filling) => this._addFilling(filling)}
                 onCancel={() => this.setState({addFillingsVisible: false})}
               />

@@ -27,7 +27,7 @@ class ModalView extends React.Component {
   }
   
   state = {
-    filling: this.props.editFilling ||
+    filling: this.props.editFilling || 
     {
       'id'         : null, // any
       'tripmeter'  : null, // number
@@ -61,8 +61,8 @@ class ModalView extends React.Component {
   }
   
   render () {
-    const { onSubmit, onCancel } = this.props
-    const { filling, isDateTimePickerVisible, editFilling } = this.state
+    const { onSubmit, onCancel, editFilling } = this.props
+    const { filling, isDateTimePickerVisible } = this.state
     const Touchable = (Platform.OS == 'android') ? TouchableNativeFeedback : TouchableOpacity
 
     const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
@@ -77,15 +77,6 @@ class ModalView extends React.Component {
         <View
           style={styles.contentContainer}
         >
-          {/* 
-            5 inputs:
-              tripmeter,
-              consumption,
-              fuelprice,
-              drivenDays,
-              date (datePicker)
-          */}
-
           <ModalInput 
             bottomSeperator={true}
             placeholder={'760'}
@@ -95,7 +86,7 @@ class ModalView extends React.Component {
             inputSuffix={distanceUnit}
             returnKeyType={'next'}
             onChangeText={(text) => this._updateFilling('tripmeter', text)}
-            value={filling.tripmeter}
+            value={(filling.tripmeter === null) ? '' : String(filling.tripmeter)}
           />
 
           <ModalInput 
@@ -107,7 +98,7 @@ class ModalView extends React.Component {
             inputSuffix={volumeUnit + '/' + distanceUnit}
             returnKeyType={'next'}
             onChangeText={(text) => this._updateFilling('consumption', text)}
-            value={filling.consumption}
+            value={(filling.consumption === null) ? '' : String(filling.consumption)}
           />
 
           <ModalInput 
@@ -119,7 +110,7 @@ class ModalView extends React.Component {
             inputSuffix={priceUnit + '/' + volumeUnit}
             returnKeyType={'next'}
             onChangeText={(text) => this._updateFilling('fuelPrice', text)}
-            value={filling.fuelPrice}
+            value={(filling.fuelPrice === null) ? '' : String(filling.fuelPrice)}
           />
 
           <ModalInput 
@@ -131,7 +122,7 @@ class ModalView extends React.Component {
             inputSuffix={dayUnit}
             returnKeyType={'done'}
             onChangeText={(text) => this._updateFilling('drivenDays', text)}
-            value={filling.drivenDays}
+            value={(filling.drivenDays === null) ? '' : String(filling.drivenDays)}
           />
 
           <ModalInput
@@ -176,7 +167,7 @@ class ModalView extends React.Component {
             buttonStyle={styles.button}
           />
           <Button 
-            title={'ADD'}
+            title={(editFilling === null) ? 'ADD' : 'UPDATE'}
             fontWeight={'bold'}
             fontSize={18}
             color={'#1976D2'}
