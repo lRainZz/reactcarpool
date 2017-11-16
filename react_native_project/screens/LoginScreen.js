@@ -1,12 +1,14 @@
 // external modules:
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { TouchableHighlight, Dimensions, KeyboardAvoidingView, LayoutAnimation, Platform, StyleSheet, UIManager } from 'react-native'
 
 import { Image, View } from 'react-native-animatable'
 
 import Toast from 'react-native-simple-toast';
+
+import PropTypes from 'prop-types';
 
 
 // own modules:
@@ -28,9 +30,9 @@ class Login extends React.Component {
 
   static propTypes = {
     isLoggedIn: PropTypes.bool.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    signup: PropTypes.func.isRequired,
-    login: PropTypes.func.isRequired
+    isLoading:  PropTypes.bool.isRequired,
+    signup:     PropTypes.func.isRequired,
+    login:      PropTypes.func.isRequired
   }
 
   state = {

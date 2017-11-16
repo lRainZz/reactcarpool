@@ -1,10 +1,12 @@
 // external modules
 
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 
 import { Dimensions, StyleSheet, KeyboardAvoidingView } from 'react-native'
 
 import { Text, View } from 'react-native-animatable'
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -18,8 +20,8 @@ import LoginInput from './loginComponents/LoginInput'
 
 class Signup extends Component {
   static propTypes = {
-    isLoading: PropTypes.bool.isRequired,
-    onSignupPress: PropTypes.func.isRequired,
+    isLoading:        PropTypes.bool.isRequired,
+    onSignupPress:    PropTypes.func.isRequired,
     onLoginLinkPress: PropTypes.func.isRequired
   }
 

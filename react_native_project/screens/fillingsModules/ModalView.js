@@ -1,6 +1,6 @@
 // external modules
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { View, Text, TextInput, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 
@@ -9,6 +9,8 @@ import { Button } from 'react-native-elements';
 import DatePicker from 'react-native-modal-datetime-picker';
 
 import moment from 'moment';
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -22,8 +24,8 @@ import ModalInput from './InputComponent';
 
 class ModalView extends React.Component {
   static propTypes = {
-    onSubmit: PropTypes.function,
-    onCancel: PropTypes.function,
+    onSubmit:    PropTypes.any,
+    onCancel:    PropTypes.any,
 
     editFilling: PropTypes.object
   }

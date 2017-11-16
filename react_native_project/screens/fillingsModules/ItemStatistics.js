@@ -1,10 +1,12 @@
 // external modules
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { View, StyleSheet, Text, Platform } from 'react-native';
 
 import { Icon } from 'react-native-elements';
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -16,7 +18,7 @@ import ValueUnit from './valueUnit';
 
 class FillingsItemStatistic extends React.Component {
   static propTypes = {
-    filling:        PropTypes.object.isRequired
+    filling: PropTypes.object.isRequired
 
   }
 

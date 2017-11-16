@@ -1,8 +1,10 @@
 // external modules
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { View, StyleSheet, Text, Platform } from 'react-native';
+
+import PropTypes from 'prop-types';
 
 
 // own moduels
@@ -12,16 +14,16 @@ import { View, StyleSheet, Text, Platform } from 'react-native';
 
 class ValueUnitContainer extends React.Component {
   static propTypes = {
-    firstValue:  PropTypes.number,
-    secondValue: PropTypes.number,
+    firstValue:      PropTypes.number,
+    secondValue:     PropTypes.number,
 
-    firstUnit:   PropTypes.string,
-    secondUnit:  PropTypes.string,
+    firstUnit:       PropTypes.string,
+    secondUnit:      PropTypes.string,
 
     firstValueDesc:  PropTypes.string,
     secondValueDesc: PropTypes.string,
 
-    containerStyle: PropTypes.object
+    containerStyle:  PropTypes.any
   } 
   
   render() {   

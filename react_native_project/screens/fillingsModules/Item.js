@@ -1,6 +1,6 @@
 // external modules
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { StyleSheet, Text, Platform } from 'react-native';
 
@@ -9,6 +9,8 @@ import { View } from 'react-native-animatable';
 import { Icon } from 'react-native-elements';
 
 import Swipeout from 'react-native-swipeout';
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -20,15 +22,14 @@ import StatView from './ItemStatistics';
  
 class FillingsItem extends React.Component {
   static propTypes = {
-    filling: PropTypes.object.isRequired,
+    filling:        PropTypes.object.isRequired,
     
-    id:             PropTypes.number.isRequired,
-    isPayed:        PropTypes.bool.isRequired,
-    total:          PropTypes.number.isRequired,
+    // isPayed:        PropTypes.bool.isRequired,
+    total:          PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     carpoolMembers: PropTypes.number.isRequired,
 
-    onPressEdit:    PropTypes.function,
-    onPressDelete:  PropTypes.function
+    onPressEdit:    PropTypes.func,
+    onPressDelete:  PropTypes.func
   }
 
   state = {

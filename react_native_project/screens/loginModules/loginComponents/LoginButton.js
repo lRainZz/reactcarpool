@@ -1,10 +1,12 @@
 // external modules
 
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 import { ActivityIndicator, StyleSheet, Text } from 'react-native'
 
 import { View } from 'react-native-animatable'
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -28,12 +30,12 @@ const LoginButton = ({ onPress, isEnabled, isLoading, text, buttonStyle, textSty
 }
 
 LoginButton.propTypes = {
-  onPress: PropTypes.func,
-  isEnabled: PropTypes.bool,
-  isLoading: PropTypes.bool,
-  text: PropTypes.string,
+  onPress:     PropTypes.func,
+  isEnabled:   PropTypes.bool,
+  isLoading:   PropTypes.bool,
+  text:        PropTypes.string,
   buttonStyle: PropTypes.any,
-  textStyle: PropTypes.any
+  textStyle:   PropTypes.any
 }
 
 LoginButton.defaultProps = {

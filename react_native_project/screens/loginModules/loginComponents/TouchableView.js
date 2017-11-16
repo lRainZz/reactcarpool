@@ -1,8 +1,11 @@
 // extneral modules
 
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 import { Platform, View, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
+
+import PropTypes from 'prop-types';
+
 
 // own modules
 
@@ -31,9 +34,9 @@ const TouchableView = ({ isRippleDisabled, rippleColor, children, style, ...prop
 
 TouchableView.propTypes = {
   isRippleDisabled: PropTypes.bool,
-  rippleColor: PropTypes.string,
-  children: PropTypes.any,
-  style: View.propTypes.style
+  rippleColor:      PropTypes.string,
+  children:         PropTypes.any,
+  style:            PropTypes.any
 }
 
 export default TouchableView

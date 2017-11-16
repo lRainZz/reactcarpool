@@ -1,8 +1,10 @@
 // external modules
 
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { Text, TextInput, View, StyleSheet, Platform } from 'react-native';
+
+import PropTypes from 'prop-types';
 
 
 // own modules
@@ -16,12 +18,12 @@ class InputComponent extends React.Component {
     topSeperator:    PropTypes.bool,
     bottomSeperator: PropTypes.bool,
 
-    title:      PropTypes.string.isRequired,
-    titleStyle: PropTypes.object,
+    title:           PropTypes.string,
+    titleStyle:      PropTypes.any,
 
-    inputSuffix: PropTypes.string,
+    inputSuffix:     PropTypes.string,
 
-    customInput: PropTypes.object
+    customInput:     PropTypes.object
   }
 
   state = {
@@ -32,7 +34,7 @@ class InputComponent extends React.Component {
     const { inputSuffix, title, titleStyle, customInput, ...otherProps } = this.props
     const { isFocused } = this.state
 
-    const topSeperator    = (false || this.props,topSeperator)
+    const topSeperator    = (false || this.props.topSeperator)
     const bottomSeperator = (false || this.props.bottomSeperator)
     const borderColor     = isFocused ? 'white' : 'rgba(255,255,255,0.4)'
     

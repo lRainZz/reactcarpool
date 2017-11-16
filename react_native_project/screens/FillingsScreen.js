@@ -22,8 +22,7 @@ import ModalView from './fillingsModules/ModalView';
 
 // class
 
-class FillingsScreen extends React.Component {
-  
+class FillingsScreen extends React.Component { 
   state = {
     addFillingsVisible: false,
     fabVisible: true,
@@ -139,6 +138,7 @@ class FillingsScreen extends React.Component {
                 style={styles.listContainer}
                 extraData={this.state}
                 data={fillingsArray}
+                keyExtractor={item => item.id}
                 renderItem={({item}) => 
                   <FillingsItem
                     filling={item}
