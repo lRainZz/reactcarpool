@@ -14,6 +14,8 @@ const GLOBALS = require('../globals');
 
 import * as firebase from 'firebase';
 
+import moment from 'moment'
+
 
 // own modules:
 
@@ -42,6 +44,8 @@ class OptionsScreen extends React.Component {
                 GLOBALS.Options.UseLastCarpool = UseLastCarpool;
                 GLOBALS.Options.UseAutoPayment = UseAutoPayment;
                 GLOBALS.Options.UseDarkTheme = UseDarkTheme;
+                date = new Date();
+                GLOBALS.Options.ChangeFlag = moment(date).format('YYYY-MM-DD HH:mm:ss');
                 this.setState({
                   UseImperialUnits: UseImperialUnits,
                   UseLastCarpool: UseLastCarpool,
@@ -55,6 +59,8 @@ class OptionsScreen extends React.Component {
             UseLastCarpool = GLOBALS.Options.UseLastCarpool;
             UseAutoPayment = GLOBALS.Options.UseAutoPayment;
             UseDarkTheme = GLOBALS.Options.UseDarkTheme;
+            date = new Date();
+            GLOBALS.Options.ChangeFlag = moment(date).format('YYYY-MM-DD HH:mm:ss');
             this.setState({
               UseImperialUnits: UseImperialUnits,
               UseLastCarpool: UseLastCarpool,
@@ -135,10 +141,14 @@ class OptionsScreen extends React.Component {
     //this.setState({value});
     try 
     { 
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       GLOBALS.Options.UseImperialUnits = value;
+      GLOBALS.Options.ChangeFlag = CurrentDate;
       this.setState({UseImperialUnits: value});
       firebase.database().ref('Options/' + GLOBALS.UserKey).update({
-        UseImperialUnits: value
+        UseImperialUnits: value,
+        ChangeFlag: CurrentDate
       });
     } catch (error) 
     { 
@@ -151,10 +161,14 @@ class OptionsScreen extends React.Component {
     //this.setState({value}); 
     try 
     { 
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       GLOBALS.Options.UseLastCarpool = value;
+      GLOBALS.Options.ChangeFlag = CurrentDate;
       this.setState({UseLastCarpool: value});
       firebase.database().ref('Options/' + GLOBALS.UserKey).update({
-        UseLastCarpool: value
+        UseLastCarpool: value,
+        ChangeFlag: CurrentDate
       });
     } catch (error) 
     { 
@@ -167,10 +181,14 @@ class OptionsScreen extends React.Component {
     //this.setState({value}); 
     try 
     { 
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       GLOBALS.Options.UseAutoPayment = value;
+      GLOBALS.Options.ChangeFlag = CurrentDate;
       this.setState({UseAutoPayment: value});
       firebase.database().ref('Options/' + GLOBALS.UserKey).update({
-        UseAutoPayment: value
+        UseAutoPayment: value,
+        ChangeFlag: CurrentDate
       });
     } catch (error) 
     { 
@@ -183,10 +201,14 @@ class OptionsScreen extends React.Component {
     //this.setState({value}); 
     try 
     { 
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       GLOBALS.Options.UseDarkTheme = value;
+      GLOBALS.Options.ChangeFlag = CurrentDate;
       this.setState({UseDarkTheme: value});
       firebase.database().ref('Options/' + GLOBALS.UserKey).update({
-        UseDarkTheme: value
+        UseDarkTheme: value,
+        ChangeFlag: CurrentDate
       });
     } catch (error) 
     { 

@@ -21,6 +21,8 @@ import sha256 from 'sha256';
 
 console.disableYellowBox = true;
 
+import moment from 'moment'
+
 
 const GLOBALS = require('./globals');
 
@@ -55,7 +57,7 @@ class CarpoolApp extends React.Component {
     isAppReady: false,
     
     // debug:
-    //isAppReady: true
+    isAppReady: true
   }
 
   _FirebaseLoginFunction = async (email, password) => {
@@ -148,15 +150,19 @@ class CarpoolApp extends React.Component {
             ZipCode: zipCode
           });
           //Set globals default
+          date = new Date();
+          CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
           GLOBALS.Options.UseImperialUnits = false;
           GLOBALS.Options.UseLastCarpool = false;
           GLOBALS.Options.UseAutoPayment = false;
           GLOBALS.Options.UseDarkTheme = false;
+          GLOBALS.Options.ChangeFlag = CurrentDate;
           firebase.database().ref('Options/' + KEY).set({
             UseImperialUnits: false,
             UseLastCarpool: false,
             UseAutoPayment: false,
-            UseDarkTheme: false
+            UseDarkTheme: false,
+            ChangeFlag: CurrentDate,
           });
           GLOBALS.UserKey = KEY;
           newUserSuccess = true;

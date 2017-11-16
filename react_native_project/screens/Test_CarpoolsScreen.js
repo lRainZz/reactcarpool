@@ -10,6 +10,8 @@ import * as firebase from 'firebase';
 
 const GLOBALS = require('../globals');
 
+import moment from 'moment';
+
 //own modules
 
 import Header from '../ApplicationHeader';
@@ -69,7 +71,8 @@ class Test_CarpoolScreen extends React.Component {
       
       // Get a key for a new UserCarpool.
       UserCarpoolKEY = firebase.database().ref().push().key;
-      CurrentDate = firebase.database.ServerValue.TIMESTAMP;
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
         key: UserCarpoolKEY,
         CarpoolKey: KEY,
@@ -139,7 +142,8 @@ class Test_CarpoolScreen extends React.Component {
               if (isInvitable){
                 // Get a key for a new UserCarpool.
                 UserCarpoolKEY = firebase.database().ref().push().key;
-                CurrentDate = firebase.database.ServerValue.TIMESTAMP;
+                date = new Date();
+                CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
                 firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
                   key: UserCarpoolKEY,
                   CarpoolKey: CarpoolKey,
@@ -176,7 +180,8 @@ class Test_CarpoolScreen extends React.Component {
         if (snapshot.val()){
           // Get a key for a new UserCarpool.
           UserCarpoolKEY = firebase.database().ref().push().key;
-          CurrentDate = firebase.database.ServerValue.TIMESTAMP;
+          date = new Date();
+          CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
           firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
             key: UserCarpoolKEY,
             CarpoolKey: CarpoolKey,
@@ -466,12 +471,12 @@ class Test_CarpoolScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-KyzE1CGyYKQm_-fZQHe'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
+          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
           color="green"
         />
         <Button
-          onPress={this.joinCarpool.bind(this, '-KyzE1CGyYKQm_-fZQHe'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
+          onPress={this.joinCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
           title="Ask to join Carpool"
           color="green"
         />
@@ -486,17 +491,17 @@ class Test_CarpoolScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.checkForPlace.bind(this, '-KyzE1CGyYKQm_-fZQHe'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
+          onPress={this.checkForPlace.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
           title="Check if Carpool has a place left"
           color="green"
         />
         <Button
-          onPress={this.leaveCarpool.bind(this, '-KyzE1CGyYKQm_-fZQHe'/*CarpoolKey der verlassen werden soll*/)}
+          onPress={this.leaveCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey der verlassen werden soll*/)}
           title="Leave Carpool"
           color="green"
         />
         <Button
-          onPress={this.deleteCarpool.bind(this, '-KyzE1CGyYKQm_-fZQHe'/*CarpoolKey der gelöscht werden soll*/)}
+          onPress={this.deleteCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey der gelöscht werden soll*/)}
           title="Delete Carpool"
           color="green"
         />
