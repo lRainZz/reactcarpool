@@ -29,8 +29,10 @@ class FillingsScreen extends React.Component {
     fabVisible: true,
 
     editFilling: null,
-    // newest item always in first place -> use unshift array to add items
-    fillingsArray: 
+
+    // live init as null
+    // fillingsArray: null
+    fillingsArray:
       [
         {  
           'id'         : 1,
@@ -115,36 +117,39 @@ class FillingsScreen extends React.Component {
 
   render () {
     const { fillingsArray, addFillingsVisible, fabVisible, editFilling } = this.state
-    const fillingsAvailable = ((fillingsArray.length > 0 ))
+    const fillingsAvailable = (fillingsArray !== null)
     const fabVisibleStyle   = (fabVisible) ? {} : {height: 0, width: 0}
+    const containerFlex = (fillingsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
     return (
       <View
-        style={styles.container}
+        style={[styles.container, containerFlex]}
       >
-        <ScrollView>
           {(!fillingsAvailable) && (
-            <View />
+            <Text
+              style={[styles.font, styles.emptyText]}
+            >{'NO FILLINGS YET'}</Text>
           )}
 
           {(fillingsAvailable) && (
-            <FlatList
-              style={styles.listContainer}
-              extraData={this.state}
-              data={fillingsArray}
-              renderItem={({item}) => 
-                <FillingsItem
-                  filling={item}
-                  total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
-                  carpoolMembers={4}
-                  onPressDelete={(filling) => this._deleteFilling(filling)}
-                  onPressEdit={(filling) => this._updateFilling(filling)}
-                  editFilling={editFilling}
-                />
-              }
-            />
+            <ScrollView>
+              <FlatList
+                style={styles.listContainer}
+                extraData={this.state}
+                data={fillingsArray}
+                renderItem={({item}) => 
+                  <FillingsItem
+                    filling={item}
+                    total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
+                    carpoolMembers={4}
+                    onPressDelete={(filling) => this._deleteFilling(filling)}
+                    onPressEdit={(filling) => this._updateFilling(filling)}
+                    editFilling={editFilling}
+                  />
+                }
+              />
+            </ScrollView>
           )}
-        </ScrollView>
 
         <Fab
           style={[styles.fab, fabVisibleStyle]}
@@ -188,6 +193,11 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: '#fff'
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: '#9E9E9E',
+    fontSize: 30
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
