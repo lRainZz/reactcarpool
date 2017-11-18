@@ -13,7 +13,7 @@ import { TabNavigator } from 'react-navigation';
 
 import Header from '../ApplicationHeader';
 
-import TabNav from '../navigation/TabNav';
+import TabNav from '../navigation/TabNavHome';
 
 
 // class:

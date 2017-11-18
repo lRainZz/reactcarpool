@@ -20,7 +20,7 @@ import MembersScreen from '../screens/MembersScreen';
 
 // class
 
-const TabNav = TabNavigator (
+const TabNavHome = TabNavigator (
   {
     Fillings: {
       screen: FillingsScreen,
@@ -34,6 +34,18 @@ const TabNav = TabNavigator (
         />
       }
     },
+    Members: {
+      screen: MembersScreen,
+      navigationOptions: {
+        tabBarIcon: 
+        <Icon 
+          type='material'
+          color='white'
+          size={40}
+          name='group'
+        />
+      }
+    },
     Statistics: {
       screen: StatisticsScreen,
       navigationOptions: {
@@ -43,18 +55,6 @@ const TabNav = TabNavigator (
           color='white'
           size={40}
           name='trending-up'
-        />
-      }
-    },
-    Members: {
-      screen: MembersScreen,
-      navigationOptions: {
-        tabBarIcon: 
-        <Icon 
-          type='material'
-          color='white'
-          size={40}
-          name='person'
         />
       }
     }
@@ -77,4 +77,4 @@ const TabNav = TabNavigator (
 );
 
 
-export default TabNav;
+export default TabNavHome;

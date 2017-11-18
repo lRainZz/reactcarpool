@@ -75,7 +75,7 @@ class FillingsItem extends React.Component {
         backgroundColor={'#fff'}
       >
         <View
-          animation={'slideInUp'}
+          animation={'slideInDown'}
           delay={0}
           duration={300}
           style={styles.container}

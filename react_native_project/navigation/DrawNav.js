@@ -36,7 +36,8 @@ const DrawNav = DrawerNavigator(
     }
   },
   {
-    contentComponent: props => <SideBar {...props} />
+    contentComponent: props => <SideBar {...props} />,
+    initialRouteName: 'Carpools'
   }
 );
 

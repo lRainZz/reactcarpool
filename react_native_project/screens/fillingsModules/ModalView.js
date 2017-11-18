@@ -205,8 +205,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    backgroundColor: '#fff',
-    color: '#1976D2'
+    backgroundColor: '#fff'
   },
   inputText: {
     marginHorizontal: 5,

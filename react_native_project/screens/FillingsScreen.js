@@ -15,7 +15,7 @@ import Toast from 'react-native-simple-toast';
 
 //own modules
 
-import FillingsItem from './fillingsModules/Item';
+import FillingsItem from './fillingsModules/FillingsItem';
 
 import ModalView from './fillingsModules/ModalView';
 

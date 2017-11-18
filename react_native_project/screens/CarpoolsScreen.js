@@ -11,6 +11,8 @@ import { Text } from 'react-native';
 
 import Header from '../ApplicationHeader';
 
+import TabNavCarpool from '../navigation/TabNavCarpool'
+
 
 // class
 
@@ -22,7 +24,7 @@ class CapoolsScreen extends React.Component {
           onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}
           title='Carpools'  
         />
-        <Text>Carpools go here</Text>
+        <TabNavCarpool />
       </Container>
     );
   }
