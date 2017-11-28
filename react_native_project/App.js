@@ -37,6 +37,7 @@ const firebaseConfig  = {
   storageBucket: "fahrgemeinschaft-22833.appspot.com"
 };
 firebase.initializeApp(firebaseConfig);
+//firebase.database().goOffline();
 
 // Create a reference with .ref() instead of new Firebase(url)
 const rootRef = firebase.database().ref();
@@ -67,78 +68,153 @@ class CarpoolApp extends React.Component {
     var PasswordTrue;
 
     try{
-      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
-        if (snap.val()){
-          snap.forEach(async function(childSnapshot) {
-            var SnapshotKey = childSnapshot.key;
-            var Userkey = snap.child(SnapshotKey).child("key").val();
-            UserInDataBase = true;
-            if (password == snap.child(SnapshotKey).child("Password").val()){
-              PasswordTrue = true;
-              GLOBALS.UserKey = Userkey;
-            } else{
-              PasswordTrue = false;
-              //-----------------------------------------------------------------------------------------------------------
-              await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(UserKey).once('value')
-              .then((snapshot2) =>
-              {
-                snapshot2.forEach(async function(childSnapshot2) {
-                  CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();                  
-                  await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
-                  .then(async function(snapshot3)
-                  {
-                    var MaxPlace = snapshot3.val().MaxPlace;
-                    var CarpoolName = snapshot3.val().CarpoolName;
-                    //Generate Files in global.js: Carpools
-                    JSONExport_Carpool = {
-                      KEY: {
-                        key: CarpoolKey,
-                        MaxPlace: MaxPlace
-                      }
+      let Connected;
+      firebase.database().ref().child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          Connected = true;
+        } else {
+          Connected = false;
+        }
+      });
+
+      if(Connected){
+        await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value')
+        .then(async function(snap) 
+        {
+          if (snap.val()){
+            snap.forEach(async function(childSnapshot) {
+              var SnapshotKey = childSnapshot.key;
+              var Userkey = snap.child(SnapshotKey).child("key").val();
+              var Password = snap.child(SnapshotKey).child("Password").val();
+              var Email = snap.child(SnapshotKey).child("Email").val();
+              var FullName = snap.child(SnapshotKey).child("FullName").val();
+              var ZipCode = snap.child(SnapshotKey).child("ZipCode").val();
+
+              UserInDataBase = true;
+              if (password == snap.child(SnapshotKey).child("Password").val()){
+                PasswordTrue = true;
+                GLOBALS.UserKey = Userkey;
+                
+                JSONExport_Users = {
+                  UserKey: {
+                    key: Userkey,
+                    Password: Password,
+                    Email: Email,
+                    FullName: FullName,
+                    ZipCode: ZipCode
+                  }
+                } 
+                //Set globals
+                GLOBALS.Users = (GLOBALS.Users + JSONExport_Users);             
+
+
+                await firebase.database().ref('/Options/' + UserKey).once('value')
+                .then(async function(OptionsSnap) 
+                {
+                  let UseImperialUnits= OptionsSnap.val().UseImperialUnits;
+                  let UseAutoPayment= OptionsSnap.val().UseAutoPayment;
+                  let UseLastCarpool= OptionsSnap.val().UseLastCarpool;
+                  let UseDarkTheme= OptionsSnap.val().UseDarkTheme;
+
+                  JSONExport_Options = {
+                    UserKey: {
+                      UseImperialUnits: UseImperialUnits,
+                      UseAutoPayment: UseAutoPayment,
+                      UseLastCarpool: UseLastCarpool,
+                      UseDarkTheme: UseDarkTheme
                     }
-                    //Set globals
-                    GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-                    await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-                    .then((snapshot4) =>
-                    {
-                      snapshot4.forEach(async function(childSnapshot3) {
-                        var UserCarpoolKEY = childSnapshot3.child('key').val();
-                        var CurrentDate = childSnapshot3.child('Date').val();
-                        JSONExport_UserCarpools = {
-                          UserCarpoolKEY: {
-                            key: UserCarpoolKEY,
-                            CarpoolKey: CarpoolKey,
-                            UserKey: GLOBALS.UserKey,
-                            CarpoolName: CarpoolName,
-                            Invite: '0',
-                            Join: '0',
-                            Creator: '1',
-                            Date: CurrentDate
+                  } 
+                  //Set globals
+                  GLOBALS.Options.UseImperialUnits = UseImperialUnits;
+                  GLOBALS.Options.UseLastCarpool = UseLastCarpool;
+                  GLOBALS.Options.UseAutoPayment = UseAutoPayment;
+                  GLOBALS.Options.UseDarkTheme = UseDarkTheme;
+                  GLOBALS.UserOptions = (GLOBALS.UserOptions + JSONExport_Options); 
+
+
+                  await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(UserKey).once('value')
+                  .then((snapshot2) =>
+                  {
+                    snapshot2.forEach(async function(childSnapshot2) {
+                      CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();                  
+                      await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
+                      .then(async function(snapshot3)
+                      {
+                        var MaxPlace = snapshot3.val().MaxPlace;
+                        var CarpoolName = snapshot3.val().CarpoolName;
+                        //Generate Files in global.js: Carpools
+                        JSONExport_Carpool = {
+                          KEY: {
+                            key: CarpoolKey,
+                            MaxPlace: MaxPlace
                           }
                         }
                         //Set globals
-                        GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
-                        if (childSnapshot3.child('Creator').val() == '1'){
-                          JSONExport_Creator = {
-                            CarpoolKey: {
-                              CarpoolKey: CarpoolApp
+                        GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                        await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                        .then((snapshot4) =>
+                        {
+                          snapshot4.forEach(async function(childSnapshot3) {
+                            var UserCarpoolKEY = childSnapshot3.child('key').val();
+                            var CurrentDate = childSnapshot3.child('Date').val();
+                            JSONExport_UserCarpools = {
+                              UserCarpoolKEY: {
+                                key: UserCarpoolKEY,
+                                CarpoolKey: CarpoolKey,
+                                UserKey: GLOBALS.UserKey,
+                                CarpoolName: CarpoolName,
+                                Invite: '0',
+                                Join: '0',
+                                Creator: '1',
+                                Date: CurrentDate
+                              }
                             }
-                          }
-                          //Set globals
-                          GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
-                        }
+                            //Set globals
+                            GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+                            if (childSnapshot3.child('Creator').val() == '1'){
+                              JSONExport_Creator = {
+                                CarpoolKey: {
+                                  CarpoolKey: CarpoolApp
+                                }
+                              }
+                              //Set globals
+                              GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
+                            }
+                          });
+                        });
                       });
                     });
                   });
                 });
-              });
-              //-----------------------------------------------------------------------------------------------------------
+              } else{
+                PasswordTrue = false;
+              }
+            });
+          }else{
+            UserInDataBase = false;
+          }
+        });
+      }else{
+        //Offline ----------------------------------
+        let UserPassword;
+        if (GLOBALS.UserKey == ''){
+          Toast.show('Connection required for first Login');
+        }else{
+          GLOBALS.Users.forEach(UsersJson => {
+            if(UsersJson.Email == email){
+              UserInDataBase = true;
+              if(UsersJson.Password == password){
+                PasswordTrue = true;
+                GLOBALS.UserKey = Userkey;
+              }else{
+                PasswordTrue = false;
+              }
+            }else{
+              UserInDataBase = false;
             }
           });
-        }else{
-          UserInDataBase = false;
         }
-      });
+      }      
       this._LoginFunction(UserInDataBase, PasswordTrue);
     } catch(error){
       console.error(error);
