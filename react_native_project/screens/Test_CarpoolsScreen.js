@@ -58,7 +58,7 @@ import Header from '../ApplicationHeader';
 
 class Test_CarpoolScreen extends React.Component { 
   
-  createNewCarpool = async (MaxPlace) => 
+  createNewCarpool = async (CarpoolName, MaxPlace) => 
   {
     try
     {      
@@ -66,6 +66,7 @@ class Test_CarpoolScreen extends React.Component {
       KEY = firebase.database().ref().push().key;
       firebase.database().ref('Carpools/' + KEY).set({
         key: KEY,
+        CarpoolName: CarpoolName,
         MaxPlace: MaxPlace
       });
       
@@ -105,7 +106,7 @@ class Test_CarpoolScreen extends React.Component {
 
       JSONExport_Creator = {
         CarpoolKey: {
-
+          CarpoolKey: KEY
         }
       }
       //Set globals
@@ -225,47 +226,59 @@ class Test_CarpoolScreen extends React.Component {
                   await firebase.database().ref('/Users/' + CreatorKey).once('value')
                   .then(async function(snapshot3) 
                   {
-                    let Fullname = snapshot3.val().FullName
-                    console.log(Fullname + ' has invited you.');
-
-
-                    // YES - NO Frage:
-                    let AcceptInvite = true; // oder false bei Einladungsablehnung
-                    if (AcceptInvite){
-                      firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
-                        Invite: '0'
-                      });
-
-                      //Generate Files in global.js
-                      await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
-                      .then((snapshot4) =>
-                      {
-                        JSONExport_Carpool = {
-                          CarpoolKey: {
-                            key: CarpoolKey,
-                            MaxPlace: snapshot4.child(CarpoolKey).child("MaxPlace").val()
+                      let Fullname = snapshot3.val().FullName;
+                    await firebase.database().ref('/Carpools/' + CarpoolKey).once('value')
+                    .then((snapshot4) =>
+                    {
+                      let CarpoolName = snapshot4.val().CarpoolName;
+                      let MaxPlace = snapshot4.val().MaxPlace;
+                      console.log(Fullname + ' from Carpool "' + CarpoolName + '" has invited you.');
+  
+  
+                      // YES - NO Frage: 
+                      let AcceptInvite = true; // oder false bei Einladungsablehnung
+                      if (AcceptInvite){
+                        firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
+                          Invite: '0'
+                        });
+  
+                        //Generate Files in global.js
+                        //await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
+                        // .then((snapshot5) =>
+                        // {
+                          // var CarpoolName = snapshot5.val().CarpoolName;
+                          // var MaxPlace = snapshot5.val().MaxPlace;
+  
+                          JSONExport_Carpool = {
+                            CarpoolKey: {
+                              key: CarpoolKey,
+                              CarpoolName: CarpoolName,
+                              MaxPlace: MaxPlace
+                            }
                           }
-                        }
-
-                        JSONExport_UserCarpools = {
-                          UserCarpoolKey: {
-                            key: UserCarpoolKey,
-                            CarpoolKey: CarpoolKey,
-                            UserKey: GLOBALS.UserKey,
-                            Invite: '0',
-                            Join: '0',
-                            Creator: '0',
-                            Date: CurrentDate
+  
+                          JSONExport_UserCarpools = {
+                            UserCarpoolKey: {
+                              key: UserCarpoolKey,
+                              CarpoolKey: CarpoolKey,
+                              UserKey: GLOBALS.UserKey,
+                              Invite: '0',
+                              Join: '0',
+                              Creator: '0',
+                              Date: CurrentDate
+                            }
                           }
-                        }
-                      });
-                      
-                      //Set globals
-                      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-                      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
-                    }else{
-                      firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
-                    }
+                        // });
+                        
+                        //Set globals
+                        GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                        GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+                      }else{
+                        firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
+                      }
+                      // Ende der YES-NO-Frage
+
+                    });
                   });
                 }
               });
@@ -332,9 +345,12 @@ class Test_CarpoolScreen extends React.Component {
                   await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolElement).once('value')
                   .then((snapshot4) =>
                   {
+                    var CarpoolName = snapshot4.val().CarpoolName;
+
                     JSONExport_Carpool = {
                       CarpoolElement: {
                         key: CarpoolElement,
+                        CarpoolName: CarpoolName,
                         MaxPlace: snapshot4.child(CarpoolElement).child("MaxPlace").val()
                       }
                     }
@@ -466,17 +482,17 @@ class Test_CarpoolScreen extends React.Component {
           title='Test_Carpools'  
         />
         <Button
-          onPress={this.createNewCarpool.bind(this, '4'/*max. Sitzplatzanzahl*/)}
+          onPress={this.createNewCarpool.bind(this, 'CarpoolName'/*Name des Carpools*/,  '4'/*max. Sitzplatzanzahl*/)}
           title="Create new Carpool"
           color="green"
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
+          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
           color="green"
         />
         <Button
-          onPress={this.joinCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
+          onPress={this.joinCarpool.bind(this, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
           title="Ask to join Carpool"
           color="green"
         />
@@ -491,17 +507,17 @@ class Test_CarpoolScreen extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.checkForPlace.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
+          onPress={this.checkForPlace.bind(this, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
           title="Check if Carpool has a place left"
           color="green"
         />
         <Button
-          onPress={this.leaveCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey der verlassen werden soll*/)}
+          onPress={this.leaveCarpool.bind(this, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey der verlassen werden soll*/)}
           title="Leave Carpool"
           color="green"
         />
         <Button
-          onPress={this.deleteCarpool.bind(this, '-Kz3si4_WS0oCdZCXmlE'/*CarpoolKey der gelöscht werden soll*/)}
+          onPress={this.deleteCarpool.bind(this, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey der gelöscht werden soll*/)}
           title="Delete Carpool"
           color="green"
         />

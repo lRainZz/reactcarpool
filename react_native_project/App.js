@@ -57,7 +57,7 @@ class CarpoolApp extends React.Component {
     isAppReady: false,
     
     // debug:
-    isAppReady: true
+    //isAppReady: true
   }
 
   _FirebaseLoginFunction = async (email, password) => {
@@ -69,7 +69,7 @@ class CarpoolApp extends React.Component {
     try{
       await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
         if (snap.val()){
-          snap.forEach(function(childSnapshot) {
+          snap.forEach(async function(childSnapshot) {
             var SnapshotKey = childSnapshot.key;
             var Userkey = snap.child(SnapshotKey).child("key").val();
             UserInDataBase = true;
@@ -78,6 +78,61 @@ class CarpoolApp extends React.Component {
               GLOBALS.UserKey = Userkey;
             } else{
               PasswordTrue = false;
+              //-----------------------------------------------------------------------------------------------------------
+              await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(UserKey).once('value')
+              .then((snapshot2) =>
+              {
+                snapshot2.forEach(async function(childSnapshot2) {
+                  CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();                  
+                  await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
+                  .then(async function(snapshot3)
+                  {
+                    var MaxPlace = snapshot3.val().MaxPlace;
+                    var CarpoolName = snapshot3.val().CarpoolName;
+                    //Generate Files in global.js: Carpools
+                    JSONExport_Carpool = {
+                      KEY: {
+                        key: CarpoolKey,
+                        MaxPlace: MaxPlace
+                      }
+                    }
+                    //Set globals
+                    GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                    await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                    .then((snapshot4) =>
+                    {
+                      snapshot4.forEach(async function(childSnapshot3) {
+                        var UserCarpoolKEY = childSnapshot3.child('key').val();
+                        var CurrentDate = childSnapshot3.child('Date').val();
+                        JSONExport_UserCarpools = {
+                          UserCarpoolKEY: {
+                            key: UserCarpoolKEY,
+                            CarpoolKey: CarpoolKey,
+                            UserKey: GLOBALS.UserKey,
+                            CarpoolName: CarpoolName,
+                            Invite: '0',
+                            Join: '0',
+                            Creator: '1',
+                            Date: CurrentDate
+                          }
+                        }
+                        //Set globals
+                        GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+                        if (childSnapshot3.child('Creator').val() == '1'){
+                          JSONExport_Creator = {
+                            CarpoolKey: {
+                              CarpoolKey: CarpoolApp
+                            }
+                          }
+                          //Set globals
+                          GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
+                        }
+                      });
+                    });
+                  });
+                });
+              });
+              //-----------------------------------------------------------------------------------------------------------
             }
           });
         }else{
