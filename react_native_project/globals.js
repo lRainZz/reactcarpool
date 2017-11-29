@@ -16,7 +16,6 @@ module.exports = {
     },
     Creator: {
 
-<<<<<<< Updated upstream
     },
     Users: {
 
@@ -24,7 +23,4 @@ module.exports = {
     UserOptions: {
 
     },
-=======
-    }
->>>>>>> Stashed changes
 }
