@@ -16,11 +16,5 @@ module.exports = {
     },
     Creator: {
 
-    },
-    Users: {
-
-    },
-    UserOptions: {
-
-    },
+    }
 }
