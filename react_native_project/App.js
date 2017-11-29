@@ -15,6 +15,8 @@ import { View } from 'react-native-animatable';
 
 import DrawNav from './navigation/DrawNav';
 
+import ModalStackNav from './navigation/ModalStackNav';
+
 import Login from './screens/LoginScreen';
 
 import sha256 from 'sha256';
@@ -355,7 +357,8 @@ class CarpoolApp extends React.Component {
             delay={0}
             duration={1000}
           >
-            <DrawNav />
+            <ModalStackNav />
+            {/*<DrawNav />*/}
           </View>
         )}
 

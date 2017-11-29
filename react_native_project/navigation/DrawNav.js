@@ -26,7 +26,11 @@ const DrawNav = DrawerNavigator(
       screen: HomeScreen
     },
     Carpools: {
-      screen: CarpoolsScreen
+      screen: ({screenProps, navigation}) => 
+        <CarpoolsScreen 
+          screenProps={{rootNavigation: screenProps.rootNavigation}} 
+          navigation={navigation}  
+        />
     },
     Options: {
       screen: OptionsScreen
@@ -37,6 +41,7 @@ const DrawNav = DrawerNavigator(
   },
   {
     contentComponent: props => <SideBar {...props} />,
+    // debug:
     initialRouteName: 'Carpools'
   }
 );

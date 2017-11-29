@@ -24,7 +24,7 @@ class CapoolsScreen extends React.Component {
           onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}
           title='Carpools'  
         />
-        <TabNavCarpool />
+        <TabNavCarpool screenProps={{rootNavigation: this.props.screenProps.rootNavigation}}/>
       </Container>
     );
   }

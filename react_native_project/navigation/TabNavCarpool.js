@@ -6,12 +6,14 @@ import { Platform } from 'react-native';
 
 import { Icon } from 'react-native-elements';
 
-import { TabNavigator, StackNavigator, Text } from 'react-navigation';
+import { TabNavigator, Text } from 'react-navigation';
 
 
 // own modules
 
 import MyCarpoolsScreen from '../screens/MyCarpoolsScreen';
+
+import Header from '../ApplicationHeader';
 
 import AvailableCarpoolsScreen from '../screens/AvailableCarpoolsScreen';
 
@@ -21,7 +23,7 @@ import AvailableCarpoolsScreen from '../screens/AvailableCarpoolsScreen';
 const TabNavCarpool = TabNavigator (
     {
       MyCarpools: {
-        screen: MyCarpoolsScreen,
+        screen: ({screenProps}) => <MyCarpoolsScreen screenProps={{rootNavigation: screenProps.rootNavigation}}/>,
         navigationOptions: {
           tabBarIcon: 
           <Icon 

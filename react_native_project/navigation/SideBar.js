@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Container, Content, List, ListItem } from 'native-base';
 
-import { Image, Text, StyleSheet, Platform } from 'react-native';
+import { Image, Text, StyleSheet, Platform, Button } from 'react-native';
 
 
 // own modules:

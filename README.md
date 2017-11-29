@@ -64,8 +64,9 @@
 >> * RC Blue:       #0220ff  
 >> * RC Purple:     #9600ff  
 >> * RC Pink:       #ff00ba
+>>  
 >> * RC Red:        #F44336
->  
+>> * RC Green:      #4CAF50 
 >  
 > * Text colors are:   
 >> * RC Text on bright ground: #303030  

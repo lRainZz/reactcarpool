@@ -36,7 +36,6 @@ class InputComponent extends React.Component {
 
     const topSeperator    = (false || this.props.topSeperator)
     const bottomSeperator = (false || this.props.bottomSeperator)
-    const borderColor     = isFocused ? 'white' : 'rgba(255,255,255,0.4)'
     
 
     focus = () => this.textInputRef.focus()

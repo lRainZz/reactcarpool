@@ -10,14 +10,14 @@ import Panel from 'react-native-panel';
 
 import { CheckBox } from 'react-native-elements';
 
-const GLOBALS = require('../globals');
-
 import * as firebase from 'firebase';
 
 import moment from 'moment'
 
 
 // own modules:
+
+const GLOBALS = require('../globals');
 
 import Header from '../ApplicationHeader';
 
@@ -87,16 +87,16 @@ class OptionsScreen extends React.Component {
           <Container>
             <Content>
               <List>
-              <OptionItem
-                optionText='Use imperial units'
-                optionHint='E.g. use mph instead of kph'
-                onToggleOption={(value) => this.setStorageUseImperialUnits(value)}
-                optionValue={GLOBALS.Options.UseImperialUnits} //Important: This is the same Variable as "UseImperialUnits"
-                optionItemOnPress=
-                {
-                  () => this.setState({ "UseImperialUnits": GLOBALS.Options.UseImperialUnits}) //Important: This is the same Variable as "UseImperialUnits"
-                }
-              />
+                <OptionItem
+                  optionText='Use imperial units'
+                  optionHint='E.g. use mph instead of kph'
+                  onToggleOption={(value) => this.setStorageUseImperialUnits(value)}
+                  optionValue={GLOBALS.Options.UseImperialUnits} //Important: This is the same Variable as "UseImperialUnits"
+                  optionItemOnPress=
+                  {
+                    () => this.setState({ "UseImperialUnits": GLOBALS.Options.UseImperialUnits}) //Important: This is the same Variable as "UseImperialUnits"
+                  }
+                />
                 <OptionItem
                   optionText='Start in last used carpool'
                   optionHint='Set the last used carpool as homescreen'
@@ -222,6 +222,8 @@ class OptionItem extends React.Component {
     return (
       <ListItem
         onPress={this.props.optionItemOnPress}
+        // standard is marginLeft 17 .... whatsoever
+        style={{marginLeft: 0}}
       >
         <Body>
           <Text 
@@ -248,12 +250,12 @@ class OptionItem extends React.Component {
 
 const styles = StyleSheet.create({
   optionText: {
-    marginLeft: 10,
+    paddingLeft: 10,
     fontSize: 22,
     color: '#303030'
   },
   optionHint: {
-    marginLeft: 20,
+    paddingLeft: 20,
     fontSize: 15,
     color: '#9E9E9E'
   },

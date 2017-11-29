@@ -34,7 +34,7 @@ class FillingsScreen extends React.Component {
     fillingsArray:
       [
         {  
-          'id'         : 1,
+          "id"         : 1,
           'tripmeter'  : 1000,
           'consumption': 7.0,
           'fuelPrice'  : 1.309,
@@ -126,32 +126,32 @@ class FillingsScreen extends React.Component {
       <View
         style={[styles.container, containerFlex]}
       >
-          {(!fillingsAvailable) && (
-            <Text
-              style={[styles.font, styles.emptyText]}
-            >{'NO FILLINGS YET'}</Text>
-          )}
+        {(!fillingsAvailable) && (
+          <Text
+            style={[styles.font, styles.emptyText]}
+          >{'NO FILLINGS YET'}</Text>
+        )}
 
-          {(fillingsAvailable) && (
-            <ScrollView>
-              <FlatList
-                style={styles.listContainer}
-                extraData={this.state}
-                data={fillingsArray}
-                keyExtractor={item => item.id}
-                renderItem={({item}) => 
-                  <FillingsItem
-                    filling={item}
-                    total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
-                    carpoolMembers={4}
-                    onPressDelete={(filling) => this._deleteFilling(filling)}
-                    onPressEdit={(filling) => this._updateFilling(filling)}
-                    editFilling={editFilling}
-                  />
-                }
-              />
-            </ScrollView>
-          )}
+        {(fillingsAvailable) && (
+          <ScrollView>
+            <FlatList
+              style={styles.listContainer}
+              extraData={this.state}
+              data={fillingsArray}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => 
+                <FillingsItem
+                  filling={item}
+                  total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
+                  carpoolMembers={4}
+                  onPressDelete={(filling) => this._deleteFilling(filling)}
+                  onPressEdit={(filling) => this._updateFilling(filling)}
+                  editFilling={editFilling}
+                />
+              }
+            />
+          </ScrollView>
+        )}
 
         <Fab
           style={[styles.fab, fabVisibleStyle]}
@@ -163,23 +163,23 @@ class FillingsScreen extends React.Component {
           />
         </Fab>
 
-          <Modal 
-            open={addFillingsVisible}
-            modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
-            modalStyle={styles.modalContainer}
+        <Modal 
+          open={addFillingsVisible}
+          modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
+          modalStyle={styles.modalContainer}
+        >
+          <KeyboardAvoidingView
+            style={{flex: 1}}
+            keyboardVerticalOffset={50}
+            behavior={'padding'}
           >
-            <KeyboardAvoidingView
-              style={{flex: 1}}
-              keyboardVerticalOffset={50}
-              behavior={'padding'}
-            >
-              <ModalView
-                editFilling={editFilling} 
-                onSubmit={(filling) => this._addFilling(filling)}
-                onCancel={() => this.setState({addFillingsVisible: false})}
-              />
-              </KeyboardAvoidingView>
-          </Modal>     
+            <ModalView
+              editFilling={editFilling} 
+              onSubmit={(filling) => this._addFilling(filling)}
+              onCancel={() => this.setState({addFillingsVisible: false})}
+            />
+            </KeyboardAvoidingView>
+        </Modal>     
       </View>
     );
   }
