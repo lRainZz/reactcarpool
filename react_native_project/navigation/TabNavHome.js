@@ -23,7 +23,7 @@ import MembersScreen from '../screens/MembersScreen';
 const TabNavHome = TabNavigator (
   {
     Fillings: {
-      screen: FillingsScreen,
+      screen: ({screenProps}) => <FillingsScreen screenProps={{rootNavigation: screenProps.rootNavigation}}/>,
       navigationOptions: {
         tabBarIcon: 
         <Icon 

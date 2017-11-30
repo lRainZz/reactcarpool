@@ -22,10 +22,12 @@ import ModalInput from './InputComponent';
 
 // class
 
-class ModalView extends React.Component {
+class AddFillingsView extends React.Component {
   static propTypes = {
     onSubmit:    PropTypes.any,
     onCancel:    PropTypes.any,
+
+    submitText:  PropTypes.string,
 
     editFilling: PropTypes.object
   }
@@ -42,6 +44,14 @@ class ModalView extends React.Component {
     },
 
     isDateTimePickerVisible: false
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.editFilling == null) {
+      this.forceUpdate();
+    } else {
+      this.setState({filling: nextProps.editFilling})
+    }
   }
 
   _showDatePicker = () => {this.setState({isDateTimePickerVisible: true})}
@@ -65,7 +75,7 @@ class ModalView extends React.Component {
   }
   
   render () {
-    const { onSubmit, onCancel, editFilling } = this.props
+    const { onSubmit, onCancel, submitText } = this.props
     const { filling, isDateTimePickerVisible } = this.state
     const Touchable = (Platform.OS == 'android') ? TouchableNativeFeedback : TouchableOpacity
     const imperial = GLOBALS.UseImperialUnits
@@ -173,7 +183,7 @@ class ModalView extends React.Component {
             buttonStyle={styles.button}
           />
           <Button 
-            title={(editFilling === null) ? 'ADD' : 'UPDATE'}
+            title={submitText}
             fontWeight={'bold'}
             fontSize={18}
             color={'#1976D2'}
@@ -240,4 +250,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ModalView;
+export default AddFillingsView;

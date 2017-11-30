@@ -27,7 +27,7 @@ class HomeScreen extends React.Component {
           title='Home'  
         />
 
-        <TabNav />
+        <TabNav screenProps={{rootNavigation: this.props.screenProps.rootNavigation}}/>
       </Container>
     );
   }

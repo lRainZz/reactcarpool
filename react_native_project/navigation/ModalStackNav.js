@@ -5,17 +5,14 @@ import React from 'react';
 import { StackNavigator } from 'react-navigation';
 
 
-// debug
-import { View, Text } from 'react-native';
-
-import DebugScreen from '../screens/DebugScreen';
-// debug end
-
 // own modules
 
 import DrawNav from './DrawNav';
 
 import LoginScreen from '../screens/LoginScreen';
+
+import AddFillingsStack from '../screens/AddFillingsStack';
+
 
 // class
 
@@ -28,7 +25,7 @@ const ModalStackNav = StackNavigator (
       }
     },
     AddFillings: {
-      screen: DebugScreen
+      screen: AddFillingsStack
     }
   },
   {

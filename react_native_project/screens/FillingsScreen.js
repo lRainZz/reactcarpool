@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Button, Text, StyleSheet, ScrollView, Platform, FlatList, KeyboardAvoidingView } from 'react-native';
+import { AsyncStorage, Button, Text, StyleSheet, ScrollView, Platform, FlatList, KeyboardAvoidingView } from 'react-native';
 
 import { Fab, Icon } from 'native-base';
 
@@ -17,8 +17,6 @@ import Toast from 'react-native-simple-toast';
 
 import FillingsItem from './fillingsModules/FillingsItem';
 
-import ModalView from './fillingsModules/ModalView';
-
 
 // class
 
@@ -28,6 +26,9 @@ class FillingsScreen extends React.Component {
     fabVisible: true,
 
     editFilling: null,
+
+    inputFilling: false,
+    inputFillingObject: null,
 
     // live init as null
     // fillingsArray: null
@@ -62,45 +63,59 @@ class FillingsScreen extends React.Component {
     return totalPrice.toFixed(2);
   }
 
+  _asyncAddFilling = async() => {
+    
+    await this._getInputFilling();
+
+    if (this.state.inputFilling) {
+      await this._getInputFillingObject();
+      this._addFilling(this.state.inputFillingObject)
+    }
+  }
+
+  _getInputFilling = async() => {
+    let inputFilling = await AsyncStorage.getItem('inputFilling');
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputFilling');
+    // string to bool
+    inputFilling = (inputFilling == 'true');
+    this.setState({inputFilling: inputFilling})
+  }
+
+  _getInputFillingObject = async() => {
+    let inputFillingObject = await AsyncStorage.getItem('inputFillingObject')
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputFillingObject');
+    inputFillingObject = JSON.parse(inputFillingObject);
+    this.setState({inputFillingObject: inputFillingObject})
+  }
+
   _addFilling = (fillingObject) => {
-    let incomplete = false;  
     let fillings = this.state.fillingsArray
     let index = null
     let update = false
 
-    if (    
-        (fillingObject.tripmeter  == null) 
-    || (fillingObject.consumption == null) 
-    || (fillingObject.fuelPrice   == null) 
-    || (fillingObject.drivenDays  == null) 
-    || (fillingObject.date        == null) 
-      ) { 
-      incomplete = true; 
+    // documentation disapproves use of for...in
+    // for (var filling in fillings) {
+    for (var i1 = 0; i1 < fillings.length; i1++) {  
+      let currentFilling = fillings[i1]
+      
+      if ((currentFilling.id == fillingObject.id) && fillingObject.id != null) {
+        index = fillings.indexOf(currentFilling)
+        fillings[index] = fillingObject
+        update = true
+        break;
+      }
+    }
+    
+    if (!update) {
+      // this works because fillings is an array starting at 0
+      // object to be added gets a new id, one higher as the highest in fillings
+      fillingObject.id = fillings.length;
+      fillings.unshift(fillingObject);
     }
 
-    if (!incomplete) {
-
-      // documentation disapproves use of for...in
-      // for (var filling in fillings) {
-      for (var i1 = 0; i1 < fillings.length; i1++) {  
-        let currentFilling = fillings[i1]
-        
-        if (currentFilling.id == fillingObject.id) {
-          index = fillings.indexOf(currentFilling)
-          fillings[index] = fillingObject
-          update = true
-          break;
-        }
-      }
-      
-      if (!update) {
-        fillings.unshift(fillingObject);
-      }
-      
-      this.setState({addFillingsVisible: false, fillingsArray: fillings, editFilling: null});
-    } else {
-      Toast.show('Please insert all values to continue.', Toast.LONG);
-    }
+    this.setState({fillingsArray: fillings})
   }
 
   _deleteFilling = (filling) => {
@@ -114,6 +129,29 @@ class FillingsScreen extends React.Component {
 
   _updateFilling = (updateFilling) => {
     this.setState({editFilling: updateFilling, addFillingsVisible: true})
+  }
+
+  _showAddFillings = async(updateFilling) => {
+    let asyncUpdate       = false;
+    let asyncUpdateObject = {};
+
+    // "!= null" not type of null
+    if (updateFilling != null) {
+      asyncUpdate       = true;
+      asyncUpdateObject = updateFilling;
+    } else {
+      asyncUpdate = false;
+    }
+
+    try {
+      await AsyncStorage.setItem('updateFilling', String(asyncUpdate));
+      await AsyncStorage.setItem('updateFillingsObject', asyncUpdateObject == null ? '' : JSON.stringify(asyncUpdateObject));
+      this.props.screenProps.rootNavigation.navigate('AddFillings', {
+        onGoBack: () => this._asyncAddFilling(),
+      });
+    } catch (error) {
+      console.log('ERR writing asyncUpdate: ' + error.message)
+    }
   }
 
   render () {
@@ -145,7 +183,7 @@ class FillingsScreen extends React.Component {
                   total={this._getTotalPrice(item.consumption, item.tripmeter, item.fuelPrice)}
                   carpoolMembers={4}
                   onPressDelete={(filling) => this._deleteFilling(filling)}
-                  onPressEdit={(filling) => this._updateFilling(filling)}
+                  onPressEdit={(filling) => this._showAddFillings(filling)}
                   editFilling={editFilling}
                 />
               }
@@ -155,31 +193,13 @@ class FillingsScreen extends React.Component {
 
         <Fab
           style={[styles.fab, fabVisibleStyle]}
-          onPress={() => this.setState({addFillingsVisible : true, fabVisible: false})}
+          onPress={() => this._showAddFillings()}
         >
           <Icon
             name='add'
             color='white'
           />
-        </Fab>
-
-        <Modal 
-          open={addFillingsVisible}
-          modalDidClose={() => this.setState({addFillingsVisible : false, fabVisible: true})}
-          modalStyle={styles.modalContainer}
-        >
-          <KeyboardAvoidingView
-            style={{flex: 1}}
-            keyboardVerticalOffset={50}
-            behavior={'padding'}
-          >
-            <ModalView
-              editFilling={editFilling} 
-              onSubmit={(filling) => this._addFilling(filling)}
-              onCancel={() => this.setState({addFillingsVisible: false})}
-            />
-            </KeyboardAvoidingView>
-        </Modal>     
+        </Fab>   
       </View>
     );
   }

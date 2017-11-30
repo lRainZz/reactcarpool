@@ -23,7 +23,11 @@ import SideBar from './SideBar';
 const DrawNav = DrawerNavigator(
   {
     Home: {
-      screen: HomeScreen
+      screen:({screenProps, navigation}) => 
+        <HomeScreen 
+          screenProps={{rootNavigation: screenProps.rootNavigation}} 
+          navigation={navigation} 
+        />
     },
     Carpools: {
       screen: ({screenProps, navigation}) => 
@@ -42,7 +46,7 @@ const DrawNav = DrawerNavigator(
   {
     contentComponent: props => <SideBar {...props} />,
     // debug:
-    initialRouteName: 'Carpools'
+    initialRouteName: 'Home'
   }
 );
 
