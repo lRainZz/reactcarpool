@@ -89,7 +89,7 @@ class CarpoolItem extends React.Component {
                 onPress={() => onSetActive(carpool.id)}
               />
               <Button 
-                title={'DELETE'}
+                title={'LEAVE'}
                 fontWeight={'bold'}
                 fontSize={18}
                 color={'#1976D2'}

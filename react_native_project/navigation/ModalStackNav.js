@@ -11,7 +11,9 @@ import DrawNav from './DrawNav';
 
 import LoginScreen from '../screens/LoginScreen';
 
-import AddFillingsStack from '../screens/AddFillingsStack';
+import AddFillingsStack from '../screens/fillingsModules/AddFillingsStack';
+
+import CreateCarpoolStack from '../screens/myCarpoolModues/CreateCarpoolStack';
 
 
 // class
@@ -26,6 +28,9 @@ const ModalStackNav = StackNavigator (
     },
     AddFillings: {
       screen: AddFillingsStack
+    },
+    CreateCarpool: {
+      screen: CreateCarpoolStack
     }
   },
   {

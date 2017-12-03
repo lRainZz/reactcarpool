@@ -11,7 +11,7 @@ import Toast from 'react-native-simple-toast'
 
 // own modules
 
-import AddFillingsView from './fillingsModules/AddFillingsView'
+import AddFillingsView from './AddFillingsView'
 
 
 // class

@@ -23,13 +23,11 @@ const GLOBALS = require ('../../globals');
 class ModalView extends React.Component {
   static propTypes = {
     onSubmit:    PropTypes.any,
-    onCancel:    PropTypes.any,
-
-    editCarpool: PropTypes.object
+    onCancel:    PropTypes.any
   }
   
   state = {
-    carpool: this.props.editCarpool || 
+    carpool: 
     {
         id:     null, // number
         member: null, // number
@@ -124,6 +122,10 @@ class ModalView extends React.Component {
           />
         </View>
 
+        <View 
+          style={styles.spacer}
+        />
+
         <View
           style={[styles.buttonContainer, styles.debug]}
         >
@@ -137,7 +139,7 @@ class ModalView extends React.Component {
             buttonStyle={styles.button}
           />
           <Button 
-            title={(editCarpool === null) ? 'ADD' : 'UPDATE'}
+            title={'CREATE'}
             fontWeight={'bold'}
             fontSize={18}
             color={'#1976D2'}
@@ -159,6 +161,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 2,
     justifyContent: 'center'
+  },
+  spacer: {
+    flex: 7
   },
   buttonContainer: {
     flex: 1,

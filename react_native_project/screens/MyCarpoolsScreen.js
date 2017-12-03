@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { ScrollView, FlatList, Text, Platform, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { AsyncStorage, ScrollView, FlatList, Text, Platform, StyleSheet } from 'react-native';
 
 import { Fab, Icon } from 'native-base';
 
@@ -20,8 +20,6 @@ import { NavigationActions } from 'react-navigation';
 const GLOBALS = require('../globals')
 
 import CarpoolItem from './myCarpoolModues/CarpoolItem'
-
-import ModalView from './myCarpoolModues/ModalView';
 
 
 // class
@@ -46,7 +44,10 @@ class MyCarpoolsScreen extends React.Component {
     editCarpool: null,
     activeCarpool: null,
     addCarpoolsVisible: false,
-    fabVisible: true
+    fabVisible: true,
+
+    inputCarpool: false,
+    inputCarpoolObject: null
   }
   
   _carpoolIsActive = (id) => {
@@ -82,48 +83,42 @@ class MyCarpoolsScreen extends React.Component {
     this.setState({editCarpool: updateCarpool, addCarpoolsVisible: true})
   }
 
+  _asyncAddCarpool = async () => {
+    await this._getInputCarpool();
+    
+    if (this.state.inputCarpool) {
+      await this._getInputCarpoolObject();
+      this._addCarpool(this.state.inputCarpoolObject)
+    }
+  }
+
+  _getInputCarpool = async () => {
+    let inputCarpool = await AsyncStorage.getItem('inputCarpool');
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputCarpool');
+    // string to bool
+    inputCarpool = (inputCarpool == 'true');
+    this.setState({inputCarpool: inputCarpool})
+  }
+
+  _getInputCarpoolObject = async () => {
+    let inputCarpoolObject = await AsyncStorage.getItem('inputCarpoolObject')
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputCarpoolObject');
+    inputCarpoolObject = JSON.parse(inputCarpoolObject);
+    this.setState({inputCarpoolObject: inputCarpoolObject})
+  }
+
   _addCarpool = (carpoolObject) => {
-    let incomplete = false;  
     let carpools   = this.state.carpoolsArray
-    let index      = null
-    let update     = false
 
-    if (carpoolObject.name   == null) { 
-      incomplete = true; 
-    }
-
-    if (!incomplete) {
-
-      // documentation disapproves use of for...in
-      // for (var carpools in carpools) {
-      for (var i1 = 0; i1 < carpools.length; i1++) {  
-        let currentFilling = carpools[i1]
-        
-        if (currentFilling.id == carpoolObject.id) {
-          index = carpools.indexOf(currentFilling)
-          carpools[index] = carpoolObject
-          update = true
-          break;
-        }
-      }
-      
-      if (!update) {
-        carpools.push(carpoolObject);
-      }
-      
-      this.setState({addFillingsVisible: false, fillingsArray: carpools, editFilling: null});
-    } else {
-      Toast.show('Your carpool needs a name, at least.', Toast.LONG);
-    }
+    // this works because fillings is an array starting at 0
+    // object to be added gets a new id, one higher as the highest in fillings
+    carpoolObject.id = carpools.length;
+    carpools.push(carpoolObject);
+    
+    this.setState({carpoolsArray: carpools});
   }
-
-  _showAddFilling = (editCarpool) => {    
-    // alert(this.screenProps)
-    this.props.screenProps.rootNavigation.navigate('AddFillings')
-
-    GLOBALS.addCarpool = editCarpool
-  }
-
 
   render () {
     const { carpoolsArray, fabVisible, addCarpoolsVisible, editCarpool } = this.state
@@ -162,32 +157,16 @@ class MyCarpoolsScreen extends React.Component {
 
         <Fab
           style={[styles.fab, fabVisibleStyle]}
-          onPress={() => this.setState({addCarpoolsVisible : true, fabVisible: false})}
+          // onPress={() => this.setState({addCarpoolsVisible : true, fabVisible: false})}
+          onPress={() => this.props.screenProps.rootNavigation.navigate('CreateCarpool', {
+            onGoBack: () => this._asyncAddCarpool(),
+          })}
           >
           <Icon
             name='add'
             color='white'
           />
         </Fab>
-
-        <Modal 
-          open={addCarpoolsVisible}
-          modalDidClose={() => this.setState({addCarpoolsVisible : false, fabVisible: true})}
-          modalStyle={styles.modalContainer}
-        >
-          <KeyboardAvoidingView
-            style={{flex: 1}}
-            keyboardVerticalOffset={50}
-            behavior={'padding'}
-          >
-            <ModalView
-              editCarpool={editCarpool}
-              onSubmit={(carpool) => this._addCarpool(carpool)}
-              onCancel={() => this.setState({addCarpoolsVisible: false})}
-            />
-
-            </KeyboardAvoidingView>
-        </Modal> 
       </View>
     );
   }
@@ -201,7 +180,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1976D2'
   },
   modalContainer: {
-    // flex: 1,
     height: 250,
     backgroundColor: '#fff'
   },
