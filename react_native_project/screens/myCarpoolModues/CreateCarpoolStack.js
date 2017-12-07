@@ -17,7 +17,6 @@ import CreateCarpoolView from './CreateCarpoolView'
 // class
 
 class CreateCarpoolStack extends React.Component { 
-  
 
   _setAsyncUpdateObject = async (updateObject) => {
     let valid = this._validateCarpool(updateObject);

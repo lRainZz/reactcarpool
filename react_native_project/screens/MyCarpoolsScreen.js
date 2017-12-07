@@ -122,7 +122,6 @@ class MyCarpoolsScreen extends React.Component {
 
   render () {
     const { carpoolsArray, fabVisible, addCarpoolsVisible, editCarpool } = this.state
-    const fabVisibleStyle   = (fabVisible) ? {} : {height: 0, width: 0}
     const carpoolsAvailable = (carpoolsArray !== null)
     const containerFlex = (carpoolsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
@@ -156,8 +155,7 @@ class MyCarpoolsScreen extends React.Component {
         )}
 
         <Fab
-          style={[styles.fab, fabVisibleStyle]}
-          // onPress={() => this.setState({addCarpoolsVisible : true, fabVisible: false})}
+          style={styles.fab}
           onPress={() => this.props.screenProps.rootNavigation.navigate('CreateCarpool', {
             onGoBack: () => this._asyncAddCarpool(),
           })}
@@ -178,10 +176,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     backgroundColor: '#1976D2'
-  },
-  modalContainer: {
-    height: 250,
-    backgroundColor: '#fff'
   },
   emptyText: {
     textAlign: 'center',

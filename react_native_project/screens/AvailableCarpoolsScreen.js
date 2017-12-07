@@ -36,7 +36,7 @@ class AvailableCarpoolsScreen extends React.Component {
   }
 
   _sendJoinRequest = (carpool) => {
-    // send joing request
+    // send join request
 
     Toast.show('A join request has been sent.', Toast.LONG)
   }
@@ -44,10 +44,11 @@ class AvailableCarpoolsScreen extends React.Component {
   render () {
     const carpoolsAvailable = (carpoolsArray !== null)
     const { carpoolsArray } = this.state
+    const containerFlex = (carpoolsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
     return(
       <View
-        style={styles.container}
+        style={[styles.container, containerFlex]}
       >
 
         {(!carpoolsAvailable) && (

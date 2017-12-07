@@ -1,6 +1,6 @@
 {
-  "name": "react_native_project",
-  "version": "0.1.0",
+  "name": "react_carpool",
+  "version": "0.9.0",
   "private": true,
   "devDependencies": {
     "react-native-scripts": "1.5.0",
@@ -31,7 +31,6 @@
     "react-native-animatable": "^1.2.4",
     "react-native-elements": "^0.17.0",
     "react-native-firebase": "^3.0.6",
-    "react-native-modal": "^4.1.0",
     "react-native-modal-datetime-picker": "^4.13.0",
     "react-native-panel": "^1.0.3",
     "react-native-simple-modal": "^7.0.0",

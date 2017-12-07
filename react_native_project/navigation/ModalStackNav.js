@@ -15,6 +15,8 @@ import AddFillingsStack from '../screens/fillingsModules/AddFillingsStack';
 
 import CreateCarpoolStack from '../screens/myCarpoolModues/CreateCarpoolStack';
 
+import InviteMemberStack from '../screens/carpoolMemeberModules/InviteMemberStack'
+
 
 // class
 
@@ -27,10 +29,46 @@ const ModalStackNav = StackNavigator (
       }
     },
     AddFillings: {
-      screen: AddFillingsStack
+      screen: AddFillingsStack,
+      navigationOptions : {
+        title: '  ADD FILLING',
+        headerStyle: {
+          backgroundColor: '#1976D2'
+        },
+        headerTitleStyle: {
+          color: '#fff',
+          alignSelf: 'center'
+        },
+        headerLeft: null
+      }     
     },
     CreateCarpool: {
-      screen: CreateCarpoolStack
+      screen: CreateCarpoolStack,
+      navigationOptions: {
+        title: '  CREATE CARPOOL',
+        headerStyle: {
+          backgroundColor: '#1976D2'
+        },
+        headerTitleStyle: {
+          color: '#fff',
+          alignSelf: 'center'
+        },
+        headerLeft: null
+      }
+    },
+    InviteMember: {
+      screen: InviteMemberStack,
+      navigationOptions: {
+        title: '  INVITE MEMBER',
+        headerStyle: {
+          backgroundColor: '#1976D2'
+        },
+        headerTitleStyle: {
+          color: '#fff',
+          alignSelf: 'center'
+        },
+        headerLeft: null
+      }
     }
   },
   {

@@ -2,20 +2,134 @@
 
 import React from 'react';
 
-import { Text } from 'react-native';
+import { AsyncStorage, Text, ScrollView, StyleSheet, View, FlatList } from 'react-native';
+
+import { Fab, Icon } from 'native-base';
 
 
 //own modules
+
+import MemberItem from './carpoolMemeberModules/MemberItem'
 
 
 // class
 
 class MembersScreen extends React.Component {
+  state = {
+    membersArray: [
+      {
+        id: 0,
+        name: 'John Doe'
+      },
+      {
+        id: 1,
+        name: 'Jane Doe'
+      }
+    ],
+
+    inputMember: false,
+    inputMemberObject: null
+  }
+
+  _memberIsAdmin = (id) => {
+    // check if member is admin
+
+    return (id === 0) ? true : false
+  }
+
+  _asyncAddMember = async () => {
+    await this._getInputMember();
+    
+    if (this.state.inputMember) {
+      await this._getInputMemberObject();
+      this._addMember(this.state.inputMemberObject)
+    }
+  }
+
+  _getInputMember = async () => {
+    let inputMember = await AsyncStorage.getItem('inputMember');
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputMember');
+    // string to bool
+    inputMember = (inputMember == 'true');
+    this.setState({inputMember: inputMember})
+  }
+
+  _getInputMemberObject = async () => {
+    let inputMemberObject = await AsyncStorage.getItem('inputMemberObject')
+    // remove for next use of object transfer
+    await AsyncStorage.removeItem('inputMemberObject');
+    inputMemberObject = JSON.parse(inputMemberObject);
+    this.setState({inputMemberObject: inputMemberObject})
+  }
+
+  _addMember = (member) => {
+    let members   = this.state.membersArray
+
+    // this works because fillings is an array starting at 0
+    // object to be added gets a new id, one higher as the highest in fillings
+    member.id = members.length;
+    members.push(member);
+
+    console.log(member.name)
+    
+    this.setState({membersArray: members});
+  }
+  
   render () {
+    const { membersArray } = this.state
+    const membersAvailable = (membersArray !== null)
+    const containerFlex = (membersAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
+    
     return (
-      <Text>Members go here</Text>
+      <View
+        style={[styles.container, containerFlex]}
+      >
+        {(!membersAvailable) && (
+          <Text
+            style={[styles.font, styles.emptyText]}
+          >{'NO MEMBERS IN HERE'}</Text>
+        )}
+
+        {(membersAvailable) && (
+          <ScrollView>
+            <FlatList
+              data={membersArray}
+              extraData={this.state}
+              keyExtractor={item => item.id}
+              renderItem={({item}) => 
+                <MemberItem 
+                  member={item}
+                  isAdmin={this._memberIsAdmin(item.id)}
+                />
+              }
+            />
+          </ScrollView>
+        )}
+
+        <Fab
+          style={styles.fab}
+          onPress={() => this.props.screenProps.rootNavigation.navigate('InviteMember', {
+            onGoBack: () => this._asyncAddMember(),
+          })}
+          >
+          <Icon
+            name='person-add'
+            color='white'
+          />
+        </Fab>
+      </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  fab: {
+    backgroundColor: '#1976D2'
+  },
+})
 
 export default MembersScreen;

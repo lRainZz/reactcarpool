@@ -17,6 +17,7 @@ import AddFillingsView from './AddFillingsView'
 // class
 
 class AddFillingsStack extends React.Component {
+  
   state = {
     editFilling: null,
     addUpdateText: 'ADD',

@@ -20,35 +20,30 @@ const GLOBALS = require ('../../globals');
 
 // class
 
-class ModalView extends React.Component {
+class InviteMemberView extends React.Component {
   static propTypes = {
     onSubmit:    PropTypes.any,
     onCancel:    PropTypes.any
   }
   
   state = {
-    carpool: 
-    {
-        id:     null, // number
-        member: null, // number
-        name:   null, // string
-        icon:   null  // number
+    member: {
+      name: null
     },
-
     isFocused: false
   }
 
-  _updateCarpool = (key, value) => {
-    let updateCarpool = this.state.carpool
+  _updateMember = (key, value) => {
+    let updateMember = this.state.member
 
-    updateCarpool[key] = value
+    updateMember[key] = value
 
-    this.setState({carpool: updateCarpool})
+    this.setState({member: updateMember})
   }
   
   render () {
     const { onSubmit, onCancel, editCarpool } = this.props
-    const { carpool } = this.state
+    const { member } = this.state
 
     return (
       <View
@@ -77,27 +72,9 @@ class ModalView extends React.Component {
               onBlur={() => this.setState({ isFocused: false })}
 
               returnKeyType={'done'}
-              onChangeText={(text) => this._updateCarpool('name', text)}
-              value={(carpool.name === null) ? '' : String(carpool.name)}
+              onChangeText={(text) => this._updateMember('name', text)}
+              value={(member.name === null) ? '' : String(member.name)}
             />
-          </View>
-
-          <View
-            style={styles.seperator}
-          />
-        </View>
-
-        <View
-          style={styles.contentContainer}
-        >
-          <Text
-            style={[styles.title, styles.font]}
-          >{'ICON'}</Text>
-
-          <View
-            style={styles.inputContainer}
-          >
-          
           </View>
 
           <View
@@ -122,11 +99,11 @@ class ModalView extends React.Component {
             buttonStyle={styles.button}
           />
           <Button 
-            title={'CREATE'}
+            title={'INVITE'}
             fontWeight={'bold'}
             fontSize={18}
             color={'#1976D2'}
-            onPress={() => onSubmit(carpool)}
+            onPress={() => onSubmit(member)}
             containerViewStyle={styles.buttonBase}
             buttonStyle={styles.button}
           />
@@ -146,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   spacer: {
-    flex: 7
+    flex: 9
   },
   buttonContainer: {
     flex: 1,
@@ -188,13 +165,7 @@ const styles = StyleSheet.create({
   },
   font: {
     fontFamily: (Platform.OS == 'android') ? 'Roboto' : ''
-  },
-
-
-  debug: {
-    borderWidth: 0,
-    borderColor: '#000'
   }
 })
 
-export default ModalView;
+export default InviteMemberView;

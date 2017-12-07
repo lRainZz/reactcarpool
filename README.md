@@ -61,16 +61,17 @@
 >  
 > * Main colors are:  
 >> * RC Light Blue: #1976D2  
->> * RC Blue:       #0220ff  
->> * RC Purple:     #9600ff  
->> * RC Pink:       #ff00ba
+>> * RC Blue:       #0220FF  
+>> * RC Purple:     #9600FF  
+>> * RC Pink:       #FF00BA
+>> * RC Amber:      #FBC02D
 >>  
 >> * RC Red:        #F44336
 >> * RC Green:      #4CAF50 
 >  
 > * Text colors are:   
 >> * RC Text on bright ground: #303030  
->> * RC Text on dark ground:   #ffffff  
+>> * RC Text on dark ground:   #FFFFFF  
 >> * RC Text for hints:        #9E9E9E  
 >  
 >  
