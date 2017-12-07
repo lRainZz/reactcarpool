@@ -474,6 +474,72 @@ class Test_CarpoolScreen extends React.Component {
     }
   }
 
+
+  getCarpools = async () => 
+  {
+    try
+    {
+        let JSONExport_FreeCarpools;
+        let JSONExport = 
+          JSONExport = {
+          
+              };
+      await firebase.database().ref().child('Carpools').once('value')
+      .then(async function (snapshot) 
+      {
+        let CarpoolKey;
+        let MaxPlace;
+        let CurrentPlaceTaken;
+        let CarpoolName;
+        let UserCarpoolKey;
+        let UserCarpoolUserKey;
+        let CreatorUserKey;
+        let CreatorName;
+        snapshot.forEach(async function (childSnapshot)  
+        {
+          CarpoolKey = childSnapshot.child('key').val();
+          MaxPlace = childSnapshot.child('MaxPlace').val();
+          CurrentPlaceTaken = 0;
+          CarpoolName = childSnapshot.child('CarpoolName').val();
+
+          await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+          .then(async function (snapshot1)
+          {
+            snapshot1.forEach(async function (childSnapshot1) {
+              CurrentPlaceTaken = CurrentPlaceTaken + 1;
+              UserCarpoolKey = childSnapshot1.child('key').val();
+              UserCarpoolUserKey = childSnapshot1.child('UserKey').val();
+              if (childSnapshot1.child('Creator').val() == '1'){
+                await firebase.database().ref('/Users/' + UserCarpoolUserKey).once('value')
+                .then(async function (snapshot2)
+                {
+                  CreatorName = snapshot2.val().FullName;
+                  CreatorUserKey = UserCarpoolUserKey;
+                });
+              }
+            });
+            let FreePlace = (MaxPlace - CurrentPlaceTaken);
+              if (FreePlace > 0) {
+                // Output generieren:
+                JSONExport_FreeCarpools = {
+                  CarpoolKey: {
+                    key: CarpoolKey,
+                    CarpoolName: CarpoolName,
+                    CreatorUserKey: CreatorUserKey,
+                    CreatorName: CreatorName
+                  }
+                }
+                JSONExport = (JSONExport + JSONExport_FreeCarpools);
+            }
+          });
+        });
+      });
+    }catch(error)
+    {
+      console.log(error);
+    }
+  }
+
   render () {
     return (
       <Container>
@@ -520,6 +586,11 @@ class Test_CarpoolScreen extends React.Component {
           onPress={this.deleteCarpool.bind(this, '-L-164BY6hrEuOYDY-XN'/*CarpoolKey der gelöscht werden soll*/)}
           title="Delete Carpool"
           color="green"
+        />
+        <Button
+          onPress={this.getCarpools.bind(this)}
+          title="Get Carpools"
+          color="orange"
         />
       </Container>
     );

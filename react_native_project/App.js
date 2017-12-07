@@ -60,7 +60,7 @@ class CarpoolApp extends React.Component {
     isAppReady: false,
     
     // debug:
-    isAppReady: true
+    //isAppReady: true
   }
 
   _FirebaseLoginFunction = async (email, password) => {
@@ -110,7 +110,7 @@ class CarpoolApp extends React.Component {
                 GLOBALS.Users = (GLOBALS.Users + JSONExport_Users);             
 
 
-                await firebase.database().ref('/Options/' + UserKey).once('value')
+                await firebase.database().ref('/Options/' + Userkey).once('value')
                 .then(async function(OptionsSnap) 
                 {
                   let UseImperialUnits= OptionsSnap.val().UseImperialUnits;
@@ -134,7 +134,7 @@ class CarpoolApp extends React.Component {
                   GLOBALS.UserOptions = (GLOBALS.UserOptions + JSONExport_Options); 
 
 
-                  await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(UserKey).once('value')
+                  await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
                   .then((snapshot2) =>
                   {
                     snapshot2.forEach(async function(childSnapshot2) {
@@ -196,6 +196,7 @@ class CarpoolApp extends React.Component {
             UserInDataBase = false;
           }
         });
+      this._LoginFunction(UserInDataBase, PasswordTrue);
       }else{
         //Offline ----------------------------------
         let UserPassword;
@@ -216,8 +217,10 @@ class CarpoolApp extends React.Component {
             }
           });
         }
-      }      
-      this._LoginFunction(UserInDataBase, PasswordTrue);
+      }
+      this.setState({
+        isLoading: false
+      })
     } catch(error){
       console.error(error);
     }
