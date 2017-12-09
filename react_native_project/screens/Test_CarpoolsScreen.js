@@ -490,14 +490,14 @@ class Test_CarpoolScreen extends React.Component {
         Export = this.getCarpools_FromCarpoolList(CarpoolList);
       });
       //console.log(Promise.resolve(Export[0]));
-      //return Promise.resolve(Export);
+      return Promise.resolve(Export);
     }catch(error)
     {
       console.log(error.message);
     }
   }
 
-  getCarpools_FromCarpoolList = async (CarpoolList) =>
+  getCarpools_FromCarpoolList = (CarpoolList) =>
   {
     try
     {
@@ -530,7 +530,6 @@ class Test_CarpoolScreen extends React.Component {
       {
         this.getCarpools_FromUserCarpoolList(UserCarpoolList, CarpoolKey, CarpoolName, MaxPlace).then(
           response => {
-            console.log(response)
             return Promise.resolve(response)
           }
         );
@@ -546,12 +545,11 @@ class Test_CarpoolScreen extends React.Component {
     try
     {
       let ExportObject = {};
-      let CurrentPlaceTaken = 0;
       let CreatorObject = {};
 
-      this.getCarpools_ForEachUserCarpool(UserCarpoolList, CurrentPlaceTaken).then(
+      this.getCarpools_ForEachUserCarpool(UserCarpoolList).then(
         response => {
-          CreatorObject = Promise.resolve(response);
+          CreatorObject = response;
           if((MaxPlace - CreatorObject.CurrentPlaceTaken) > 0)
           {
             let FreePlace = (MaxPlace - CreatorObject.CurrentPlaceTaken);
@@ -565,27 +563,69 @@ class Test_CarpoolScreen extends React.Component {
     }
   }
 
-  getCarpools_ForEachUserCarpool = async (UserCarpoolList, CurrentPlaceTaken) =>
+  getCarpools_ForEachUserCarpool = async (UserCarpoolList) =>
   {
     try
     {
       let CreatorObject = {};
+      this.getCarpools_GetUsers(UserCarpoolList).then(
+        response =>
+        {
+          return Promise.resolve(response);
+        }
+      )
+    }catch(error){
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_GetUsers = async (UserCarpoolList) =>
+  {
+    try
+    {
+      let CreatorObject = {};
+      let CurrentPlaceTaken = 0;
       Promise.all(UserCarpoolList.forEach(UserCarpoolListItem => 
-      {
-        if (UserCarpoolListItem.child('Creator').val() == '1')
         {
           let CreatorKey = UserCarpoolListItem.child('UserKey').val();
-          CreatorObject = this.getCarpools_GetCreatorName(CreatorKey);
-        }
-        CreatorObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
-      }));
+          let Creator = UserCarpoolListItem.child('Creator').val();
+          this.getCarpools_GetCreator(CreatorKey, Creator, CurrentPlaceTaken, CreatorObject).then(
+            response =>
+            {
+              CreatorObject = Promise.resolve(response);
+              CurrentPlaceTaken = CurrentPlaceTaken + 1;
+            }
+          )
+        }));
       return Promise.resolve(CreatorObject);
     }catch(error){
       console.log(error.message);
     }
   }
 
-  getCarpools_GetCreatorName = async (UserKey) =>
+  getCarpools_GetCreator = async (CreatorKey, Creator, CurrentPlaceTaken, CreatorObject) =>
+  {
+    try
+    {
+      if (Creator == '1')
+      {
+        this.getCarpools_GetCreatorName(CreatorKey, CurrentPlaceTaken).then(
+          response => {
+            response = Promise.resolve(response);
+            return Promise.resolve(response);
+        });
+      }else{
+        CreatorObject.CreatorKey = CreatorObject.CreatorKey;
+        CreatorObject.CreatorName = CreatorObject.CreatorName;
+        CreatorObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
+        return Promise.resolve(CreatorObject);
+      }
+    }catch(error){
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_GetCreatorName = async (UserKey, CurrentPlaceTaken) =>
   {
     try
     {
@@ -596,8 +636,9 @@ class Test_CarpoolScreen extends React.Component {
       {
         CreatorObject.CreatorKey = UserKey;
         CreatorObject.CreatorName = User.val().FullName;
-        return CreatorObject;
+        CreatorObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
       });
+      return Promise.resolve(CreatorObject);
     }catch(error)
     {
       console.log(error.message);
