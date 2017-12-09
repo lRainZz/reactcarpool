@@ -488,9 +488,9 @@ class Test_CarpoolScreen extends React.Component {
       .then(async (CarpoolList) =>
       {
         Export = this.getCarpools_FromCarpoolList(CarpoolList);
+        // console.log(Export[0]);
+        return Export;
       });
-      console.log(Export[0]);
-      return Export;
     }catch(error)
     {
       console.log(error.message);
@@ -511,10 +511,10 @@ class Test_CarpoolScreen extends React.Component {
 
         ExportObject = this.getCarpools_FromCarpoolKey(CarpoolKey, CarpoolName, MaxPlace);
 
-        console.log(ExportObject.CreatorName);
+        // console.log(ExportObject.CreatorName);
         Export.push(ExportObject);
+        return Export;
       }));
-      return Export;
     }catch(error)
     {
       console.log(error.message);
@@ -530,10 +530,14 @@ class Test_CarpoolScreen extends React.Component {
       await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
       .then(async (UserCarpoolList) =>
       {
-        ExportObject = this.getCarpools_FromUserCarpoolList(UserCarpoolList, CarpoolKey, CarpoolName, MaxPlace);
-      });
+        this.getCarpools_FromUserCarpoolList(UserCarpoolList, CarpoolKey, CarpoolName, MaxPlace).then(
+          response => {
+            console.log(response)
+            return Promise.resolve(response)
+          }
+        );
 
-      return ExportObject;
+      });
     }catch(error)
     {
       console.log(error.message);
@@ -555,25 +559,24 @@ class Test_CarpoolScreen extends React.Component {
           CreatorObject.CreatorKey = UserCarpoolListItem.child('UserKey').val();
           CreatorObject.CreatorName = UserCarpoolListItem.child("FullName").val();
         }
-        CurrentPlaceTaken = CurrentPlaceTaken + 1;
-      }));
-      
-      if((MaxPlace - CurrentPlaceTaken) > 0)
-      {
-        ExportObject = this.getCarpools_FillExportObject(CarpoolKey, CarpoolName, MaxPlace, CurrentPlaceTaken, CreatorObject);
-      }
 
-      return ExportObject;
+        CurrentPlaceTaken = CurrentPlaceTaken + 1;
+      
+        if((MaxPlace - CurrentPlaceTaken) > 0)
+        {
+          ExportObject = this.getCarpools_FillExportObject(CarpoolKey, CarpoolName, MaxPlace, CurrentPlaceTaken, CreatorObject);
+        }      
+      }));
+
+      return Promise.resolve(ExportObject);
+
     }catch(error)
     {
       console.log(error.message);
     }
   }
 
-  getCarpools_FillExportObject = async (CarpoolKey, CarpoolName, MaxPlace, CurrentPlaceTaken, CreatorObject) =>
-  {
-    try
-    {
+  getCarpools_FillExportObject = (CarpoolKey, CarpoolName, MaxPlace, CurrentPlaceTaken, CreatorObject) => {
       let ExportObject = {};
 
       ExportObject.CarpoolKey = CarpoolKey;
@@ -582,10 +585,6 @@ class Test_CarpoolScreen extends React.Component {
       ExportObject.CreatorName = CreatorObject.CreatorName;
 
       return ExportObject;
-    }catch(error)
-    {
-      console.log(error.message);
-    }
   }
 
 //---------------------------------------------------------------------------------------------------------------------------
