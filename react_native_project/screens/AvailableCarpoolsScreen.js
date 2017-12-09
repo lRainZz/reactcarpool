@@ -15,20 +15,22 @@ import AvailableCarpool from './availableCarpoolsModules/AvailableCarpool'
 
 class AvailableCarpoolsScreen extends React.Component {
   state = {
-    carpoolsArray: [
-      {
-        id:     '0',
-        member: '4',
-        name:   'I\'m a carpool',
-        icon:   ''
-      },
-      {
-        id:     '1',
-        member: '3',
-        name:   'Nicest carpool EUW',
-        icon:   ''
-      }
-    ]
+    carpoolsArray: null 
+    // // debug:
+    // [
+    //   {
+    //     id:     '0',
+    //     member: '4',
+    //     name:   'I\'m a carpool',
+    //     icon:   ''
+    //   },
+    //   {
+    //     id:     '1',
+    //     member: '3',
+    //     name:   'Nicest carpool EUW',
+    //     icon:   ''
+    //   }
+    // ]
   }
 
   componentWillMount () {

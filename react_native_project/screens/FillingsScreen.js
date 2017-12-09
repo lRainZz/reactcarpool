@@ -53,10 +53,6 @@ class FillingsScreen extends React.Component {
       ]
   }
 
-  _showFillingsModal = () => this.setState({ fillingsModalVisible: true})
-
-  _hideFillingsModal = () => this.setState({ fillingsModalVisible: false})
-
   _getTotalPrice = (avgConsumption, tripLength, fuelPrice) => {
     let totalPrice = ((tripLength / 100) * avgConsumption * fuelPrice);
 
