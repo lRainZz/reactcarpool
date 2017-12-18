@@ -479,114 +479,184 @@ class Test_CarpoolScreen extends React.Component {
 
 
 
-  getCarpools = async () =>
+  getCarpools = async () => 
   {
     try
     {
       let Export = [];
-      let ExportObject;
-
-      let CarpoolKey;
-      let CarpoolName;
-      let MaxPlace;
-
-      let UserKey;
-      let Creator;
-      let CreatorKey;
-      let CreatorName;
-
-      let CurrentPlaceTaken;
-      let FreePlace;
       await firebase.database().ref().child('Carpools').once('value')
       .then(async (CarpoolList) =>
       {
-        Promise.all(CarpoolList.forEach(async (CarpoolListItem) =>
-        {
-          CarpoolKey = CarpoolListItem.child('key').val();
-          CarpoolName = CarpoolListItem.child('CarpoolName').val();
-          MaxPlace = CarpoolListItem.child('MaxPlace').val();
-          console.log('1');
-
-          await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-          .then(async (UserCarpoolList) =>
-          {
-            console.log('2');
-            Promise.all(UserCarpoolList.forEach(async (UserCarpoolListItem) => 
-            {
-              UserKey = UserCarpoolListItem.child('UserKey').val();
-              Creator = UserCarpoolListItem.child('Creator').val();
-              console.log('3');
-              if (Creator == '1')
-              {
-                console.log('3.1')
-
-                await firebase.database().ref('/Users/' + UserKey).once('value')
-                .then((User) =>
-                {
-                  CreatorKey = UserKey;
-                  CreatorName = User.val().FullName;
-                  CurrentPlaceTaken = CurrentPlaceTaken + 1;
-                  console.log('4');
-                });
-                //----------------------------------------------------------------
-                // await this.getCarpools_GetCreatorName(UserKey, CreatorKey, CreatorName, CurrentPlaceTaken).then(
-                //   response => {
-                //     let ExportObject1 = {};
-                //     ExportObject1 = Promise.resolve(response);
-                //     CreatorKey = ExportObject1.CreatorKey;
-                //     CreatorName = ExportObject1.CreatorName;
-                //     CurrentPlaceTaken = ExportObject1.CurrentPlaceTaken;
-                //     console.log('4.1')
-                // });
-                //----------------------------------------------------------------
-              }else{
-                CurrentPlaceTaken = CurrentPlaceTaken + 1;
-              }
-            }));
-          }).then(
-            response => {              
-              console.log('5.1: Max: ' + MaxPlace + ' Current: ' + CurrentPlaceTaken);
-              if((MaxPlace - CurrentPlaceTaken) > 0)
-              {
-                FreePlace = (MaxPlace - CurrentPlaceTaken);
-                ExportObject.CarpoolKey = CarpoolKey;
-                ExportObject.CarpoolName = CarpoolName;
-                ExportObject.CreatorKey = CreatorKey;
-                ExportObject.CreatorName = CreatorName;
-                ExportObject.FreePlace = FreePlace;
-                console.log('5.2');
-                Export.push(ExportObject);
-              }
-            }
-          );
-        }));
+        Export = this.getCarpools_FromCarpoolList(CarpoolList);
       });
-      //return Promise.resolve(Export);
-      //console.log(Export[0]);
+      //console.log(Promise.resolve(Export[0]));
+      return Promise.resolve(Export);
     }catch(error)
     {
       console.log(error.message);
     }
   }
 
-  // getCarpools_GetCreatorName = async (UserKey, CreatorKey, CreatorName, CurrentPlaceTaken) =>
-  // {
-  //   try
-  //   {
-  //     await firebase.database().ref('/Users/' + UserKey).once('value')
-  //     .then((User) =>
-  //     {
-  //       let ExportObject  = {};
-  //       ExportObject.CreatorKey = UserKey;
-  //       ExportObject.CreatorName = User.val().FullName;
-  //       ExportObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
-  //       console.log('4');
-  //       return ExportObject;
-  //     });
-  //   }catch(error){
-  //     console.log(error.message);
-  //   }
-  // }
+  getCarpools_FromCarpoolList = (CarpoolList) =>
+  {
+    try
+    {
+      let Export = [];
+      Promise.all(CarpoolList.forEach(async (CarpoolListItem) =>
+      {
+        let ExportObject = {};
+        CarpoolKey = CarpoolListItem.child('key').val();
+        CarpoolName = CarpoolListItem.child('CarpoolName').val();
+        MaxPlace = CarpoolListItem.child('MaxPlace').val();
+
+        ExportObject = this.getCarpools_FromCarpoolKey(CarpoolKey, CarpoolName, MaxPlace);
+        Export.push(ExportObject);
+      }));
+      return Promise.resolve(Export);
+    }catch(error)
+    {
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_FromCarpoolKey = async (CarpoolKey, CarpoolName, MaxPlace) =>
+  {
+    try
+    {
+      let ExportObject = {};
+
+      await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+      .then(async (UserCarpoolList) =>
+      {
+        this.getCarpools_FromUserCarpoolList(UserCarpoolList, CarpoolKey, CarpoolName, MaxPlace).then(
+          response => {
+            return Promise.resolve(response)
+          }
+        );
+      });
+    }catch(error)
+    {
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_FromUserCarpoolList = async (UserCarpoolList, CarpoolKey, CarpoolName, MaxPlace) =>
+  {
+    try
+    {
+      let ExportObject = {};
+      let CreatorObject = {};
+
+      this.getCarpools_ForEachUserCarpool(UserCarpoolList).then(
+        response => {
+          CreatorObject = response;
+          if((MaxPlace - CreatorObject.CurrentPlaceTaken) > 0)
+          {
+            let FreePlace = (MaxPlace - CreatorObject.CurrentPlaceTaken);
+            ExportObject = this.getCarpools_FillExportObject(CarpoolKey, CarpoolName,  CreatorObject, FreePlace);
+            return Promise.resolve(ExportObject);
+          }
+        });
+    }catch(error)
+    {
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_ForEachUserCarpool = async (UserCarpoolList) =>
+  {
+    try
+    {
+      let CreatorObject = {};
+      this.getCarpools_GetUsers(UserCarpoolList).then(
+        response =>
+        {
+          return Promise.resolve(response);
+        }
+      )
+    }catch(error){
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_GetUsers = async (UserCarpoolList) =>
+  {
+    try
+    {
+      let CreatorObject = {};
+      let CurrentPlaceTaken = 0;
+      Promise.all(UserCarpoolList.forEach(UserCarpoolListItem => 
+        {
+          let CreatorKey = UserCarpoolListItem.child('UserKey').val();
+          let Creator = UserCarpoolListItem.child('Creator').val();
+          this.getCarpools_GetCreator(CreatorKey, Creator, CurrentPlaceTaken, CreatorObject).then(
+            response =>
+            {
+              CreatorObject = Promise.resolve(response);
+              CurrentPlaceTaken = CurrentPlaceTaken + 1;
+            }
+          )
+        }));
+      return Promise.resolve(CreatorObject);
+    }catch(error){
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_GetCreator = async (CreatorKey, Creator, CurrentPlaceTaken, CreatorObject) =>
+  {
+    try
+    {
+      if (Creator == '1')
+      {
+        this.getCarpools_GetCreatorName(CreatorKey, CurrentPlaceTaken).then(
+          response => {
+            response = Promise.resolve(response);
+            return Promise.resolve(response);
+        });
+      }else{
+        CreatorObject.CreatorKey = CreatorObject.CreatorKey;
+        CreatorObject.CreatorName = CreatorObject.CreatorName;
+        CreatorObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
+        return Promise.resolve(CreatorObject);
+      }
+    }catch(error){
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_GetCreatorName = async (UserKey, CurrentPlaceTaken) =>
+  {
+    try
+    {
+      let CreatorObject = {};
+      let CreatorName;
+      await firebase.database().ref('/Users/' + UserKey).once('value')
+      .then(async (User) =>
+      {
+        CreatorObject.CreatorKey = UserKey;
+        CreatorObject.CreatorName = User.val().FullName;
+        CreatorObject.CurrentPlaceTaken = CurrentPlaceTaken + 1;
+      });
+      return Promise.resolve(CreatorObject);
+    }catch(error)
+    {
+      console.log(error.message);
+    }
+  }
+
+  getCarpools_FillExportObject = (CarpoolKey, CarpoolName, CreatorObject, FreePlace) => {
+      let ExportObject = {};
+
+      ExportObject.CarpoolKey = CarpoolKey;
+      ExportObject.CarpoolName = CarpoolName;
+      ExportObject.CreatorKey = CreatorObject.CreatorKey;
+      ExportObject.CreatorName = CreatorObject.CreatorName;
+      ExportObject.FreePlace = FreePlace;
+      console.log('Name: '+ ExportObject.CreatorName);
+
+      return ExportObject;
+  }
 
 //---------------------------------------------------------------------------------------------------------------------------
 
