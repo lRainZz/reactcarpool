@@ -20,7 +20,7 @@ import { stringify } from 'querystring';
 
 class Test_CarpoolScreen extends React.Component { 
 
-  getCarpools = async () =>
+  getCarpools = () =>
   {
     try
     {
@@ -30,102 +30,67 @@ class Test_CarpoolScreen extends React.Component {
       let CarpoolName;
       let MaxPlace;
 
-      await firebase.database().ref().child('Carpools').once('value')
-      .then(async (CarpoolList) =>
+      firebase.database().ref().child('Carpools').once('value')
+      .then((CarpoolList) =>
       {
-        Promise.all(CarpoolList.forEach(async (CarpoolListItem) => // CarpoolList
+        Promise.all(CarpoolList.forEach(async (CarpoolListItem) =>
         {
           CarpoolKey = CarpoolListItem.child('key').val();
           CarpoolName = CarpoolListItem.child('CarpoolName').val();
           MaxPlace = CarpoolListItem.child('MaxPlace').val();
 
-          const FreePlace = await this.getFreePlace(CarpoolKey, MaxPlace); // vor getExportObject();
-
-          const CreatorObject = await this.getCreator(CarpoolKey); // vor getExportObject();
-
-          const ExportObject = await this.getExportobject(CreatorObject, CarpoolKey, CarpoolName, FreePlace); // nach  getFreePlace(); und getCreator();
-
-          Export.push(ExportObject); // nach getExportObject();
-        })).then(
-          response =>
+          firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+          .then((UserCarpoolList) =>
           {
-            return Export;
-          }
-        );
-      });
+            UserCarpoolList.forEach((UserCarpoolListItem) => 
+            {
+              if (UserCarpoolListItem.child('Creator').val() == '1')
+              {
+                let UserKey = UserCarpoolListItem.child('UserKey').val();
+                firebase.database().ref('/Users/' + UserKey).once('value')
+                .then((User) =>
+                {
+                  let CreatorObject = {};
+                  CreatorObject.CreatorKey = UserKey;
+                  CreatorObject.CreatorName = User.val().FullName;
+                  
+                  firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                  .then((UserCarpoolList) =>
+                  {
+                    let CurrentPlaceTaken = 0;
+                    Promise.all(UserCarpoolList.forEach((UserCarpoolListItem) =>
+                    {
+                      CurrentPlaceTaken++;
+                    })).then(
+                      response =>
+                      {
+                        let FreePlace = (MaxPlace - CurrentPlaceTaken);
+
+                        let ExportObject = {};
+                        ExportObject.CarpoolKey = CarpoolKey;
+                        ExportObject.CarpoolName = CarpoolName;
+                        ExportObject.CreatorKey = CreatorObject.CreatorKey;
+                        ExportObject.CreatorName = CreatorObject.CreatorName;
+                        ExportObject.FreePlace = FreePlace;
+                        console.log(ExportObject);
+                        Export.push(ExportObject);
+                      }
+                    );
+                  });
+                });
+              }
+            });
+          });
+        }));
+      }).then(
+        response =>
+        {
+          console.log(Export);
+          return Export;
+        }        
+      );
     }catch(error)
     {
-      console.log(error.message);
-    }
-  }
-
-  getCreator = (CarpoolKey) => // die funzt einwandfrei
-  {
-    try
-    {
-      firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-      .then((UserCarpoolList) =>
-      {
-        UserCarpoolList.forEach((UserCarpoolListItem) => 
-        {
-          if (UserCarpoolListItem.child('Creator').val() == '1')
-          {
-            let UserKey = UserCarpoolListItem.child('UserKey').val();
-            firebase.database().ref('/Users/' + UserKey).once('value')
-            .then((User) =>
-            {
-              let CreatorObject = {};
-              CreatorObject.CreatorKey = UserKey;
-              CreatorObject.CreatorName = User.val().FullName;
-              return CreatorObject;
-            });
-          }
-        });
-      });
-    }catch(error){
-      console.log(error.message);
-    }
-  }
-
-  getFreePlace = (CarpoolKey, MaxPlace) => // die funzt einwandfrei
-  {
-    try
-    {
-      firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-      .then((UserCarpoolList) =>
-      {
-        let CurrentPlaceTaken = 0;
-        Promise.all(UserCarpoolList.forEach((UserCarpoolListItem) =>
-        {
-          CurrentPlaceTaken++;
-        })).then(
-          response =>
-          {
-            let FreePlace = (MaxPlace - CurrentPlaceTaken);
-            return FreePlace;
-          }
-        );
-      });
-    }catch(error){
-      console.log(error.message);
-    }
-  }
-
-  getExportobject = (CreatorObject, CarpoolKey, CarpoolName, FreePlace) => //triggert leider momentan zur selben zeit wie die oberen zwei Funktionen
-  {
-    try
-    {
-      let ExportObject = {};
-      ExportObject.CarpoolKey = CarpoolKey;
-      ExportObject.CarpoolName = CarpoolName;
-      ExportObject.CreatorKey = CreatorObject.CreatorKey;
-      ExportObject.CreatorName = CreatorObject.CreatorName;
-      ExportObject.FreePlace = FreePlace;
-      console.log('Export: FreePlace: ' + ExportObject.FreePlace);
-      console.log('Export: Creator: ' + ExportObject.CreatorName);
-      console.log('Export: Carpool: ' + ExportObject.CarpoolName);
-      return ExportObject;
-    }catch(error){
       console.log(error.message);
     }
   }
