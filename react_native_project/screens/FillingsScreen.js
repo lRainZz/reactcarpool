@@ -14,6 +14,8 @@ import Toast from 'react-native-simple-toast';
 
 import sha256 from 'sha256';
 
+import * as firebase from 'firebase';
+
 
 //own modules
 
@@ -35,26 +37,42 @@ class FillingsScreen extends React.Component {
     inputFillingObject: null,
 
     // live init as null
-    // fillingsArray: null
-    fillingsArray:
-      [
-        {  
-          "id"         : 1,
-          'tripmeter'  : 1000,
-          'consumption': 7.0,
-          'fuelPrice'  : 1.309,
-          'drivenDays' : 4,
-          'date'       : '08.01.2017'
-        },
-        {
-          'id'         : 0,
-          'tripmeter'  : 860,
-          'consumption': 7.3,
-          'fuelPrice'  : 1.309,
-          'drivenDays' : 4,
-          'date'       : '01.01.2017'
-        }
-      ]
+    fillingsArray: null
+      // [
+      //   {  
+      //     "id"         : 1,
+      //     'tripmeter'  : 1000,
+      //     'consumption': 7.0,
+      //     'fuelPrice'  : 1.309,
+      //     'drivenDays' : 4,
+      //     'date'       : '08.01.2017'
+      //   },
+      //   {
+      //     'id'         : 0,
+      //     'tripmeter'  : 860,
+      //     'consumption': 7.3,
+      //     'fuelPrice'  : 1.309,
+      //     'drivenDays' : 4,
+      //     'date'       : '01.01.2017'
+      //   }
+      // ]
+  }
+
+  componentWillMount () {
+    this._loadFillingsFromGlobals()
+  }
+
+  _loadFillingsFromGlobals = () => {
+    let allFillingsObject = GLOBALS.Fillings;
+    let loadArray         = [];
+
+    console.log('LoadingFillings GLOBALS: ' + allFillingsObject)
+
+    for (filling in allFillingsObject) {
+      loadArray.shift(filling)
+    }
+
+    this.setState({fillingsArray: loadArray})
   }
 
   _getTotalPrice = (avgConsumption, tripLength, fuelPrice) => {
@@ -111,11 +129,12 @@ class FillingsScreen extends React.Component {
     if (!update) {
       // this works because fillings is an array starting at 0
       // object to be added gets a new id, one higher as the highest in fillings
-      fillingObject.id = this._getNewId;
+      fillingObject.id = this._getNewId();
       fillings.unshift(fillingObject);
     }
 
     this._addOrUpdateFirebaseGlobals(GLOBALS.ActiveCarpoolId, fillingObject, update)
+
     this.setState({fillingsArray: fillings})
   }
 
@@ -159,6 +178,7 @@ class FillingsScreen extends React.Component {
   _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256((Math.round(Math.random() * 1000000) + Time)); //generates Key from random value and epoche timestamp
+    return Id
     console.log('Add filling new key: ' + Key);    
   }
 
@@ -176,45 +196,52 @@ class FillingsScreen extends React.Component {
       });
     }
 
-    if(Connected){
-      if (update) {
-        firebase.database().ref('Fillings/' + Id).update({
-          CarpoolKey: CarpoolKey,
-          tripmeter: Filling.tripmeter,
-          consumption: Filling.consumption,
-          fuelPrice: Filling.fuelPrice,
-          drivenDays: Filling.drivenDays,
-          date: Filling.date,
-        });
-      } else {
-        // Add Filling to Firebase
-        firebase.database().ref('Fillings/' + Id).set({
-          id: Filling.Id,
-          CarpoolKey: CarpoolKey,
-          tripmeter: Filling.tripmeter,
-          consumption: Filling.consumption,
-          fuelPrice: Filling.fuelPrice,
-          drivenDays: Filling.drivenDays,
-          date: Filling.date,
-        });
-      }  
+    try {
+      if(Connected){
+        if (update) {
+          firebase.database().ref('Fillings/' + Filling.Id).update({
+            CarpoolKey:  CarpoolKey,
+            tripmeter:   Filling.tripmeter,
+            consumption: Filling.consumption,
+            fuelPrice:   Filling.fuelPrice,
+            drivenDays:  Filling.drivenDays,
+            date:        Filling.date,
+          });
+        } else {
+          // Add Filling to Firebase
+          firebase.database().ref('Fillings/' + Filling.Id).set({
+            id:          Filling.Id,
+            CarpoolKey:  CarpoolKey,
+            tripmeter:   Filling.tripmeter,
+            consumption: Filling.consumption,
+            fuelPrice:   Filling.fuelPrice,
+            drivenDays:  Filling.drivenDays,
+            date:        Filling.date,
+          });
+        }  
+      }
+    } catch(error) {
+      console.log(error.message)
     }
+    
     
     //Generate Files in global.js
     JSONExport_Filling = {
       Id: {
-        id: ID,
-        CarpoolKey: CarpoolKey,
-        tripmeter: Filling.tripmeter,
+        id:          Filling.Id,
+        CarpoolKey:  CarpoolKey,
+        tripmeter:   Filling.tripmeter,
         consumption: Filling.consumption,
-        fuelPrice: Filling.fuelPrice,
-        drivenDays: Filling.drivenDays,
-        date: Filling.date
+        fuelPrice:   Filling.fuelPrice,
+        drivenDays:  Filling.drivenDays,
+        date:        Filling.date
       }
     }
 
     //Set globals
     GLOBALS.Fillings = (GLOBALS.Fillings + JSONExport_Filling);
+
+    console.log('Adding filling, FirebaseGLOBALS done')
   }
   // All Functions--------------------------------------------------------------------------------------
 

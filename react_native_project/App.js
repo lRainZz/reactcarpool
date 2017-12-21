@@ -71,14 +71,18 @@ class CarpoolApp extends React.Component {
 
     try{
       let Connected;
-      firebase.database().ref().child('.info/connected').on('value', function(connectedSnap) {
-        if (connectedSnap.val() === true) {
-          Connected = true;
-        } else {
-          Connected = false;
-        }
-      });
 
+      for (tryCount = 0; tryCount <= 3; tryCount++) {
+        firebase.database().ref().child('.info/connected').on('value', function(connectedSnap) {
+          if (connectedSnap.val() === true) {
+            tryCount = 99
+            Connected = true;
+          } else {
+            Connected = false;
+          }
+        });
+      }
+      
       if(Connected){
         await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value')
         .then(async function(snap) 

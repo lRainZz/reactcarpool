@@ -38,11 +38,11 @@ class FillingsItemStatistic extends React.Component {
           containerStyle={styles.section}
           
           firstValueDesc={'a distance of '}
-          firstValue={filling.tripmeter}
+          firstValue={parseFloat(filling.tripmeter, 10)}
           firstUnit={distanceUnit}
 
           secondValueDesc={'with an avg. '}
-          secondValue={filling.consumption}
+          secondValue={parseFloat(filling.consumption, 10)}
           secondUnit={volumeUnit + '/' + distanceUnit}
         />
 
@@ -52,11 +52,11 @@ class FillingsItemStatistic extends React.Component {
           containerStyle={styles.section}
 
           firstValueDesc={'in '}
-          firstValue={filling.drivenDays}
+          firstValue={parseFloat(filling.drivenDays, 10)}
           firstUnit={dayUnit}
           
           secondValueDesc={'for '}
-          secondValue={filling.fuelPrice}
+          secondValue={parseFloat(filling.fuelPrice, 10)}
           secondUnit={priceUnit + '/' + volumeUnit}
         />
       </View>
