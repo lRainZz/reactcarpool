@@ -494,17 +494,20 @@ class Test_CarpoolScreen extends React.Component {
                             {
                               let FreePlace = (MaxPlace - CurrentPlaceTaken);
 
-                              let ExportObject = {};
-                              ExportObject.CarpoolKey = CarpoolKey;
-                              ExportObject.CarpoolName = CarpoolName;
-                              ExportObject.CreatorKey = CreatorObject.CreatorKey;
-                              ExportObject.CreatorName = CreatorObject.CreatorName;
-                              ExportObject.FreePlace = FreePlace;
-                              Export.push(ExportObject);
-                              if (CarpoolCounter == CarpoolMax)
+                              if(FreePlace > 0)
                               {
-                                return Export;
-                              }
+                                let ExportObject = {};
+                                ExportObject.CarpoolKey = CarpoolKey;
+                                ExportObject.CarpoolName = CarpoolName;
+                                ExportObject.CreatorKey = CreatorObject.CreatorKey;
+                                ExportObject.CreatorName = CreatorObject.CreatorName;
+                                ExportObject.FreePlace = FreePlace;
+                                Export.push(ExportObject);
+                                if (CarpoolCounter == CarpoolMax)
+                                {
+                                  return Export;
+                                }
+                              }                              
                             }
                           );
                         });
