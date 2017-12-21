@@ -12,6 +12,8 @@ import Modal from 'react-native-simple-modal';
 
 import Toast from 'react-native-simple-toast';
 
+import sha256 from 'sha256';
+
 
 //own modules
 
@@ -149,6 +151,43 @@ class FillingsScreen extends React.Component {
       console.log('ERR writing asyncUpdate: ' + error.message)
     }
   }
+
+// All Functions--------------------------------------------------------------------------------------
+  _getNewId = async() => {
+    let Time = (new Date).getTime();
+    let Id = sha256((Math.round(Math.random() * 1000000) + Time)); //generates Key from random value and epoche timestamp
+    console.log(Key);    
+  }
+
+  _addToFirebase = async(CarpoolKey, Filling) => {
+    // Add Filling to Firebase
+    firebase.database().ref('Fillings/' +Id).set({
+      id: Filling.Id,
+      CarpoolKey: CarpoolKey,
+      tripmeter: Filling.tripmeter,
+      consumption: Filling.consumption,
+      fuelPrice: Filling.fuelPrice,
+      drivenDays: Filling.drivenDays,
+      date: Filling.date,
+    });
+
+    //Generate Files in global.js
+    JSONExport_Filling = {
+      Id: {
+        id: ID,
+        CarpoolKey: CarpoolKey,
+        tripmeter: Filling.tripmeter,
+        consumption: Filling.consumption,
+        fuelPrice: Filling.fuelPrice,
+        drivenDays: Filling.drivenDays,
+        date: Filling.date
+      }
+    }
+
+    //Set globals
+    GLOBALS.Fillings = (GLOBALS.Fillings + JSONExport_Filling);
+  }
+  // All Functions--------------------------------------------------------------------------------------
 
   render () {
     const { fillingsArray, addFillingsVisible, fabVisible, editFilling } = this.state

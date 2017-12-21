@@ -16,5 +16,8 @@ module.exports = {
     },
     Creator: {
 
-    }
+    },
+    Fillings: {
+
+    },
 }
