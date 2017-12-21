@@ -15,6 +15,7 @@ import moment from 'moment';
 //own modules
 
 import Header from '../ApplicationHeader';
+
 import { stringify } from 'querystring';
 
 
@@ -436,7 +437,7 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  static getCarpools = () =>
+  static getCarpools = async () =>
   {
     try
     {
@@ -505,7 +506,8 @@ class CarpoolFunctions extends React.Component {
                                 Export.push(ExportObject);
                                 if (CarpoolCounter == CarpoolMax)
                                 {
-                                  return Export;
+                                  console.log('GetCarpools: ' + Export)
+                                  return Export
                                 }
                               }                              
                             }

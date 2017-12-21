@@ -44,7 +44,7 @@ class AvailableCarpool extends React.Component {
         >
           <Text
             style={[styles.font, styles.headerText]}
-          >{carpool.name}</Text>
+          >{carpool.CarpoolName}</Text>
         </View>
 
         <View

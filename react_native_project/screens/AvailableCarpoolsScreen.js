@@ -6,6 +6,8 @@ import { View, Text, StyleSheet, Platform, ScrollView, FlatList } from 'react-na
 
 import Toast from 'react-native-simple-toast'
 
+import * as firebase from 'firebase';
+
 
 // own modules
 
@@ -21,25 +23,96 @@ class AvailableCarpoolsScreen extends React.Component {
     // // debug:
     // [
     //   {
-    //     id:     '0',
-    //     member: '4',
-    //     name:   'I\'m a carpool',
-    //     icon:   ''
+    //     CarpoolKey:  '0',
+    //     FreePlace:   2,
+    //     CarpoolName: 'I\'m a carpool',
+    //     CreatorKey:  '',
+    //     CreatorName: ''
     //   },
-    //   {
-    //     id:     '1',
-    //     member: '3',
-    //     name:   'Nicest carpool EUW',
-    //     icon:   ''
-    //   }
     // ]
   }
 
-  componentWillMount = async () => {
-    await new CarpoolFunctions.getCarpools().then( availableCarpools => {
-      this.setState({carpoolsArray: availableCarpools})
-    })
+  getCarpools = async () => {
+    try
+    {
+      let CarpoolMax = 0;
+      let CarpoolCounter = 0;
+      let Export = [];
+
+      let CarpoolKey;
+      let CarpoolName;
+      let MaxPlace;
+
+      firebase.database().ref().child('Carpools').once('value')
+      .then((CarpoolList1) => {
+        Promise.all(CarpoolList1.forEach((CarpoolListItem1) => {
+          CarpoolMax++;
+        })).then(
+          response => {
+            firebase.database().ref().child('Carpools').once('value')
+            .then((CarpoolList) => {
+              Promise.all(CarpoolList.forEach((CarpoolListItem) => {
+                CarpoolCounter++;
+                CarpoolKey = CarpoolListItem.child('key').val();
+                CarpoolName = CarpoolListItem.child('CarpoolName').val();
+                MaxPlace = CarpoolListItem.child('MaxPlace').val();
+
+                firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                .then((UserCarpoolList) => {
+                  UserCarpoolList.forEach((UserCarpoolListItem) => {
+                    if (UserCarpoolListItem.child('Creator').val() == '1') {
+                      let UserKey = UserCarpoolListItem.child('UserKey').val();
+                      firebase.database().ref('/Users/' + UserKey).once('value')
+                      .then((User) => {
+                        let CreatorObject = {};
+                        CreatorObject.CreatorKey = UserKey;
+                        CreatorObject.CreatorName = User.val().FullName;
+                        
+                        firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                        .then((UserCarpoolList) => {
+                          let CurrentPlaceTaken = 0;
+                          Promise.all(UserCarpoolList.forEach((UserCarpoolListItem) => {
+                            CurrentPlaceTaken++;
+                          })).then(
+                            response => {
+                              let FreePlace = (MaxPlace - CurrentPlaceTaken);
+
+                              if(FreePlace > 0) {
+                                let ExportObject = {};
+                                ExportObject.CarpoolKey = CarpoolKey;
+                                ExportObject.CarpoolName = CarpoolName;
+                                ExportObject.CreatorKey = CreatorObject.CreatorKey;
+                                ExportObject.CreatorName = CreatorObject.CreatorName;
+                                ExportObject.FreePlace = FreePlace;
+                                Export.push(ExportObject);
+
+                                if (CarpoolCounter == CarpoolMax) {
+                                  console.log('GetCarpools: ' + Export)
+                                  // return Export
+                                  this.setState({carpoolsArray: Export})
+                                }
+                              }                              
+                            }
+                          );
+                        });
+                      });
+                    }
+                  });
+                });
+              }));
+            });
+          });
+      });      
+    } catch(error) {
+      console.log(error.message);
+    }
   }
+
+  async componentWillMount() {
+    await this.getCarpools()
+  }
+
+  // implement pull down to refresh
 
   _sendJoinRequest = (carpool) => {
     // send join request
@@ -73,7 +146,7 @@ class AvailableCarpoolsScreen extends React.Component {
             <FlatList
               data={carpoolsArray}
               extraData={this.state}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.CarpoolKey}
               renderItem={({item}) => 
                 <AvailableCarpool
                   carpool={item}
