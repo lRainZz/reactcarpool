@@ -19,6 +19,8 @@ import sha256 from 'sha256';
 
 import FillingsItem from './fillingsModules/FillingsItem';
 
+const GLOBALS = require('../globals');
+
 
 // class
 
@@ -109,10 +111,11 @@ class FillingsScreen extends React.Component {
     if (!update) {
       // this works because fillings is an array starting at 0
       // object to be added gets a new id, one higher as the highest in fillings
-      fillingObject.id = fillings.length;
+      fillingObject.id = this._getNewId;
       fillings.unshift(fillingObject);
     }
 
+    this._addOrUpdateFirebaseGlobals(GLOBALS.ActiveCarpoolId, fillingObject, update)
     this.setState({fillingsArray: fillings})
   }
 
@@ -153,24 +156,50 @@ class FillingsScreen extends React.Component {
   }
 
 // All Functions--------------------------------------------------------------------------------------
-  _getNewId = async() => {
+  _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256((Math.round(Math.random() * 1000000) + Time)); //generates Key from random value and epoche timestamp
-    console.log(Key);    
+    console.log('Add filling new key: ' + Key);    
   }
 
-  _addToFirebase = async(CarpoolKey, Filling) => {
-    // Add Filling to Firebase
-    firebase.database().ref('Fillings/' +Id).set({
-      id: Filling.Id,
-      CarpoolKey: CarpoolKey,
-      tripmeter: Filling.tripmeter,
-      consumption: Filling.consumption,
-      fuelPrice: Filling.fuelPrice,
-      drivenDays: Filling.drivenDays,
-      date: Filling.date,
-    });
+  _addOrUpdateFirebaseGlobals = async(CarpoolKey, Filling, update) => {
+    let Connected
+    
+    for (tryCount = 0; tryCount <= 3; tryCount++) {
+      firebase.database().ref().child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          tryCount = 99
+          Connected = true;
+        } else {
+          Connected = false;
+        }
+      });
+    }
 
+    if(Connected){
+      if (update) {
+        firebase.database().ref('Fillings/' + Id).update({
+          CarpoolKey: CarpoolKey,
+          tripmeter: Filling.tripmeter,
+          consumption: Filling.consumption,
+          fuelPrice: Filling.fuelPrice,
+          drivenDays: Filling.drivenDays,
+          date: Filling.date,
+        });
+      } else {
+        // Add Filling to Firebase
+        firebase.database().ref('Fillings/' + Id).set({
+          id: Filling.Id,
+          CarpoolKey: CarpoolKey,
+          tripmeter: Filling.tripmeter,
+          consumption: Filling.consumption,
+          fuelPrice: Filling.fuelPrice,
+          drivenDays: Filling.drivenDays,
+          date: Filling.date,
+        });
+      }  
+    }
+    
     //Generate Files in global.js
     JSONExport_Filling = {
       Id: {
