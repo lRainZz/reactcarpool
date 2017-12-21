@@ -437,6 +437,62 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
+  getCarpools = async (CarpoolKey) => {
+    try
+    {
+      let FirebaseIds = [];
+      let GlobalIds = [];
+      firebase.database().ref().child('Fillings').once('value')
+      .then((FillingList) => {
+        Promise.all(FillingList.forEach((FillingListItem) => {
+          let Id = FillingListItem.child('Id').val();
+          FirebaseIds.push(Id);
+        })).then(
+          response => {
+            let GlobalsObject = {};
+            let Filling = {};
+            let FillingId;
+
+            GlobalsObject = GLOBALS.Fillings;
+            let GlobalsArray = Object.entries(GlobalsObject);
+
+            GlobalsArray.forEach(FillingArray => {
+              Filling = FillingArray[1];
+              FillingId = Filling.id;
+              if (FirebaseIds.indexOf(FillingId) !== '-1'){
+                // Add Filling to Firebase
+                console.log(FillingId);
+                firebase.database().ref('Fillings/' + FillingId).set({
+                  id: FillingId,
+                  CarpoolKey: Filling.CarpoolKey,
+                  tripmeter: Filling.tripmeter,
+                  consumption: Filling.consumption,
+                  fuelPrice: Filling.fuelPrice,
+                  drivenDays: Filling.drivenDays,
+                  date: Filling.date,
+                });
+
+                //Generate Files in global.js
+                JSONExport_Filling = {
+                  FillingId: {
+                    id: FillingId,
+                    CarpoolKey: Filling.CarpoolKey,
+                    tripmeter: Filling.tripmeter,
+                    consumption: Filling.consumption,
+                    fuelPrice: Filling.fuelPrice,
+                    drivenDays: Filling.drivenDays,
+                    date: Filling.date
+                  }
+                }
+              }
+            });
+          }
+        );
+      });      
+    } catch(error) {
+      console.log(error.message);
+    }
+  }
 //---------------------------------------------------------------------------------------------------------------------------
 
   render () {
@@ -485,6 +541,11 @@ class CarpoolFunctions extends React.Component {
           onPress={this.deleteCarpool.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey der gelöscht werden soll*/)}
           title="Delete Carpool"
           color="green"
+        />
+        <Button
+          onPress={this.getCarpools.bind(this, '-L-vet94Duh-qAQgxdwo')}
+          title="Add missing Fillings"
+          color="orange"
         />
       </Container>
     );
