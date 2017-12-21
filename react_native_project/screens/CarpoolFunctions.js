@@ -437,7 +437,7 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  getCarpools = async (CarpoolKey) => {
+  _compareFillings = async () => {
     try
     {
       let FirebaseIds = [];
@@ -461,7 +461,6 @@ class CarpoolFunctions extends React.Component {
               FillingId = Filling.id;
               if (FirebaseIds.indexOf(FillingId) !== '-1'){
                 // Add Filling to Firebase
-                console.log(FillingId);
                 firebase.database().ref('Fillings/' + FillingId).set({
                   id: FillingId,
                   CarpoolKey: Filling.CarpoolKey,
@@ -471,19 +470,6 @@ class CarpoolFunctions extends React.Component {
                   drivenDays: Filling.drivenDays,
                   date: Filling.date,
                 });
-
-                //Generate Files in global.js
-                JSONExport_Filling = {
-                  FillingId: {
-                    id: FillingId,
-                    CarpoolKey: Filling.CarpoolKey,
-                    tripmeter: Filling.tripmeter,
-                    consumption: Filling.consumption,
-                    fuelPrice: Filling.fuelPrice,
-                    drivenDays: Filling.drivenDays,
-                    date: Filling.date
-                  }
-                }
               }
             });
           }
@@ -543,7 +529,7 @@ class CarpoolFunctions extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.getCarpools.bind(this, '-L-vet94Duh-qAQgxdwo')}
+          onPress={this._compareFillings.bind(this)}
           title="Add missing Fillings"
           color="orange"
         />
