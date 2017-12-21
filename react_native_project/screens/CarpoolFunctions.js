@@ -18,7 +18,7 @@ import Header from '../ApplicationHeader';
 import { stringify } from 'querystring';
 
 
-class Test_CarpoolScreen extends React.Component { 
+class CarpoolFunctions extends React.Component { 
 
   createNewCarpool = async (CarpoolName, MaxPlace) => 
   {
@@ -436,7 +436,7 @@ class Test_CarpoolScreen extends React.Component {
     }
   }
 
-  getCarpools = () =>
+  static getCarpools = () =>
   {
     try
     {
@@ -584,4 +584,4 @@ class Test_CarpoolScreen extends React.Component {
   }
 }
 
-export default Test_CarpoolScreen;
+export default CarpoolFunctions;

@@ -11,6 +11,8 @@ import Toast from 'react-native-simple-toast'
 
 import AvailableCarpool from './availableCarpoolsModules/AvailableCarpool'
 
+import CarpoolFunctions from './CarpoolFunctions'
+
 // class
 
 class AvailableCarpoolsScreen extends React.Component {
@@ -33,8 +35,10 @@ class AvailableCarpoolsScreen extends React.Component {
     // ]
   }
 
-  componentWillMount () {
-    // load carpools
+  componentWillMount = async () => {
+    await new CarpoolFunctions.getCarpools().then( availableCarpools => {
+      this.setState({carpoolsArray: availableCarpools})
+    })
   }
 
   _sendJoinRequest = (carpool) => {

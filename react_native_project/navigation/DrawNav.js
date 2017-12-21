@@ -13,7 +13,7 @@ import OptionsScreen from '../screens/OptionsScreen';
 
 import CarpoolsScreen from '../screens/CarpoolsScreen';
 
-import Test_CarpoolsScreen from '../screens/Test_CarpoolsScreen';
+import CarpoolFunctions from '../screens/CarpoolFunctions';
 
 import SideBar from './SideBar';
 
@@ -40,7 +40,7 @@ const DrawNav = DrawerNavigator(
       screen: OptionsScreen
     },
     Test_Carpools: {
-      screen: Test_CarpoolsScreen
+      screen: CarpoolFunctions
     }
   },
   {
