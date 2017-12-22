@@ -47,7 +47,7 @@ class CarpoolItem extends React.Component {
         >
           <Text
             style={[styles.font, styles.headerText]}
-          >{carpool.Carpoolname}</Text>
+          >{carpool.CarpoolName}</Text>
         </View>
 
         <View

@@ -86,10 +86,6 @@ class MyCarpoolsScreen extends React.Component {
         }
     )
 
-    console.log(GLOBALS.Carpools)
-    console.log('/---------------------------------/')
-    console.log(loadArray)
-
     this.setState({activeCarpool: GLOBALS.Options.ActiveCarpoolId, carpoolsArray: loadArray})
   }
 
