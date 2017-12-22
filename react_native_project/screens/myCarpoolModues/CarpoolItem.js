@@ -79,24 +79,24 @@ class CarpoolItem extends React.Component {
           <View
             style={styles.dropdown}
           >
-              <Button 
-                title={'SET AS ACTIVE'}
-                fontWeight={'bold'}
-                fontSize={18}
-                color={'#1976D2'}
-                buttonStyle={styles.dropButton}
-                containerViewStyle={styles.buttonFlex}
-                onPress={() => onSetActive(carpool.id)}
-              />
-              <Button 
-                title={'LEAVE'}
-                fontWeight={'bold'}
-                fontSize={18}
-                color={'#1976D2'}
-                buttonStyle={styles.dropButton}
-                containerViewStyle={styles.buttonFlex}
-                onPress={() => onDelete(carpool)}
-              />
+            <Button 
+              title={'SET AS ACTIVE'}
+              fontWeight={'bold'}
+              fontSize={18}
+              color={'#1976D2'}
+              buttonStyle={styles.dropButton}
+              containerViewStyle={styles.buttonFlex}
+              onPress={() => onSetActive(carpool.key)}
+            />
+            <Button 
+              title={'LEAVE'}
+              fontWeight={'bold'}
+              fontSize={18}
+              color={'#1976D2'}
+              buttonStyle={styles.dropButton}
+              containerViewStyle={styles.buttonFlex}
+              onPress={() => onDelete(carpool)}
+            />
           </View>
         </Panel>
         <View 
@@ -130,17 +130,14 @@ const styles = StyleSheet.create({
   iconContainer: {
     flex: 2
   },
-  settings: {
-
-  },
   dropdown: {
-    flex: 1,
+    flex: 5,
     flexDirection: 'row',
     margin: 5,
     marginBottom: 10
   },
   dropButton: {
-    flex: 1,
+    // flex: 1,
     alignSelf: 'center',
     backgroundColor: '#fff'
   },

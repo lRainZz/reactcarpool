@@ -214,7 +214,7 @@ class FillingsScreen extends React.Component {
         } else {
           // Add Filling to Firebase
           firebase.database().ref('Fillings/' + Filling.id).set({
-            id:          Filling.Id,
+            id:          Filling.id,
             CarpoolKey:  CarpoolKey,
             tripmeter:   Filling.tripmeter,
             consumption: Filling.consumption,
@@ -232,7 +232,7 @@ class FillingsScreen extends React.Component {
     //Generate Files in global.js
     JSONExport_Filling = {
       id: {
-        id:          Filling.Id,
+        id:          Filling.id,
         CarpoolKey:  CarpoolKey,
         tripmeter:   Filling.tripmeter,
         consumption: Filling.consumption,

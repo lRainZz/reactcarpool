@@ -86,7 +86,10 @@ class MyCarpoolsScreen extends React.Component {
         }
     )
 
-    this.setState({activeCarpool: GLOBALS.Options.ActiveCarpoolId, carpoolsArray: loadArray})
+    this.setState({
+      activeCarpool: GLOBALS.Options.ActiveCarpoolId, 
+      carpoolsArray: loadArray
+    })
   }
 
   _updateCarpool = (updateCarpool) => {
@@ -151,12 +154,12 @@ class MyCarpoolsScreen extends React.Component {
             <FlatList
               data={carpoolsArray}
               extraData={this.state}
-              keyExtractor={item => item.id}
+              keyExtractor={item => item.key}
               renderItem={({item}) => 
                 <CarpoolItem 
                   carpool={item}
-                  active={this._carpoolIsActive(item.id)}
-                  onSetActive={(id) => this._setActiveCarpool(id)}
+                  active={this._carpoolIsActive(item.key)}
+                  onSetActive={(key) => this._setActiveCarpool(key)}
                   onDelete={(carpool) => this._deleteCarpool(carpool)}
                 />
               }
