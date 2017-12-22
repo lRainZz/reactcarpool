@@ -111,7 +111,7 @@ class CarpoolApp extends React.Component {
                   }
                 } 
                 //Set globals
-                GLOBALS.Users = (GLOBALS.Users + JSONExport_Users);             
+                GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
 
 
                 await firebase.database().ref('/Options/' + Userkey).once('value')
@@ -135,7 +135,7 @@ class CarpoolApp extends React.Component {
                   GLOBALS.Options.UseLastCarpool = UseLastCarpool;
                   GLOBALS.Options.UseAutoPayment = UseAutoPayment;
                   GLOBALS.Options.UseDarkTheme = UseDarkTheme;
-                  GLOBALS.UserOptions = (GLOBALS.UserOptions + JSONExport_Options); 
+                  GLOBALS.UserOptions = {...GLOBALS.UserOptions, ...JSONExport_Options}; 
 
 
                   await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
@@ -157,7 +157,7 @@ class CarpoolApp extends React.Component {
                           }
                         }
                         //Set globals
-                        GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+                        GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
                         await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
                         .then((snapshot4) =>
                         {
@@ -176,7 +176,7 @@ class CarpoolApp extends React.Component {
                               }
                             }
                             //Set globals
-                            GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+                            GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
                             if (childSnapshot3.child('Creator').val() == '1'){
                               JSONExport_Creator = {
                                 CarpoolKey: {
@@ -184,7 +184,7 @@ class CarpoolApp extends React.Component {
                                 }
                               }
                               //Set globals
-                              GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
+                              GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
                             }
                           });
                         });

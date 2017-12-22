@@ -73,9 +73,9 @@ class CarpoolFunctions extends React.Component {
         }
       }
       //Set globals
-      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
-      GLOBALS.Creator = (GLOBALS.Creator + JSONExport_Creator);
+      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+      GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
     }catch(error)
     {
       console.error(error);
@@ -276,8 +276,8 @@ class CarpoolFunctions extends React.Component {
         }
       
       //Set globals
-      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
     }else{
       firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
     }
