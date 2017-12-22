@@ -63,14 +63,15 @@ class FillingsScreen extends React.Component {
   }
 
   _loadFillingsFromGlobals = () => {
-    let allFillingsObject = GLOBALS.Fillings;
+    let allFillingsObject = Object.entries(GLOBALS.Fillings)
     let loadArray         = [];
 
-    console.log('LoadingFillings GLOBALS: ' + allFillingsObject)
-
-    for (filling in allFillingsObject) {
-      loadArray.shift(filling)
-    }
+    allFillingsObject.forEach(
+        fillingArray => {
+          filling = fillingArray[1]
+          loadArray.unshift(filling)
+        }
+    )
 
     this.setState({fillingsArray: loadArray})
   }
@@ -133,7 +134,9 @@ class FillingsScreen extends React.Component {
       fillings.unshift(fillingObject);
     }
 
-    this._addOrUpdateFirebaseGlobals(GLOBALS.ActiveCarpoolId, fillingObject, update)
+    let carpoolId = GLOBALS.ActiveCarpoolId
+
+    this._addOrUpdateFirebaseGlobals(carpoolId, fillingObject, update)
 
     this.setState({fillingsArray: fillings})
   }
@@ -178,8 +181,8 @@ class FillingsScreen extends React.Component {
   _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256((Math.round(Math.random() * 1000000) + Time)); //generates Key from random value and epoche timestamp
-    return Id
-    console.log('Add filling new key: ' + Key);    
+    console.log('Add filling new key: ' + Id);   
+    return Id 
   }
 
   _addOrUpdateFirebaseGlobals = async(CarpoolKey, Filling, update) => {
@@ -199,7 +202,7 @@ class FillingsScreen extends React.Component {
     try {
       if(Connected){
         if (update) {
-          firebase.database().ref('Fillings/' + Filling.Id).update({
+          firebase.database().ref('Fillings/' + Filling.id).update({
             CarpoolKey:  CarpoolKey,
             tripmeter:   Filling.tripmeter,
             consumption: Filling.consumption,
@@ -209,7 +212,7 @@ class FillingsScreen extends React.Component {
           });
         } else {
           // Add Filling to Firebase
-          firebase.database().ref('Fillings/' + Filling.Id).set({
+          firebase.database().ref('Fillings/' + Filling.id).set({
             id:          Filling.Id,
             CarpoolKey:  CarpoolKey,
             tripmeter:   Filling.tripmeter,
@@ -227,7 +230,7 @@ class FillingsScreen extends React.Component {
     
     //Generate Files in global.js
     JSONExport_Filling = {
-      Id: {
+      id: {
         id:          Filling.Id,
         CarpoolKey:  CarpoolKey,
         tripmeter:   Filling.tripmeter,
@@ -239,9 +242,9 @@ class FillingsScreen extends React.Component {
     }
 
     //Set globals
-    GLOBALS.Fillings = (GLOBALS.Fillings + JSONExport_Filling);
+    GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Filling}
 
-    console.log('Adding filling, FirebaseGLOBALS done')
+    console.log('Adding filling, FirebaseGLOBALS done: ' + JSON.stringify(JSONExport_Filling))
   }
   // All Functions--------------------------------------------------------------------------------------
 
