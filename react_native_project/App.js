@@ -150,12 +150,13 @@ class CarpoolApp extends React.Component {
                         var CarpoolName = snapshot3.val().CarpoolName;
                         //Generate Files in global.js: Carpools
                         JSONExport_Carpool = {
-                          KEY: {
+                          CarpoolKey: {
                             key: CarpoolKey,
                             MaxPlace: MaxPlace,
                             CarpoolName: CarpoolName
                           }
                         }
+                        console.log(JSONExport_Carpool)
                         //Set globals
                         GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
                         await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
