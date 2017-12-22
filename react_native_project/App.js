@@ -152,7 +152,8 @@ class CarpoolApp extends React.Component {
                         JSONExport_Carpool = {
                           KEY: {
                             key: CarpoolKey,
-                            MaxPlace: MaxPlace
+                            MaxPlace: MaxPlace,
+                            CarpoolName: CarpoolName
                           }
                         }
                         //Set globals
@@ -168,7 +169,6 @@ class CarpoolApp extends React.Component {
                                 key: UserCarpoolKEY,
                                 CarpoolKey: CarpoolKey,
                                 UserKey: GLOBALS.UserKey,
-                                CarpoolName: CarpoolName,
                                 Invite: '0',
                                 Join: '0',
                                 Creator: '1',
@@ -180,7 +180,7 @@ class CarpoolApp extends React.Component {
                             if (childSnapshot3.child('Creator').val() == '1'){
                               JSONExport_Creator = {
                                 CarpoolKey: {
-                                  CarpoolKey: CarpoolApp
+                                  CarpoolKey: CarpoolKey
                                 }
                               }
                               //Set globals
