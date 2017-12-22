@@ -150,10 +150,6 @@ class FillingsScreen extends React.Component {
     this.setState({fillingsArray: fillings})
   }
 
-  _updateFilling = (updateFilling) => {
-    this.setState({editFilling: updateFilling, addFillingsVisible: true})
-  }
-
   _showAddFillings = async(updateFilling) => {
     let asyncUpdate       = false;
     let asyncUpdateObject = {};
