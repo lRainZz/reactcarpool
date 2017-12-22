@@ -244,14 +244,15 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  _answerInvite = async (CarpoolObject, Accept) =>
+  _answerInvOrJoin = async (CarpoolObject, Accept, InvOrJoin) =>
   {
     let CarpoolKey = CarpoolObject.CarpoolKey;
     let UserCarpoolKey = CarpoolObject.UserCarpoolKey;
 
     if (Accept){
       firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
-        Invite: '0'
+        Invite: '0',
+        Join: '0'
       });
 
         JSONExport_Carpool = {
@@ -279,101 +280,6 @@ class CarpoolFunctions extends React.Component {
       GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
     }else{
       firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
-    }
-  }
-
-  CheckForJoin = async () => 
-  {
-    try
-    {
-      await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
-      .then((snapshot) =>
-      {
-        let counter = 1;
-        let CarpoolArray = [];
-        let InviteArray = [];
-        let InviteUserCarpoolArray = [];
-        let InviteDateArray = [];
-        snapshot.forEach(async function(childSnapshot) {
-          if (childSnapshot.child('Creator').val() == '1'){
-            CarpoolArray[counter] = childSnapshot.child('CarpoolKey').val()
-            counter = counter +1;
-          }
-        });
-        CarpoolArray.forEach(async function(CarpoolElement) {
-          await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolElement).once('value')
-          .then((snapshot1) =>
-          {
-            let InviteCounter = 1;
-            snapshot1.forEach(function(childSnapshot1) {
-              if (childSnapshot1.child('Join').val() == '1'){
-                InviteArray[InviteCounter] = childSnapshot1.child('UserKey').val();
-                InviteUserCarpoolArray[InviteCounter] = childSnapshot1.child('key').val();
-                InviteDateArray[InviteCounter] = childSnapshot1.child('Date').val();
-                InviteCounter = InviteCounter + 1;
-              }
-            });
-            InviteCounter = 1;
-            InviteArray.forEach(async function(InviteElement) {
-              await firebase.database().ref().child('Users').orderByChild('key').equalTo(InviteElement).once('value')
-              .then(async function(snapshot2) 
-              {
-                UserName = snapshot2.child(InviteElement).child("FullName").val();
-                console.log(UserName + ' wants to join your Carpool');
-
-
-
-                // YES - NO Frage:
-                let AcceptJoin = true; // oder false bei Ablehnung
-                UserCarpoolKey = InviteUserCarpoolArray[InviteCounter];
-                CurrentDate = InviteDateArray[InviteCounter];
-                if (AcceptJoin){
-                  firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
-                    Join: '0'
-                  });
-
-                  //Generate Files in global.js
-                  await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolElement).once('value')
-                  .then((snapshot4) =>
-                  {
-                    var CarpoolName = snapshot4.val().CarpoolName;
-
-                    JSONExport_Carpool = {
-                      CarpoolElement: {
-                        key: CarpoolElement,
-                        CarpoolName: CarpoolName,
-                        MaxPlace: snapshot4.child(CarpoolElement).child("MaxPlace").val()
-                      }
-                    }
-
-                    JSONExport_UserCarpools = {
-                      UserCarpoolKey: {
-                        key: UserCarpoolKey,
-                        CarpoolKey: CarpoolElement,
-                        UserKey: InviteElement,
-                        Invite: '0',
-                        Join: '0',
-                        Creator: '0',
-                        Date: CurrentDate
-                      }
-                    }
-                  });
-                  
-                  //Set globals
-                  GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-                  GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
-                }else{
-                  firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
-                }
-              });
-              InviteCounter = InviteCounter + 1;
-            });
-          });
-        });
-      });
-    }catch(error)
-    {
-      console.log(error);
     }
   }
 
