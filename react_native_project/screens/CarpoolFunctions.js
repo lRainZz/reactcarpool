@@ -244,7 +244,7 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  _answerInvOrJoin = async (CarpoolObject, Accept, InvOrJoin) =>
+  _answerInvOrJoin = async (CarpoolObject, Accept) => //Accept is true or false
   {
     let CarpoolKey = CarpoolObject.CarpoolKey;
     let UserCarpoolKey = CarpoolObject.UserCarpoolKey;
