@@ -165,93 +165,120 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  checkForInvite = async () => 
+  checkForInvOrJoin = async (InvOrJoin) => 
   {
     try
     {
+      let Export = [];
+      let MaxCounter = 0;
+      let Counter = 0;
       //Check if Carpool exists
-      await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+
+      firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
       .then((snapshot) =>
       {
-        snapshot.forEach(async function(childSnapshot) {
-          if (childSnapshot.child('Invite').val() == '1'){
-            CarpoolKey = snapshot.child(childSnapshot.key).child("CarpoolKey").val();
-            UserCarpoolKey = childSnapshot.key;
-            CurrentDate = snapshot.child(childSnapshot.key).child("Date").val();
-            //Get Creator
-            await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-            .then((snapshot2) =>
+        Promise.all(snapshot.forEach((childSnapshot) => {
+          if (childSnapshot.child(InvOrJoin).val() == '1'){
+            MaxCounter++;
+          }
+        })).then(
+          response =>
+          {
+            firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+            .then((snapshot) =>
             {
-              snapshot2.forEach(async function(childSnapshot2) {
-                if (childSnapshot2.child('Creator').val() == '1'){
-                  CreatorKey = snapshot2.child(childSnapshot2.key).child("UserKey").val();
-                  //Get Name of Creator
-                  await firebase.database().ref('/Users/' + CreatorKey).once('value')
-                  .then(async function(snapshot3) 
+              snapshot.forEach((childSnapshot) => {
+                if (childSnapshot.child(InvOrJoin).val() == '1'){
+                  CarpoolKey = snapshot.child(childSnapshot.key).child("CarpoolKey").val();
+                  UserCarpoolKey = childSnapshot.key;
+                  CurrentDate = snapshot.child(childSnapshot.key).child("Date").val();
+                  //Get Creator
+                  firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                  .then((snapshot2) =>
                   {
-                      let Fullname = snapshot3.val().FullName;
-                    await firebase.database().ref('/Carpools/' + CarpoolKey).once('value')
-                    .then((snapshot4) =>
-                    {
-                      let CarpoolName = snapshot4.val().CarpoolName;
-                      let MaxPlace = snapshot4.val().MaxPlace;
-                      console.log(Fullname + ' from Carpool "' + CarpoolName + '" has invited you.');
-  
-  
-                      // YES - NO Frage: 
-                      let AcceptInvite = true; // oder false bei Einladungsablehnung
-                      if (AcceptInvite){
-                        firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
-                          Invite: '0'
-                        });
-  
-                        //Generate Files in global.js
-                        //await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
-                        // .then((snapshot5) =>
-                        // {
-                          // var CarpoolName = snapshot5.val().CarpoolName;
-                          // var MaxPlace = snapshot5.val().MaxPlace;
-  
-                          JSONExport_Carpool = {
-                            CarpoolKey: {
-                              key: CarpoolKey,
-                              CarpoolName: CarpoolName,
-                              MaxPlace: MaxPlace
-                            }
-                          }
-  
-                          JSONExport_UserCarpools = {
-                            UserCarpoolKey: {
-                              key: UserCarpoolKey,
-                              CarpoolKey: CarpoolKey,
-                              UserKey: GLOBALS.UserKey,
-                              Invite: '0',
-                              Join: '0',
-                              Creator: '0',
-                              Date: CurrentDate
-                            }
-                          }
-                        // });
-                        
-                        //Set globals
-                        GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
-                        GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
-                      }else{
-                        firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
-                      }
-                      // Ende der YES-NO-Frage
+                    snapshot2.forEach((childSnapshot2) => {
+                      if (childSnapshot2.child('Creator').val() == '1'){
+                        CreatorKey = snapshot2.child(childSnapshot2.key).child("UserKey").val();
+                        //Get Name of Creator
+                        firebase.database().ref('/Users/' + CreatorKey).once('value')
+                        .then((snapshot3) =>
+                        {
+                          let Fullname = snapshot3.val().FullName;
+                          firebase.database().ref('/Carpools/' + CarpoolKey).once('value')
+                          .then((snapshot4) =>
+                          {
+                            let CarpoolName = snapshot4.val().CarpoolName;
+                            //let MaxPlace = snapshot4.val().MaxPlace;
+                            //console.log(Fullname + ' from Carpool "' + CarpoolName + '" has invited you.');
 
+                            let CarpoolObject = {};
+                            CarpoolObject.CarpoolKey = CarpoolKey;
+                            CarpoolObject.CarpoolName = CarpoolName;
+                            CarpoolObject.Fullname = Fullname;
+                            CarpoolObject.UserCarpoolKey = UserCarpoolKey;
+                            CarpoolObject.Date = CurrentDate;
+
+                            Counter++;
+                            Export.push(CarpoolObject);
+                            if(Counter == MaxCounter)
+                            {
+                              console.log(Export);
+                              return Export;
+                            }
+                          });
+                        });
+                      }
                     });
                   });
                 }
               });
             });
           }
-        });
-      });      
+        );
+      });
+
+      
     }catch(error)
     {
       console.log(error);
+    }
+  }
+
+  _answerInvite = async (CarpoolObject, Accept) =>
+  {
+    let CarpoolKey = CarpoolObject.CarpoolKey;
+    let UserCarpoolKey = CarpoolObject.UserCarpoolKey;
+
+    if (Accept){
+      firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
+        Invite: '0'
+      });
+
+        JSONExport_Carpool = {
+          CarpoolKey: {
+            key: CarpoolKey,
+            CarpoolName: CarpoolObject.CarpoolName,
+            MaxPlace: CarpoolObject.MaxPlace
+          }
+        }
+
+        JSONExport_UserCarpools = {
+          UserCarpoolKey: {
+            key: UserCarpoolKey,
+            CarpoolKey: CarpoolKey,
+            UserKey: GLOBALS.UserKey,
+            Invite: '0',
+            Join: '0',
+            Creator: '0',
+            Date: CarpoolObject.CurrentDate
+          }
+        }
+      
+      //Set globals
+      GLOBALS.Carpools = (GLOBALS.Carpools + JSONExport_Carpool);
+      GLOBALS.UserCarpools = (GLOBALS.UserCarpools + JSONExport_UserCarpools);
+    }else{
+      firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
     }
   }
 
@@ -294,7 +321,8 @@ class CarpoolFunctions extends React.Component {
                 UserName = snapshot2.child(InviteElement).child("FullName").val();
                 console.log(UserName + ' wants to join your Carpool');
 
-                                     
+
+
                 // YES - NO Frage:
                 let AcceptJoin = true; // oder false bei Ablehnung
                 UserCarpoolKey = InviteUserCarpoolArray[InviteCounter];
@@ -504,14 +532,9 @@ class CarpoolFunctions extends React.Component {
           color="green"
         />
         <Button
-          onPress={this.checkForInvite.bind(this)}
+          onPress={this.checkForInvOrJoin.bind(this, 'Invite')}
           title="Check for invite"
-          color="green"
-        />
-        <Button
-          onPress={this.CheckForJoin.bind(this)}
-          title="Check for join intention"
-          color="green"
+          color="orange"
         />
         <Button
           onPress={this.checkForPlace.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
