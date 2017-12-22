@@ -154,22 +154,27 @@ class FillingsScreen extends React.Component {
     let asyncUpdate       = false;
     let asyncUpdateObject = {};
 
-    // "!= null" not type of null
-    if (updateFilling != null) {
-      asyncUpdate       = true;
-      asyncUpdateObject = updateFilling;
+    if (GLOBALS.ActiveCarpoolId == null) {
+      Toast.show('Please join or create a carpool first and set one as "active".')
     } else {
-      asyncUpdate = false;
-    }
 
-    try {
-      await AsyncStorage.setItem('updateFilling', String(asyncUpdate));
-      await AsyncStorage.setItem('updateFillingsObject', asyncUpdateObject == null ? '' : JSON.stringify(asyncUpdateObject));
-      this.props.screenProps.rootNavigation.navigate('AddFillings', {
-        onGoBack: () => this._asyncAddFilling(),
-      });
-    } catch (error) {
-      console.log('ERR writing asyncUpdate: ' + error.message)
+      // "!= null" not type of null
+      if (updateFilling != null) {
+        asyncUpdate       = true;
+        asyncUpdateObject = updateFilling;
+      } else {
+        asyncUpdate = false;
+      }
+
+      try {
+        await AsyncStorage.setItem('updateFilling', String(asyncUpdate));
+        await AsyncStorage.setItem('updateFillingsObject', asyncUpdateObject == null ? '' : JSON.stringify(asyncUpdateObject));
+        this.props.screenProps.rootNavigation.navigate('AddFillings', {
+          onGoBack: () => this._asyncAddFilling(),
+        });
+      } catch (error) {
+        console.log('ERR writing asyncUpdate: ' + error.message)
+      }
     }
   }
 
