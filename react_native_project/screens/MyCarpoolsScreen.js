@@ -26,21 +26,21 @@ import CarpoolItem from './myCarpoolModues/CarpoolItem'
 
 class MyCarpoolsScreen extends React.Component {
   state = {
-    carpoolsArray: 
-    [
-      {
-        id:     '0',
-        member: '4',
-        name:   'I\'m a carpool',
-        icon:   ''
-      },
-      {
-        id:     '1',
-        member: '3',
-        name:   'Nicest carpool EUW',
-        icon:   ''
-      }
-    ],
+    carpoolsArray: null,
+    // [
+    //   {
+    //     id:     '0',
+    //     member: '4',
+    //     name:   'I\'m a carpool',
+    //     icon:   ''
+    //   },
+    //   {
+    //     id:     '1',
+    //     member: '3',
+    //     name:   'Nicest carpool EUW',
+    //     icon:   ''
+    //   }
+    // ],
     editCarpool: null,
     activeCarpool: null,
     addCarpoolsVisible: false,
@@ -76,7 +76,21 @@ class MyCarpoolsScreen extends React.Component {
   }
 
   componentWillMount () {
-    this.setState({activeCarpool: GLOBALS.Options.ActiveCarpoolId})
+    let allCarpoolsObject = Object.entries(GLOBALS.Carpools)
+    let loadArray         = [];
+
+    allCarpoolsObject.forEach(
+        carpoolsArray => {
+          carpool = carpoolsArray[1]
+          loadArray.unshift(carpool)
+        }
+    )
+
+    console.log(GLOBALS.Carpools)
+    console.log('/---------------------------------/')
+    console.log(loadArray)
+
+    this.setState({activeCarpool: GLOBALS.Options.ActiveCarpoolId, carpoolsArray: loadArray})
   }
 
   _updateCarpool = (updateCarpool) => {

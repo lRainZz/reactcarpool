@@ -134,7 +134,7 @@ class FillingsScreen extends React.Component {
       fillings.unshift(fillingObject);
     }
 
-    let carpoolId = GLOBALS.ActiveCarpoolId
+    let carpoolId = GLOBALS.Options.ActiveCarpoolId
 
     this._addOrUpdateFirebaseGlobals(carpoolId, fillingObject, update)
 
@@ -154,7 +154,7 @@ class FillingsScreen extends React.Component {
     let asyncUpdate       = false;
     let asyncUpdateObject = {};
 
-    if (GLOBALS.ActiveCarpoolId == null) {
+    if (GLOBALS.Options.ActiveCarpoolId == null) {
       Toast.show('Please join or create a carpool first and set one as "active".')
     } else {
 
