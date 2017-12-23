@@ -352,14 +352,14 @@ class CarpoolApp extends React.Component {
     //Firebase-Conn---------------------------------------------------------
     var newUserSuccess;
     try{
-      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', function(snap) {
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(email).once('value', (snap) => {
         if (snap.val()){
           console.log('Email in Use');
           newUserSuccess = false;
         }else{
           //do Sign up
           // Get a key for a new User.
-          KEY = this._getNewId();
+          KEY = this._getNewId()
           firebase.database().ref('Users/' + KEY).set({
             key: KEY,
             Password: password,
@@ -396,7 +396,7 @@ class CarpoolApp extends React.Component {
   _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
-    return Id 
+    return Id;
   }
 
   

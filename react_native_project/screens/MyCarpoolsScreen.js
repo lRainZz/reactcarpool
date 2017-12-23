@@ -59,7 +59,7 @@ class MyCarpoolsScreen extends React.Component {
   _carpoolIsActive = (id) => {
     let active = false;
     
-    if (id == this.state.activeCarpool) {
+    if (id === this.state.activeCarpool) {
       active = true
     }
 
@@ -282,7 +282,7 @@ class MyCarpoolsScreen extends React.Component {
       }
 
       JSONExport_Creator = {
-        [CarpoolKey]: {
+        [KEY]: {
           CarpoolKey: KEY
         }
       }
