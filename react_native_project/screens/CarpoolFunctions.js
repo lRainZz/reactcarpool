@@ -90,56 +90,6 @@ class CarpoolFunctions extends React.Component {
     }
   }
 
-  inviteToCarpool = async (InviteEmail, CarpoolKey) => 
-  {
-    try
-    {
-      var isInvitable = true;
-      //Check if User exists
-      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(InviteEmail).once('value')
-      .then((snapshot) =>
-      {
-        if (snapshot.val()){
-          snapshot.forEach(function(childSnapshot) {
-            var InviteKEY = childSnapshot.key;
-            //Check for all Users in Carpool
-            firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-            .then((snapshot2) =>
-            {
-              snapshot2.forEach(function(childSnapshot2) {
-                if (InviteKEY == childSnapshot2.child('UserKey').val()){
-                  isInvitable = false;
-                }
-              })
-              if (isInvitable){
-                // Get a key for a new UserCarpool.
-                UserCarpoolKEY = this._getNewId();
-                date = new Date();
-                CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-                firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
-                  key: UserCarpoolKEY,
-                  CarpoolKey: CarpoolKey,
-                  UserKey: InviteKEY,
-                  Invite: '1',
-                  Join: '0',
-                  Creator: '0',
-                  Date: CurrentDate,
-                });
-              }else{
-                console.log('User is already in the Carpool');
-              }
-            });
-          });
-        }else{
-          console.log('Email does not belong to a existing User!');          
-        }
-      });
-    }catch(error)
-    {
-      console.error(error);
-    }
-  }
-
   joinCarpool = async (CarpoolKey) => 
   {
     try
