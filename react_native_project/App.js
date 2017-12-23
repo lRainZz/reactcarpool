@@ -64,6 +64,7 @@ class CarpoolApp extends React.Component {
   }
 
   _FirebaseLoginFunction = async (email, password) => {
+    GLOBALS.Status = '1';
     //Firebase-Conn---------------------------------------------------------
 
     var UserInDataBase;
@@ -88,6 +89,7 @@ class CarpoolApp extends React.Component {
         .then(async function(snap) 
         {
           if (snap.val()){
+            GLOBALS.Status = '0';
             snap.forEach(async function(childSnapshot) {
               var SnapshotKey = childSnapshot.key;
               var Userkey = snap.child(SnapshotKey).child("key").val();
@@ -135,13 +137,26 @@ class CarpoolApp extends React.Component {
                   GLOBALS.Options.UseLastCarpool = UseLastCarpool;
                   GLOBALS.Options.UseAutoPayment = UseAutoPayment;
                   GLOBALS.Options.UseDarkTheme = UseDarkTheme;
-                  GLOBALS.UserOptions = {...GLOBALS.UserOptions, ...JSONExport_Options}; 
+                  GLOBALS.UserOptions = {...GLOBALS.UserOptions, ...JSONExport_Options};
+
+                  let MaxCounterCP = 0;
+                  let CounterCP = 0;
+
+                  firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
+                  .then((CPCSnap) =>
+                  {
+                    CPCSnap.forEach(async (childCPCSnap) => {
+                      MaxCounterCP++;
+                    });
+                  });
+
 
 
                   firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
                   .then((snapshot2) =>
                   {
                     snapshot2.forEach(async (childSnapshot2) => {
+                      CounterCP++;
                       CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();                  
                       await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
                       .then((snapshot3) =>
@@ -188,7 +203,7 @@ class CarpoolApp extends React.Component {
                                 //Set globals
                                 GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};                                
                               }
-                              
+
                               firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
                                 .then((ActiveCarpoolSnapshot) =>
                                 {
@@ -201,7 +216,7 @@ class CarpoolApp extends React.Component {
                                 firebase.database().ref().child('Fillings').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
                                 .then((FillingSnapshot) =>
                                 {
-                                  FillingSnapshot.forEach(FillingChildsnapshot => {
+                                  Promise.all(FillingSnapshot.forEach(FillingChildsnapshot => {
                                     let consumption = FillingChildsnapshot.child('consumption').val();
                                     let date = FillingChildsnapshot.child('date').val();
                                     let drivenDays = FillingChildsnapshot.child('drivenDays').val();
@@ -222,7 +237,14 @@ class CarpoolApp extends React.Component {
                                     }
                                     // Set globals
                                     GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
-                                  });
+                                  })).then(
+                                    response => {
+                                      if(CounterCP == MaxCounterCP){
+                                        GLOBALS.Status = '1';
+                                        console.log(GLOBALS.Status)
+                                      }
+                                    }
+                                  );
                                 });
                                 //-------------------------------------------------------------------
                             });
@@ -271,33 +293,49 @@ class CarpoolApp extends React.Component {
     //Firebase-Conn---------------------------------------------------------   
   }
 
-  _LoginFunction = (UserInDataBase, PasswordTrue) => {
-    if (UserInDataBase) {
-      if (PasswordTrue) {
-        // grant login
-        this.setState({ 
-          isAppReady: true,
-          isLoggedIn: true,
-          isLoading: false
-        })
+  checkFlag = () => {
+    if(GLOBALS.Status == '0') {
+      //setTimeout(() => {this.setState({timePassed: true})}, 100)
+       this.checkFlag();
+    } else {
+      return '1'
+    }
+  }
 
-      } else  {
+  _LoginFunction = (UserInDataBase, PasswordTrue) => {
+    console.log('here: ' + GLOBALS.Status);
+    if(GLOBALS.Status == '0') {
+      console.log('restart')
+      setTimeout(()=>{this._LoginFunction(UserInDataBase, PasswordTrue)},1000)
+    }else{
+      console.log('lets go')
+      if (UserInDataBase) {
+        if (PasswordTrue) {
+          // grant login
+          this.setState({ 
+            isAppReady: true,
+            isLoggedIn: true,
+            isLoading: false
+          })
+  
+        } else  {
+          
+          // stop loading
+          this.setState({
+            isLoading: false
+          });
+          Toast.show('I can\'t remember my passwords either :/');
         
+        }
+      } else {
+  
         // stop loading
         this.setState({
           isLoading: false
         });
-        Toast.show('I can\'t remember my passwords either :/');
+        Toast.show('Seems like you\'re new here.');
       
       }
-    } else {
-
-      // stop loading
-      this.setState({
-        isLoading: false
-      });
-      Toast.show('Seems like you\'re new here.');
-    
     }
   }
 
