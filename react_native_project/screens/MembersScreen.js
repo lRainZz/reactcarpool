@@ -6,6 +6,13 @@ import { AsyncStorage, Text, ScrollView, StyleSheet, View, FlatList } from 'reac
 
 import { Fab, Icon } from 'native-base';
 
+import Toast from 'react-native-simple-toast'
+
+import * as firebase from 'firebase';
+
+import sha256 from 'sha256';
+
+
 
 //own modules
 
@@ -101,17 +108,67 @@ class MembersScreen extends React.Component {
   }
 
   _addMember = (member) => {
-    let members   = this.state.membersArray
+    let activeCarpool = GLOBALS.Options.ActiveCarpoolId
 
-    // this works because fillings is an array starting at 0
-    // object to be added gets a new id, one higher as the highest in fillings
-    member.id = members.length;
-    members.push(member);
-
-    console.log(member.name)
-    
-    this.setState({membersArray: members});
+    this.inviteToCarpool(member.name, activeCarpool)
   }
+
+  inviteToCarpool = async (InviteEmail, CarpoolKey) => 
+  {
+    try
+    {
+      var isInvitable = true;
+      //Check if User exists
+      await firebase.database().ref().child('Users').orderByChild('Email').equalTo(InviteEmail).once('value')
+      .then((snapshot) =>
+      {
+        if (snapshot.val()){
+          snapshot.forEach(function(childSnapshot) {
+            var InviteKEY = childSnapshot.key;
+            //Check for all Users in Carpool
+            firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+            .then((snapshot2) =>
+            {
+              snapshot2.forEach(function(childSnapshot2) {
+                if (InviteKEY == childSnapshot2.child('UserKey').val()){
+                  isInvitable = false;
+                }
+              })
+              if (isInvitable){
+                // Get a key for a new UserCarpool.
+                UserCarpoolKEY = this._getNewId();
+                date = new Date();
+                CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+                firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
+                  key: UserCarpoolKEY,
+                  CarpoolKey: CarpoolKey,
+                  UserKey: InviteKEY,
+                  Invite: '1',
+                  Join: '0',
+                  Creator: '0',
+                  Date: CurrentDate,
+                });
+              }else{
+                Toast.show('User is already a member of the carpool.')
+              }
+            });
+          });
+        }else{
+          Toast.show('Email does not belong to an existing user.')      
+        }
+      });
+    }catch(error)
+    {
+      console.error(error);
+    }
+  }
+
+  _getNewId = () => {
+    let Time = (new Date).getTime();
+    let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
+    return Id 
+  }
+
   
   render () {
     const { membersArray, allowedToInvite } = this.state
