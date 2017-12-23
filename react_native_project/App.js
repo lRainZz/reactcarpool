@@ -159,6 +159,7 @@ class CarpoolApp extends React.Component {
                             .then((snapshot3) =>
                             {
                               snapshot3.forEach(element => {
+                                CarpoolKey = element.child('key').val();
                                 let MaxPlace = element.child('MaxPlace').val();
                                 let CarpoolName = element.child('CarpoolName').val();
                                 //Generate Files in global.js: Carpools
