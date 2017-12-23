@@ -42,32 +42,30 @@ class MembersScreen extends React.Component {
     let allow = false
 
     allCarpoolsObject.forEach(
-        carpoolsArray => {
-          carpool = carpoolsArray[1]
-          if (carpool.CarpoolKey === activeCarpool) {
-            let member = {}
-            console.log(carpool)
-            member.id      = carpool.UserKey
-            member.isAdmin = (carpool.Creator == 1)
+      carpoolsArray => {
+        carpool = carpoolsArray[1]
+        if (carpool.CarpoolKey === activeCarpool) {
+          let member = {}
+          console.log(carpool)
+          member.id      = carpool.UserKey
+          member.isAdmin = (carpool.Creator == 1)
 
-            // if this is me....
-            if (member.id === GLOBALS.UserKey) {
-              allow = member.isAdmin
-            }
-
-            allUsersObject.forEach(
-              usersArray => {
-                user = usersArray[1]
-                if (member.id == user.key) {
-                  member.name = user.FullName
-                }
-              }
-            )
-
-            loadArray.unshift(member)
+          // if this is me....
+          if (member.id === GLOBALS.UserKey) {
+            allow = member.isAdmin
           }
-          
-        }
+
+          allUsersObject.forEach(
+            usersArray => {
+              user = usersArray[1]
+              if (member.id == user.key) {
+                member.name = user.FullName
+              }
+            }
+          )
+          loadArray.unshift(member)
+        }    
+      }
     )
 
     this.setState({
