@@ -66,7 +66,7 @@ class CarpoolItem extends React.Component {
 
   render () {
     const { carpool, onSetActive, onDelete } = this.props
-    const isAdmin = (GLOBALS.Creator[carpool.CarpoolKey] != null)
+    const isAdmin = (GLOBALS.Creator[carpool.key] != null)
 
     return(
       <View

@@ -162,9 +162,9 @@ class MyCarpoolsScreen extends React.Component {
   _deleteCarpool = (carpool, doDelete) => {
     
     if (doDelete) {
-      this.deleteCarpool(carpool.CarpoolKey)
+      this.deleteCarpool(carpool.key)
     } else {
-      this.leaveCarpool(carpool.CarpoolKey)
+      this.leaveCarpool(carpool.key)
     }
 
     let carpools = this.state.carpoolsArray
@@ -317,12 +317,12 @@ class MyCarpoolsScreen extends React.Component {
             <FlatList
               data={carpoolsArray}
               extraData={this.state}
-              keyExtractor={item => item.CarpoolKey}
+              keyExtractor={item => item.key}
               renderItem={({item}) => 
                 <CarpoolItem 
                   carpool={item}
-                  active={this._carpoolIsActive(item.CarpoolKey)}
-                  onSetActive={(CarpoolKey) => this._setActiveCarpool(CarpoolKey)}
+                  active={this._carpoolIsActive(item.key)}
+                  onSetActive={(key) => this._setActiveCarpool(key)}
                   onDelete={(carpool, doDelete) => this._deleteCarpool(carpool, doDelete)}
                 />
               }

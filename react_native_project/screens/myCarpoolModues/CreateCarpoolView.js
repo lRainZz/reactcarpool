@@ -29,8 +29,8 @@ class ModalView extends React.Component {
   state = {
     carpool: 
     {
-      MaxPlace: null, // number
-      CarpoolName:     null, // string
+      MaxPlace:    null, // number
+      CarpoolName: null, // string
     },
 
     isFocused: false
