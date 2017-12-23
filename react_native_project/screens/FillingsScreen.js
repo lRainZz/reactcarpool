@@ -66,6 +66,8 @@ class FillingsScreen extends React.Component {
     let loadArray         = [];
     let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
 
+    console.log(GLOBALS.Fillings)
+
     allFillingsObject.forEach(
         fillingArray => {
           filling = fillingArray[1]

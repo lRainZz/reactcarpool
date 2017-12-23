@@ -218,9 +218,10 @@ class CarpoolApp extends React.Component {
                                         CarpoolKey: CarpoolKey
                                       }
                                     }
-                                    //Set globals
-                                    console.log(JSONExport_Fillings)
+                                    // Set globals
+                                    // console.log(JSONExport_Fillings)
                                     GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
+                                    console.log(GLOBALS.Fillings)
                                   });
                                 });
                                 //-------------------------------------------------------------------

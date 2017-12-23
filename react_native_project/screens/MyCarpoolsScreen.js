@@ -14,6 +14,10 @@ import Toast from 'react-native-simple-toast';
 
 import { NavigationActions } from 'react-navigation';
 
+import sha256 from 'sha256';
+
+import * as firebase from 'firebase';
+
 
 // own modules
 
