@@ -102,7 +102,7 @@ class CarpoolApp extends React.Component {
                 GLOBALS.UserKey = Userkey;
                 
                 JSONExport_Users = {
-                  UserKey: {
+                  [GLOBALS.UserKey]: {
                     key: Userkey,
                     Password: Password,
                     Email: Email,
@@ -123,7 +123,7 @@ class CarpoolApp extends React.Component {
                   let UseDarkTheme= OptionsSnap.val().UseDarkTheme;
 
                   JSONExport_Options = {
-                    UserKey: {
+                    [GLOBALS.UserKey]: {
                       UseImperialUnits: UseImperialUnits,
                       UseAutoPayment: UseAutoPayment,
                       UseLastCarpool: UseLastCarpool,
@@ -151,7 +151,7 @@ class CarpoolApp extends React.Component {
                           let CarpoolName = element.child('CarpoolName').val();
                           //Generate Files in global.js: Carpools
                           JSONExport_Carpool = {
-                            CarpoolKey: {
+                            [CarpoolKey]: {
                               key: CarpoolKey,
                               MaxPlace: MaxPlace,
                               CarpoolName: CarpoolName
@@ -166,7 +166,7 @@ class CarpoolApp extends React.Component {
                               var UserCarpoolKEY = childSnapshot3.child('key').val();
                               var CurrentDate = childSnapshot3.child('Date').val();
                               JSONExport_UserCarpools = {
-                                UserCarpoolKEY: {
+                                [UserCarpoolKEY]: {
                                   key: UserCarpoolKEY,
                                   CarpoolKey: CarpoolKey,
                                   UserKey: GLOBALS.UserKey,
@@ -178,9 +178,10 @@ class CarpoolApp extends React.Component {
                               }
                               //Set globals
                               GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+
                               if (childSnapshot3.child('Creator').val() == '1'){
                                 JSONExport_Creator = {
-                                  CarpoolKey: {
+                                  [CarpoolKey]: {
                                     CarpoolKey: CarpoolKey
                                   }
                                 }
@@ -204,12 +205,12 @@ class CarpoolApp extends React.Component {
                                     let date = FillingChildsnapshot.child('date').val();
                                     let drivenDays = FillingChildsnapshot.child('drivenDays').val();
                                     let fuelPrice = FillingChildsnapshot.child('fuelPrice').val();
-                                    let id = FillingChildsnapshot.child('id').val();
+                                    let Fillingid = FillingChildsnapshot.child('id').val();
                                     let tripmeter = FillingChildsnapshot.child('tripmeter').val();
 
                                     JSONExport_Fillings = {
-                                      id: {
-                                        id: id,
+                                      [Fillingid]: {
+                                        id: Fillingid,
                                         consumption: consumption,
                                         date: date,
                                         drivenDays: drivenDays,
@@ -219,9 +220,7 @@ class CarpoolApp extends React.Component {
                                       }
                                     }
                                     // Set globals
-                                    // console.log(JSONExport_Fillings)
                                     GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
-                                    console.log(GLOBALS.Fillings)
                                   });
                                 });
                                 //-------------------------------------------------------------------

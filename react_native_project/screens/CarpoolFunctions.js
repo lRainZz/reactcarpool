@@ -49,14 +49,14 @@ class CarpoolFunctions extends React.Component {
 
       //Generate Files in global.js
       JSONExport_Carpool = {
-        KEY: {
+        [KEY]: {
           key: KEY,
           MaxPlace: MaxPlace
         }
       }
 
       JSONExport_UserCarpools = {
-        UserCarpoolKEY: {
+        [UserCarpoolKEY]: {
           key: UserCarpoolKEY,
           CarpoolKey: KEY,
           UserKey: GLOBALS.UserKey,
@@ -68,7 +68,7 @@ class CarpoolFunctions extends React.Component {
       }
 
       JSONExport_Creator = {
-        CarpoolKey: {
+        [CarpoolKey]: {
           CarpoolKey: KEY
         }
       }
@@ -254,7 +254,7 @@ class CarpoolFunctions extends React.Component {
       });
 
         JSONExport_Carpool = {
-          CarpoolKey: {
+          [CarpoolKey]: {
             key: CarpoolKey,
             CarpoolName: CarpoolObject.CarpoolName,
             MaxPlace: CarpoolObject.MaxPlace
@@ -262,7 +262,7 @@ class CarpoolFunctions extends React.Component {
         }
 
         JSONExport_UserCarpools = {
-          UserCarpoolKey: {
+          [UserCarpoolKey]: {
             key: UserCarpoolKey,
             CarpoolKey: CarpoolKey,
             UserKey: GLOBALS.UserKey,

@@ -62,16 +62,17 @@ class FillingsScreen extends React.Component {
   }
 
   _loadFillingsFromGlobals = () => {
+    console.log(GLOBALS.Fillings)
     let allFillingsObject = Object.entries(GLOBALS.Fillings)
     let loadArray         = [];
     let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
 
-    console.log(GLOBALS.Fillings)
+    //console.log(GLOBALS.Fillings)
 
     allFillingsObject.forEach(
         fillingArray => {
           filling = fillingArray[1]
-          console.log(filling.CarpoolKey + ' : ' + activeCarpool)
+          //console.log(filling.CarpoolKey + ' : ' + activeCarpool)
           
           if (filling.CarpoolKey === activeCarpool) {
             loadArray.unshift(filling)
@@ -238,7 +239,7 @@ class FillingsScreen extends React.Component {
     
     //Generate Files in global.js
     JSONExport_Filling = {
-      id: {
+      [id]: {
         id:          Filling.id,
         CarpoolKey:  CarpoolKey,
         tripmeter:   Filling.tripmeter,
