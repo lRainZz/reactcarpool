@@ -54,7 +54,7 @@ class InviteMemberView extends React.Component {
         >
           <Text
             style={[styles.title, styles.font]}
-          >{'NAME'}</Text>
+          >{'EMAIL'}</Text>
 
           <View
             style={styles.inputContainer}

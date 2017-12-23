@@ -39,6 +39,7 @@ class MembersScreen extends React.Component {
     let allUsersObject    = Object.entries(GLOBALS.Users)
     let loadArray         = [];
     let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
+    let allow = false
 
     allCarpoolsObject.forEach(
         carpoolsArray => {
@@ -48,6 +49,11 @@ class MembersScreen extends React.Component {
             console.log(carpool)
             member.id      = carpool.UserKey
             member.isAdmin = (carpool.Creator == 1)
+
+            // if this is me....
+            if (member.id === GLOBALS.UserKey) {
+              allow = member.isAdmin
+            }
 
             allUsersObject.forEach(
               usersArray => {
@@ -65,7 +71,8 @@ class MembersScreen extends React.Component {
     )
 
     this.setState({
-      membersArray: loadArray
+      membersArray: loadArray,
+      allowedToInvite: allow
     })
   }
 
@@ -109,9 +116,10 @@ class MembersScreen extends React.Component {
   }
   
   render () {
-    const { membersArray } = this.state
+    const { membersArray, allowedToInvite } = this.state
     const membersAvailable = (membersArray !== null)
     const containerFlex = (membersAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
+
     
     return (
       <View
@@ -139,17 +147,20 @@ class MembersScreen extends React.Component {
           </ScrollView>
         )}
 
-        <Fab
-          style={styles.fab}
-          onPress={() => this.props.screenProps.rootNavigation.navigate('InviteMember', {
-            onGoBack: () => this._asyncAddMember(),
-          })}
-          >
-          <Icon
-            name='person-add'
-            color='white'
-          />
-        </Fab>
+        {(allowedToInvite) && (
+          <Fab
+            style={styles.fab}
+            onPress={() => this.props.screenProps.rootNavigation.navigate('InviteMember', {
+              onGoBack: () => this._asyncAddMember(),
+            })}
+            >
+            <Icon
+              name='person-add'
+              color='white'
+            />
+          </Fab>
+        )}
+        
       </View>
     );
   }
