@@ -8,7 +8,7 @@ import Toast from 'react-native-simple-toast'
 
 import * as firebase from 'firebase';
 
-const GLOBALS = require('./globals');
+const GLOBALS = require('../globals');
 
 
 
