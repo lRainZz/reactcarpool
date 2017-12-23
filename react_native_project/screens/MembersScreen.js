@@ -36,6 +36,7 @@ class MembersScreen extends React.Component {
 
   componentWillMount () {
     let allCarpoolsObject = Object.entries(GLOBALS.UserCarpools)
+    let allUsersObject    = Object.entries(GLOBALS.Users)
     let loadArray         = [];
     let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
 
@@ -44,9 +45,19 @@ class MembersScreen extends React.Component {
           carpool = carpoolsArray[1]
           if (carpool.CarpoolKey === activeCarpool) {
             let member = {}
-            member.id   = carpool.UserKey
-            member.name = carpool.FullName
-            member.isAdmin = (carpool.Creator === 1)
+            console.log(carpool)
+            member.id      = carpool.UserKey
+            member.isAdmin = (carpool.Creator == 1)
+
+            allUsersObject.forEach(
+              usersArray => {
+                user = usersArray[1]
+                if (member.id == user.key) {
+                  member.name = user.FullName
+                }
+              }
+            )
+
             loadArray.unshift(member)
           }
           
