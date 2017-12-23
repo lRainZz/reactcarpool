@@ -359,7 +359,7 @@ class CarpoolApp extends React.Component {
         }else{
           //do Sign up
           // Get a key for a new User.
-          KEY = firebase.database().ref().push().key;
+          KEY = this._getNewId();
           firebase.database().ref('Users/' + KEY).set({
             key: KEY,
             Password: password,
@@ -391,6 +391,12 @@ class CarpoolApp extends React.Component {
       console.error(error);
     }
     //Firebase-Conn---------------------------------------------------------   
+  }
+
+  _getNewId = () => {
+    let Time = (new Date).getTime();
+    let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
+    return Id 
   }
 
   

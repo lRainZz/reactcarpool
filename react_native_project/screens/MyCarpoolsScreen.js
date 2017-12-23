@@ -240,7 +240,7 @@ class MyCarpoolsScreen extends React.Component {
     try
     {      
       // Get a key for a new Carpool.
-      KEY = firebase.database().ref().push().key;
+      KEY = this._getNewId();
       firebase.database().ref('Carpools/' + KEY).set({
         key: KEY,
         CarpoolName: CarpoolName,
@@ -248,7 +248,7 @@ class MyCarpoolsScreen extends React.Component {
       });
       
       // Get a key for a new UserCarpool.
-      UserCarpoolKEY = firebase.database().ref().push().key;
+      UserCarpoolKEY = this._getNewId();
       date = new Date();
       CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({

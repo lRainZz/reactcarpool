@@ -12,6 +12,8 @@ const GLOBALS = require('../globals');
 
 import moment from 'moment';
 
+import sha256 from 'sha256';
+
 //own modules
 
 import Header from '../ApplicationHeader';
@@ -21,12 +23,18 @@ import { stringify } from 'querystring';
 
 class CarpoolFunctions extends React.Component { 
 
+  _getNewId = () => {
+    let Time = (new Date).getTime();
+    let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
+    return Id 
+  }
+
   createNewCarpool = async (CarpoolName, MaxPlace) => 
   {
     try
     {      
       // Get a key for a new Carpool.
-      KEY = firebase.database().ref().push().key;
+      KEY = this._getNewId();
       firebase.database().ref('Carpools/' + KEY).set({
         key: KEY,
         CarpoolName: CarpoolName,
@@ -34,7 +42,7 @@ class CarpoolFunctions extends React.Component {
       });
       
       // Get a key for a new UserCarpool.
-      UserCarpoolKEY = firebase.database().ref().push().key;
+      UserCarpoolKEY = this._getNewId();
       date = new Date();
       CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
       firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
@@ -105,7 +113,7 @@ class CarpoolFunctions extends React.Component {
               })
               if (isInvitable){
                 // Get a key for a new UserCarpool.
-                UserCarpoolKEY = firebase.database().ref().push().key;
+                UserCarpoolKEY = this._getNewId();
                 date = new Date();
                 CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
                 firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
@@ -143,7 +151,7 @@ class CarpoolFunctions extends React.Component {
       {
         if (snapshot.val()){
           // Get a key for a new UserCarpool.
-          UserCarpoolKEY = firebase.database().ref().push().key;
+          UserCarpoolKEY = this._getNewId();
           date = new Date();
           CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
           firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
