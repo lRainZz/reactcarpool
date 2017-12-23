@@ -186,10 +186,42 @@ class CarpoolApp extends React.Component {
                                 }
                                 //Set globals
                                 GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
+
+
+                                //-------------------------------------------------------------------
+
+                                //-------------------------------------------------------------------
                               }
                             });
                           });
                         });                        
+                      });
+                      await firebase.database().ref().child('Fillings').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                      .then((FillingSnapshot) =>
+                      {
+                        FillingSnapshot.forEach(FillingChildsnapshot => {
+                          let consumption = FillingChildsnapshot.child('consumption').val();
+                          let date = FillingChildsnapshot.child('date').val();
+                          let drivenDays = FillingChildsnapshot.child('drivenDays').val();
+                          let fuelPrice = FillingChildsnapshot.child('fuelPrice').val();
+                          let id = FillingChildsnapshot.child('id').val();
+                          let tripmeter = FillingChildsnapshot.child('tripmeter').val();
+
+                          JSONExport_Fillings = {
+                            id: {
+                              id: id,
+                              consumption: consumption,
+                              date: date,
+                              drivenDays: drivenDays,
+                              fuelPrice: fuelPrice,
+                              tripmeter: tripmeter,
+                              CarpoolKey: CarpoolKey
+                            }
+                          }
+                          //Set globals
+                          console.log(JSONExport_Fillings)
+                          GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
+                        });
                       });
                     });
                   });
