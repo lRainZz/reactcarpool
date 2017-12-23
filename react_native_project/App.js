@@ -172,7 +172,6 @@ class CarpoolApp extends React.Component {
                                 }
                                 //Set globals
                                 GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-                                console.log(GLOBALS.Carpools)
                                 firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
                                 .then((snapshot4) =>
                                 {

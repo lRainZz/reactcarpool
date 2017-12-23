@@ -179,8 +179,6 @@ class MyCarpoolsScreen extends React.Component {
     let allCarpoolsObject = Object.entries(GLOBALS.Carpools)
     let loadArray         = [];
 
-    console.log(GLOBALS.Carpools) 
-
     allCarpoolsObject.forEach(
         carpoolsArray => {
           carpool = carpoolsArray[1]
@@ -235,7 +233,7 @@ class MyCarpoolsScreen extends React.Component {
     this.setState({carpoolsArray: carpools})
   }
 
-  createNewCarpool = async (CarpoolName, MaxPlace, CarpoolKey) => 
+  createNewCarpool = (CarpoolName, MaxPlace, CarpoolKey) => 
   {
     try
     {      
@@ -265,6 +263,7 @@ class MyCarpoolsScreen extends React.Component {
       JSONExport_Carpool = {
         [KEY]: {
           key: KEY,
+          CarpoolName: CarpoolName,
           MaxPlace: MaxPlace
         }
       }
