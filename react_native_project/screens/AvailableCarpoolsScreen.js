@@ -8,6 +8,9 @@ import Toast from 'react-native-simple-toast'
 
 import * as firebase from 'firebase';
 
+const GLOBALS = require('./globals');
+
+
 
 // own modules
 
@@ -60,42 +63,44 @@ class AvailableCarpoolsScreen extends React.Component {
                 firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
                 .then((UserCarpoolList) => {
                   UserCarpoolList.forEach((UserCarpoolListItem) => {
-                    if (UserCarpoolListItem.child('Creator').val() == '1') {
-                      let UserKey = UserCarpoolListItem.child('UserKey').val();
-                      firebase.database().ref('/Users/' + UserKey).once('value')
-                      .then((User) => {
-                        let CreatorObject = {};
-                        CreatorObject.CreatorKey = UserKey;
-                        CreatorObject.CreatorName = User.val().FullName;
-                        
-                        firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-                        .then((UserCarpoolList) => {
-                          let CurrentPlaceTaken = 0;
-                          Promise.all(UserCarpoolList.forEach((UserCarpoolListItem) => {
-                            CurrentPlaceTaken++;
-                          })).then(
-                            response => {
-                              let FreePlace = (MaxPlace - CurrentPlaceTaken);
+                    if(UserCarpoolListItem.child('UserKey').val() !== GLOBALS.UserKey){                      
+                      if (UserCarpoolListItem.child('Creator').val() == '1') {
+                        let UserKey = UserCarpoolListItem.child('UserKey').val();
+                        firebase.database().ref('/Users/' + UserKey).once('value')
+                        .then((User) => {
+                          let CreatorObject = {};
+                          CreatorObject.CreatorKey = UserKey;
+                          CreatorObject.CreatorName = User.val().FullName;
+                          
+                          firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                          .then((UserCarpoolList) => {
+                            let CurrentPlaceTaken = 0;
+                            Promise.all(UserCarpoolList.forEach((UserCarpoolListItem) => {
+                              CurrentPlaceTaken++;
+                            })).then(
+                              response => {
+                                let FreePlace = (MaxPlace - CurrentPlaceTaken);
 
-                              if(FreePlace > 0) {
-                                let ExportObject = {};
-                                ExportObject.CarpoolKey = CarpoolKey;
-                                ExportObject.CarpoolName = CarpoolName;
-                                ExportObject.CreatorKey = CreatorObject.CreatorKey;
-                                ExportObject.CreatorName = CreatorObject.CreatorName;
-                                ExportObject.FreePlace = FreePlace;
-                                Export.push(ExportObject);
+                                if(FreePlace > 0) {
+                                  let ExportObject = {};
+                                  ExportObject.CarpoolKey = CarpoolKey;
+                                  ExportObject.CarpoolName = CarpoolName;
+                                  ExportObject.CreatorKey = CreatorObject.CreatorKey;
+                                  ExportObject.CreatorName = CreatorObject.CreatorName;
+                                  ExportObject.FreePlace = FreePlace;
+                                  Export.push(ExportObject);
 
-                                if (CarpoolCounter == CarpoolMax) {
-                                  console.log('GetCarpools: ' + Export)
-                                  // return Export
-                                  this.setState({carpoolsArray: Export})
-                                }
-                              }                              
-                            }
-                          );
+                                  if (CarpoolCounter == CarpoolMax) {
+                                    console.log('GetCarpools: ' + Export)
+                                    // return Export
+                                    this.setState({carpoolsArray: Export})
+                                  }
+                                }                              
+                              }
+                            );
+                          });
                         });
-                      });
+                      }
                     }
                   });
                 });
