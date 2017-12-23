@@ -66,6 +66,7 @@ class CarpoolItem extends React.Component {
 
   render () {
     const { carpool, onSetActive, onDelete } = this.props
+    const isAdmin = (GLOBALS.Creator[carpool.CarpoolKey] != null)
 
     return(
       <View
@@ -92,13 +93,13 @@ class CarpoolItem extends React.Component {
                 onPress={() => onSetActive(carpool.key)}
               />
               <Button 
-                title={'LEAVE'}
+                title={ (isAdmin) ? 'DELETE' : 'LEAVE'}
                 fontWeight={'bold'}
                 fontSize={18}
                 color={'#1976D2'}
                 buttonStyle={styles.dropButton}
                 containerViewStyle={styles.buttonFlex}
-                onPress={() => onDelete(carpool)}
+                onPress={() => onDelete(carpool, isAdmin)}
               />
             </View>
           </View>

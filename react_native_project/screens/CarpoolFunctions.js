@@ -305,69 +305,6 @@ class CarpoolFunctions extends React.Component {
       console.log(error);
     }
   }
-  
-  leaveCarpool = async (CarpoolKey) => 
-  {
-    try
-    {
-      await firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
-      .then((snapshot) =>
-      {
-        snapshot.forEach(async function(childSnapshot){
-          if (childSnapshot.child('CarpoolKey').val() == CarpoolKey){
-            if (childSnapshot.child('Creator').val() == '1'){
-              let FirstDate = '0';
-              let FirstUserCarpoolKey;
-              await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-              .then((snapshot1) =>
-              {
-                snapshot1.forEach(childSnapshot1 => {
-                  if (childSnapshot1.child('Creator').val() == '0'){
-                    if (FirstDate == '0'){
-                      FirstDate = childSnapshot1.child('Date').val();
-                      FirstUserCarpoolKey = childSnapshot1.key;
-                    }else{
-                      if (childSnapshot1.child('Date').val() < FirstDate){
-                        FirstDate = childSnapshot1.child('Date').val();
-                        FirstUserCarpoolKey = childSnapshot1.key;
-                      }
-                    }
-                  }
-                });                
-                firebase.database().ref('UserCarpools/' + FirstUserCarpoolKey).update({
-                  Creator: '1'
-                });
-                firebase.database().ref('UserCarpools').child(childSnapshot.key).remove();
-              });
-            }else{
-              firebase.database().ref('UserCarpools').child(childSnapshot.key).remove();
-            }
-          }
-        });        
-      });
-    }catch(error)
-    {
-      console.log(error);
-    }
-  }
-
-  deleteCarpool = async (CarpoolKey) => 
-  {
-    try
-    {
-      await firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-      .then((snapshot) =>
-      {
-        snapshot.forEach(childSnapshot => {
-          firebase.database().ref('UserCarpools').child(childSnapshot.key).remove();
-        });
-        firebase.database().ref('Carpools').child(CarpoolKey).remove();
-      });
-    }catch(error)
-    {
-      console.log(error);
-    }
-  }
 
   _compareFillings = async () => {
     try
