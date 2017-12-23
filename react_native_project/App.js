@@ -145,114 +145,116 @@ class CarpoolApp extends React.Component {
                   firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
                   .then((CPCSnap) =>
                   {
-                    CPCSnap.forEach(async (childCPCSnap) => {
+                    Promise.all(CPCSnap.forEach((childCPCSnap) => {
                       MaxCounterCP++;
-                    });
-                  });
-
-
-
-                  firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
-                  .then((snapshot2) =>
-                  {
-                    snapshot2.forEach(async (childSnapshot2) => {
-                      CounterCP++;
-                      CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();                  
-                      await firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
-                      .then((snapshot3) =>
-                      {
-                        snapshot3.forEach(element => {
-                          let MaxPlace = element.child('MaxPlace').val();
-                          let CarpoolName = element.child('CarpoolName').val();
-                          //Generate Files in global.js: Carpools
-                          JSONExport_Carpool = {
-                            [CarpoolKey]: {
-                              key: CarpoolKey,
-                              MaxPlace: MaxPlace,
-                              CarpoolName: CarpoolName
-                            }
-                          }
-                          //Set globals
-                          GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-                          firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-                          .then((snapshot4) =>
-                          {
-                            snapshot4.forEach((childSnapshot3) =>{
-                              var UserCarpoolKEY = childSnapshot3.child('key').val();
-                              var CurrentDate = childSnapshot3.child('Date').val();
-                              JSONExport_UserCarpools = {
-                                [UserCarpoolKEY]: {
-                                  key: UserCarpoolKEY,
-                                  CarpoolKey: CarpoolKey,
-                                  UserKey: GLOBALS.UserKey,
-                                  Invite: '0',
-                                  Join: '0',
-                                  Creator: '1',
-                                  Date: CurrentDate
-                                }
-                              }
-                              //Set globals
-                              GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
-
-                              if (childSnapshot3.child('Creator').val() == '1'){
-                                JSONExport_Creator = {
+                      console.log('MaxCounterCP: ' + MaxCounterCP)
+                    })).then(
+                      response => {
+                        firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
+                        .then((snapshot2) =>
+                        {
+                          snapshot2.forEach((childSnapshot2) => {
+                            CounterCP++;
+                            CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();
+                            console.log('CounterCP: ' + CounterCP)
+                            firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
+                            .then((snapshot3) =>
+                            {
+                              snapshot3.forEach(element => {
+                                let MaxPlace = element.child('MaxPlace').val();
+                                let CarpoolName = element.child('CarpoolName').val();
+                                //Generate Files in global.js: Carpools
+                                JSONExport_Carpool = {
                                   [CarpoolKey]: {
-                                    CarpoolKey: CarpoolKey
+                                    key: CarpoolKey,
+                                    MaxPlace: MaxPlace,
+                                    CarpoolName: CarpoolName
                                   }
                                 }
                                 //Set globals
-                                GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};                                
-                              }
-
-                              firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
-                                .then((ActiveCarpoolSnapshot) =>
+                                GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+                                console.log(GLOBALS.Carpools)
+                                firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                                .then((snapshot4) =>
                                 {
-                                  ActiveCarpoolSnapshot.forEach(element => {
-                                    GLOBALS.Options.ActiveCarpoolId = element.child('CarpoolKey').val();
+                                  snapshot4.forEach((childSnapshot3) =>{
+                                    var UserCarpoolKEY = childSnapshot3.child('key').val();
+                                    var CurrentDate = childSnapshot3.child('Date').val();
+                                    JSONExport_UserCarpools = {
+                                      [UserCarpoolKEY]: {
+                                        key: UserCarpoolKEY,
+                                        CarpoolKey: CarpoolKey,
+                                        UserKey: GLOBALS.UserKey,
+                                        Invite: '0',
+                                        Join: '0',
+                                        Creator: '1',
+                                        Date: CurrentDate
+                                      }
+                                    }
+                                    //Set globals
+                                    GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+
+                                    if (childSnapshot3.child('Creator').val() == '1'){
+                                      JSONExport_Creator = {
+                                        [CarpoolKey]: {
+                                          CarpoolKey: CarpoolKey
+                                        }
+                                      }
+                                      //Set globals
+                                      GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};                                
+                                    }
+
+                                    firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+                                      .then((ActiveCarpoolSnapshot) =>
+                                      {
+                                        ActiveCarpoolSnapshot.forEach(element => {
+                                          GLOBALS.Options.ActiveCarpoolId = element.child('CarpoolKey').val();
+                                        });
+                                      });
+
+                                      //-------------------------------------------------------------------
+                                      firebase.database().ref().child('Fillings').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
+                                      .then((FillingSnapshot) =>
+                                      {
+                                        Promise.all(FillingSnapshot.forEach(FillingChildsnapshot => {
+                                          let consumption = FillingChildsnapshot.child('consumption').val();
+                                          let date = FillingChildsnapshot.child('date').val();
+                                          let drivenDays = FillingChildsnapshot.child('drivenDays').val();
+                                          let fuelPrice = FillingChildsnapshot.child('fuelPrice').val();
+                                          let Fillingid = FillingChildsnapshot.child('id').val();
+                                          let tripmeter = FillingChildsnapshot.child('tripmeter').val();
+
+                                          JSONExport_Fillings = {
+                                            [Fillingid]: {
+                                              id: Fillingid,
+                                              consumption: consumption,
+                                              date: date,
+                                              drivenDays: drivenDays,
+                                              fuelPrice: fuelPrice,
+                                              tripmeter: tripmeter,
+                                              CarpoolKey: CarpoolKey
+                                            }
+                                          }
+                                          // Set globals
+                                          GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
+                                        })).then(
+                                          response => {
+                                            if(CounterCP == MaxCounterCP){
+                                              GLOBALS.Status = '1';
+                                            }
+                                          }
+                                        );
+                                      });
+                                      //-------------------------------------------------------------------
                                   });
                                 });
-
-                                //-------------------------------------------------------------------
-                                firebase.database().ref().child('Fillings').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
-                                .then((FillingSnapshot) =>
-                                {
-                                  Promise.all(FillingSnapshot.forEach(FillingChildsnapshot => {
-                                    let consumption = FillingChildsnapshot.child('consumption').val();
-                                    let date = FillingChildsnapshot.child('date').val();
-                                    let drivenDays = FillingChildsnapshot.child('drivenDays').val();
-                                    let fuelPrice = FillingChildsnapshot.child('fuelPrice').val();
-                                    let Fillingid = FillingChildsnapshot.child('id').val();
-                                    let tripmeter = FillingChildsnapshot.child('tripmeter').val();
-
-                                    JSONExport_Fillings = {
-                                      [Fillingid]: {
-                                        id: Fillingid,
-                                        consumption: consumption,
-                                        date: date,
-                                        drivenDays: drivenDays,
-                                        fuelPrice: fuelPrice,
-                                        tripmeter: tripmeter,
-                                        CarpoolKey: CarpoolKey
-                                      }
-                                    }
-                                    // Set globals
-                                    GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
-                                  })).then(
-                                    response => {
-                                      if(CounterCP == MaxCounterCP){
-                                        GLOBALS.Status = '1';
-                                        console.log(GLOBALS.Status)
-                                      }
-                                    }
-                                  );
-                                });
-                                //-------------------------------------------------------------------
-                            });
+                              });                        
+                            });                      
                           });
-                        });                        
-                      });                      
-                    });
-                  });
+                        });
+                      }
+                    );
+                  });                  
                 });
               } else{
                 PasswordTrue = false;
