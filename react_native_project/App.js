@@ -186,9 +186,10 @@ class CarpoolApp extends React.Component {
                                   }
                                 }
                                 //Set globals
-                                GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
-
-                                firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+                                GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};                                
+                              }
+                              
+                              firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
                                 .then((ActiveCarpoolSnapshot) =>
                                 {
                                   ActiveCarpoolSnapshot.forEach(element => {
@@ -224,7 +225,6 @@ class CarpoolApp extends React.Component {
                                   });
                                 });
                                 //-------------------------------------------------------------------
-                              }
                             });
                           });
                         });                        
