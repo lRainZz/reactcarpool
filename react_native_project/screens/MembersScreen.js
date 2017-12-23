@@ -11,30 +11,51 @@ import { Fab, Icon } from 'native-base';
 
 import MemberItem from './carpoolMemeberModules/MemberItem'
 
+const GLOBALS = require('../globals');
+
 
 // class
 
 class MembersScreen extends React.Component {
   state = {
-    membersArray: [
-      {
-        id: 0,
-        name: 'John Doe'
-      },
-      {
-        id: 1,
-        name: 'Jane Doe'
-      }
-    ],
+    membersArray: null,
+    // [
+    //   {
+    //     id: 0,
+    //     name: 'John Doe'
+    //   },
+    //   {
+    //     id: 1,
+    //     name: 'Jane Doe'
+    //   }
+    // ],
 
     inputMember: false,
     inputMemberObject: null
   }
 
-  _memberIsAdmin = (id) => {
-    // check if member is admin
+  componentWillMount () {
+    let allCarpoolsObject = Object.entries(GLOBALS.UserCarpools)
+    let loadArray         = [];
+    let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
 
-    return (id === 0) ? true : false
+    allCarpoolsObject.forEach(
+        carpoolsArray => {
+          carpool = carpoolsArray[1]
+          if (carpool.CarpoolKey === activeCarpool) {
+            let member = {}
+            member.id   = carpool.UserKey
+            member.name = carpool.FullName
+            member.isAdmin = (carpool.Creator === 1)
+            loadArray.unshift(member)
+          }
+          
+        }
+    )
+
+    this.setState({
+      membersArray: loadArray
+    })
   }
 
   _asyncAddMember = async () => {
@@ -100,7 +121,7 @@ class MembersScreen extends React.Component {
               renderItem={({item}) => 
                 <MemberItem 
                   member={item}
-                  isAdmin={this._memberIsAdmin(item.id)}
+                  isAdmin={item.isAdmin}
                 />
               }
             />

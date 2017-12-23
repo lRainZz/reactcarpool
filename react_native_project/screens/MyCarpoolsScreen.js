@@ -229,6 +229,7 @@ class MyCarpoolsScreen extends React.Component {
     carpools.push(carpoolObject)
 
     this.createNewCarpool(carpoolObject.CarpoolName, carpoolObject.MaxPlace, carpoolObject.CarpoolKey)
+    this._setActiveCarpool(carpoolObject.CarpoolKey)
     
     this.setState({carpoolsArray: carpools})
   }

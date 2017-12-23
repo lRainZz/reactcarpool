@@ -46,18 +46,18 @@ const TabNavHome = TabNavigator (
         />
       }
     },
-    Statistics: {
-      screen: StatisticsScreen,
-      navigationOptions: {
-        tabBarIcon: 
-        <Icon 
-          type='material'
-          color='white'
-          size={40}
-          name='trending-up'
-        />
-      }
-    }
+    // Statistics: {
+    //   screen: StatisticsScreen,
+    //   navigationOptions: {
+    //     tabBarIcon: 
+    //     <Icon 
+    //       type='material'
+    //       color='white'
+    //       size={40}
+    //       name='trending-up'
+    //     />
+    //   }
+    // }
   },
   {
     tabBarPosition: 'top',
