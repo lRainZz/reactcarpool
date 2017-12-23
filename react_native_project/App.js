@@ -147,7 +147,6 @@ class CarpoolApp extends React.Component {
                   {
                     Promise.all(CPCSnap.forEach((childCPCSnap) => {
                       MaxCounterCP++;
-                      console.log('MaxCounterCP: ' + MaxCounterCP)
                     })).then(
                       response => {
                         firebase.database().ref().child('UserCarpools').orderByChild('UserKey').equalTo(Userkey).once('value')
@@ -156,7 +155,6 @@ class CarpoolApp extends React.Component {
                           snapshot2.forEach((childSnapshot2) => {
                             CounterCP++;
                             CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();
-                            console.log('CounterCP: ' + CounterCP)
                             firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
                             .then((snapshot3) =>
                             {
@@ -305,12 +303,9 @@ class CarpoolApp extends React.Component {
   }
 
   _LoginFunction = (UserInDataBase, PasswordTrue) => {
-    console.log('here: ' + GLOBALS.Status);
     if(GLOBALS.Status == '0') {
-      console.log('restart')
       setTimeout(()=>{this._LoginFunction(UserInDataBase, PasswordTrue)},1000)
     }else{
-      console.log('lets go')
       if (UserInDataBase) {
         if (PasswordTrue) {
           // grant login

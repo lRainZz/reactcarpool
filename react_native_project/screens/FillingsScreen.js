@@ -191,7 +191,6 @@ class FillingsScreen extends React.Component {
   _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
-    console.log('Add filling new key: ' + Id);   
     return Id 
   }
 
