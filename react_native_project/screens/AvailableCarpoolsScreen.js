@@ -117,12 +117,10 @@ class AvailableCarpoolsScreen extends React.Component {
     await this.getCarpools()
   }
 
-  // implement pull down to refresh
-
   _sendJoinRequest = (carpool) => {
     // send join request
 
-    Toast.show('A join request has been sent.', Toast.LONG)
+    Toast.show('This carpool is invite only. Please contact the owner if you want to join', Toast.LONG)
   }
   
   render () {
