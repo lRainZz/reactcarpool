@@ -29,10 +29,8 @@ class ModalView extends React.Component {
   state = {
     carpool: 
     {
-        id:     null, // number
-        member: null, // number
-        name:   null, // string
-        icon:   null  // number
+      MaxPlace: null, // number
+      CarpoolName:     null, // string
     },
 
     isFocused: false
@@ -76,9 +74,9 @@ class ModalView extends React.Component {
               onFocus={() => this.setState({ isFocused: true })}
               onBlur={() => this.setState({ isFocused: false })}
 
-              returnKeyType={'done'}
-              onChangeText={(text) => this._updateCarpool('name', text)}
-              value={(carpool.name === null) ? '' : String(carpool.name)}
+              returnKeyType={'next'}
+              onChangeText={(text) => this._updateCarpool('CarpoolName', text)}
+              value={(carpool.CarpoolName === null) ? '' : String(carpool.CarpoolName)}
             />
           </View>
 
@@ -92,12 +90,28 @@ class ModalView extends React.Component {
         >
           <Text
             style={[styles.title, styles.font]}
-          >{'ICON'}</Text>
+          >{'MAX PLACES'}</Text>
 
           <View
             style={styles.inputContainer}
           >
-          
+            <TextInput
+              ref={(ref) => this.textInputRef = ref}
+              autoCapitalize={'none'}
+              keyboardType={'numeric'}
+              autoCorrect={false}
+              style={styles.textInput}
+              maxLength={3}
+              underlineColorAndroid={'transparent'}
+              placeholderTextColor={'rgba(255,255,255,0.4)'}
+              selectionColor={'black'}
+              onFocus={() => this.setState({ isFocused: true })}
+              onBlur={() => this.setState({ isFocused: false })}
+
+              returnKeyType={'done'}
+              onChangeText={(text) => this._updateCarpool('MaxPlace', text)}
+              value={(carpool.MaxPlace === null) ? '' : String(carpool.MaxPlace)}
+            />
           </View>
 
           <View

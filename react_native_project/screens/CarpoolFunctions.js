@@ -358,11 +358,6 @@ class CarpoolFunctions extends React.Component {
           title='Test_Carpools'  
         />
         <Button
-          onPress={this.createNewCarpool.bind(this, 'CarpoolName'/*Name des Carpools*/,  '4'/*max. Sitzplatzanzahl*/)}
-          title="Create new Carpool"
-          color="green"
-        />
-        <Button
           onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
           title="Invite someone to carpool"
           color="green"
@@ -380,16 +375,6 @@ class CarpoolFunctions extends React.Component {
         <Button
           onPress={this.checkForPlace.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey von dem die verfügbaren Plätze rausgesucht werden sollen*/)}
           title="Check if Carpool has a place left"
-          color="green"
-        />
-        <Button
-          onPress={this.leaveCarpool.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey der verlassen werden soll*/)}
-          title="Leave Carpool"
-          color="green"
-        />
-        <Button
-          onPress={this.deleteCarpool.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey der gelöscht werden soll*/)}
-          title="Delete Carpool"
           color="green"
         />
         <Button

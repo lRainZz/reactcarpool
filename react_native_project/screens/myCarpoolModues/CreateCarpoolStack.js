@@ -34,9 +34,9 @@ class CreateCarpoolStack extends React.Component {
   _validateCarpool = (carpool) => {
     valid = false
     
-    console.log(carpool.name.length)
+    console.log(carpool.CarpoolName.length)
 
-    if (carpool.name.length > 4 ) {
+    if (carpool.CarpoolName.length > 4 ) {
       valid = true
     }
 

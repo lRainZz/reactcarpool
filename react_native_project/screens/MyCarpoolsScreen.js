@@ -18,6 +18,8 @@ import sha256 from 'sha256';
 
 import * as firebase from 'firebase';
 
+import moment from 'moment';
+
 
 // own modules
 
@@ -66,7 +68,6 @@ class MyCarpoolsScreen extends React.Component {
 
   _setActiveCarpool = (id) => {
     GLOBALS.Options.ActiveCarpoolId = id
-    console.log(GLOBALS.Options.ActiveCarpoolId)
 
     let Key = this._getNewId();
 
@@ -178,6 +179,8 @@ class MyCarpoolsScreen extends React.Component {
     let allCarpoolsObject = Object.entries(GLOBALS.Carpools)
     let loadArray         = [];
 
+    console.log(GLOBALS.Carpools) 
+
     allCarpoolsObject.forEach(
         carpoolsArray => {
           carpool = carpoolsArray[1]
@@ -224,12 +227,73 @@ class MyCarpoolsScreen extends React.Component {
   _addCarpool = (carpoolObject) => {
     let carpools   = this.state.carpoolsArray
 
-    // this works because fillings is an array starting at 0
-    // object to be added gets a new id, one higher as the highest in fillings
-    carpoolObject.id = carpools.length;
-    carpools.push(carpoolObject);
+    carpoolObject.id = this._getNewId()
+    carpools.push(carpoolObject)
+
+    this.createNewCarpool(carpoolObject.CarpoolName, carpoolObject.MaxPlace)
     
-    this.setState({carpoolsArray: carpools});
+    this.setState({carpoolsArray: carpools})
+  }
+
+  createNewCarpool = async (CarpoolName, MaxPlace) => 
+  {
+    try
+    {      
+      // Get a key for a new Carpool.
+      KEY = firebase.database().ref().push().key;
+      firebase.database().ref('Carpools/' + KEY).set({
+        key: KEY,
+        CarpoolName: CarpoolName,
+        MaxPlace: MaxPlace
+      });
+      
+      // Get a key for a new UserCarpool.
+      UserCarpoolKEY = firebase.database().ref().push().key;
+      date = new Date();
+      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
+      firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
+        key: UserCarpoolKEY,
+        CarpoolKey: KEY,
+        UserKey: GLOBALS.UserKey,
+        Invite: '0',
+        Join: '0',
+        Creator: '1',
+        Date: CurrentDate,
+      });
+
+      //Generate Files in global.js
+      JSONExport_Carpool = {
+        [KEY]: {
+          key: KEY,
+          MaxPlace: MaxPlace
+        }
+      }
+
+      JSONExport_UserCarpools = {
+        [UserCarpoolKEY]: {
+          key: UserCarpoolKEY,
+          CarpoolKey: KEY,
+          UserKey: GLOBALS.UserKey,
+          Invite: '0',
+          Join: '0',
+          Creator: '1',
+          Date: CurrentDate
+        }
+      }
+
+      JSONExport_Creator = {
+        [CarpoolKey]: {
+          CarpoolKey: KEY
+        }
+      }
+      //Set globals
+      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+      GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
+    }catch(error)
+    {
+      console.error(error);
+    }
   }
 
   render () {
@@ -253,12 +317,12 @@ class MyCarpoolsScreen extends React.Component {
             <FlatList
               data={carpoolsArray}
               extraData={this.state}
-              keyExtractor={item => item.key}
+              keyExtractor={item => item.CarpoolKey}
               renderItem={({item}) => 
                 <CarpoolItem 
                   carpool={item}
-                  active={this._carpoolIsActive(item.key)}
-                  onSetActive={(key) => this._setActiveCarpool(key)}
+                  active={this._carpoolIsActive(item.CarpoolKey)}
+                  onSetActive={(CarpoolKey) => this._setActiveCarpool(CarpoolKey)}
                   onDelete={(carpool, doDelete) => this._deleteCarpool(carpool, doDelete)}
                 />
               }
