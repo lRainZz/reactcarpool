@@ -64,7 +64,31 @@ class MyCarpoolsScreen extends React.Component {
     GLOBALS.Options.ActiveCarpoolId = id
     console.log(GLOBALS.Options.ActiveCarpoolId)
 
+    let Key = this._getNewId();
+
+    firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
+    .then((ActiveCarpoolSnapshot) =>
+    {
+      if (ActiveCarpoolSnapshot.val()){
+        firebase.database().ref('ActiveCarpool/' + Key).update({
+          CarpoolKey:  id
+        });
+      }else{
+        firebase.database().ref('ActiveCarpool/' + Key).set({
+          key:          Key,
+          CarpoolKey:  id,
+          UserKey:   GLOBALS.UserKey
+        });
+      }
+    });    
+
     this.setState({activeCarpool: id})
+  }
+
+  _getNewId = () => {
+    let Time = (new Date).getTime();
+    let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
+    return Id 
   }
 
   _deleteCarpool = (carpool) => {
