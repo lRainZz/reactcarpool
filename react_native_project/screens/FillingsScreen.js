@@ -36,7 +36,6 @@ class FillingsScreen extends React.Component {
     inputFilling: false,
     inputFillingObject: null,
 
-    // live init as null
     fillingsArray: null
       // [
       //   {  
@@ -65,11 +64,16 @@ class FillingsScreen extends React.Component {
   _loadFillingsFromGlobals = () => {
     let allFillingsObject = Object.entries(GLOBALS.Fillings)
     let loadArray         = [];
+    let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
 
     allFillingsObject.forEach(
         fillingArray => {
           filling = fillingArray[1]
-          loadArray.unshift(filling)
+          console.log(filling.CarpoolKey + ' : ' + activeCarpool)
+          
+          if (filling.CarpoolKey === activeCarpool) {
+            loadArray.unshift(filling)
+          }
         }
     )
 
@@ -123,13 +127,13 @@ class FillingsScreen extends React.Component {
         index = fillings.indexOf(currentFilling)
         fillings[index] = fillingObject
         update = true
+        console.log('update')
+        console.log('Update Object: ' + fillingObject.id + ' list match: ' + currentFilling.id)
         break;
       }
     }
     
     if (!update) {
-      // this works because fillings is an array starting at 0
-      // object to be added gets a new id, one higher as the highest in fillings
       fillingObject.id = this._getNewId();
       fillings.unshift(fillingObject);
     }
@@ -146,6 +150,8 @@ class FillingsScreen extends React.Component {
     let index    = fillings.indexOf(filling)
 
     fillings.splice(index, 1)
+
+    this._removeFirebaseGlobals(filling.id)
 
     this.setState({fillingsArray: fillings})
   }
@@ -181,7 +187,7 @@ class FillingsScreen extends React.Component {
 // All Functions--------------------------------------------------------------------------------------
   _getNewId = () => {
     let Time = (new Date).getTime();
-    let Id = sha256((Math.round(Math.random() * 1000000) + Time)); //generates Key from random value and epoche timestamp
+    let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
     console.log('Add filling new key: ' + Id);   
     return Id 
   }
@@ -228,7 +234,6 @@ class FillingsScreen extends React.Component {
       console.log(error.message)
     }
     
-    
     //Generate Files in global.js
     JSONExport_Filling = {
       id: {
@@ -246,6 +251,34 @@ class FillingsScreen extends React.Component {
     GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Filling}
 
     console.log('Adding filling, FirebaseGLOBALS done: ' + JSON.stringify(JSONExport_Filling))
+  }
+
+  _removeFirebaseGlobals = (filling) => {
+    let Connected
+    
+    for (tryCount = 0; tryCount <= 3; tryCount++) {
+      firebase.database().ref().child('.info/connected').on('value', function(connectedSnap) {
+        if (connectedSnap.val() === true) {
+          tryCount = 99
+          Connected = true;
+        } else {
+          Connected = false;
+        }
+      });
+    }
+
+    try {
+      if(Connected){
+        firebase.database().ref('Fillings').child(filling.id).remove()
+        console.log('Delete filling: ' + filling.id)
+      }
+    } catch(error) {
+      console.log(error.message)
+    }
+
+    let globalFillings = GLOBALS.Fillings
+    delete globalFillings[filling.id]
+    GLOBALS.Fillings = globalFillings
   }
   // All Functions--------------------------------------------------------------------------------------
 

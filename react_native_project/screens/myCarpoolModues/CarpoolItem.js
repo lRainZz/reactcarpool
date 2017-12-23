@@ -76,27 +76,31 @@ class CarpoolItem extends React.Component {
         <Panel
           header={() => this.renderHeader()}
         >
-          <View
-            style={styles.dropdown}
+          <View 
+            style={styles.dropdownFlex}
           >
-            <Button 
-              title={'SET AS ACTIVE'}
-              fontWeight={'bold'}
-              fontSize={18}
-              color={'#1976D2'}
-              buttonStyle={styles.dropButton}
-              containerViewStyle={styles.buttonFlex}
-              onPress={() => onSetActive(carpool.key)}
-            />
-            <Button 
-              title={'LEAVE'}
-              fontWeight={'bold'}
-              fontSize={18}
-              color={'#1976D2'}
-              buttonStyle={styles.dropButton}
-              containerViewStyle={styles.buttonFlex}
-              onPress={() => onDelete(carpool)}
-            />
+            <View
+              style={styles.dropdown}
+            >
+              <Button 
+                title={'SET AS ACTIVE'}
+                fontWeight={'bold'}
+                fontSize={18}
+                color={'#1976D2'}
+                buttonStyle={styles.dropButton}
+                containerViewStyle={styles.buttonFlex}
+                onPress={() => onSetActive(carpool.key)}
+              />
+              <Button 
+                title={'LEAVE'}
+                fontWeight={'bold'}
+                fontSize={18}
+                color={'#1976D2'}
+                buttonStyle={styles.dropButton}
+                containerViewStyle={styles.buttonFlex}
+                onPress={() => onDelete(carpool)}
+              />
+            </View>
           </View>
         </Panel>
         <View 
@@ -130,14 +134,18 @@ const styles = StyleSheet.create({
   iconContainer: {
     flex: 2
   },
+  dropdownFlex: {
+    height: 60
+  },
   dropdown: {
-    flex: 5,
+    flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     margin: 5,
     marginBottom: 10
   },
   dropButton: {
-    // flex: 1,
+    flex: 1,
     alignSelf: 'center',
     backgroundColor: '#fff'
   },

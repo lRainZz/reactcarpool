@@ -62,8 +62,9 @@ class MyCarpoolsScreen extends React.Component {
 
   _setActiveCarpool = (id) => {
     GLOBALS.Options.ActiveCarpoolId = id
+    console.log(GLOBALS.Options.ActiveCarpoolId)
 
-    this.setState({activeCarpool: GLOBALS.Options.ActiveCarpoolId})
+    this.setState({activeCarpool: id})
   }
 
   _deleteCarpool = (carpool) => {
