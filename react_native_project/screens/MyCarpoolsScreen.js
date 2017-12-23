@@ -227,20 +227,20 @@ class MyCarpoolsScreen extends React.Component {
   _addCarpool = (carpoolObject) => {
     let carpools   = this.state.carpoolsArray
 
-    carpoolObject.id = this._getNewId()
+    carpoolObject.CarpoolKey = this._getNewId()
     carpools.push(carpoolObject)
 
-    this.createNewCarpool(carpoolObject.CarpoolName, carpoolObject.MaxPlace)
+    this.createNewCarpool(carpoolObject.CarpoolName, carpoolObject.MaxPlace, carpoolObject.CarpoolKey)
     
     this.setState({carpoolsArray: carpools})
   }
 
-  createNewCarpool = async (CarpoolName, MaxPlace) => 
+  createNewCarpool = async (CarpoolName, MaxPlace, CarpoolKey) => 
   {
     try
     {      
       // Get a key for a new Carpool.
-      KEY = this._getNewId();
+      KEY = CarpoolKey
       firebase.database().ref('Carpools/' + KEY).set({
         key: KEY,
         CarpoolName: CarpoolName,
