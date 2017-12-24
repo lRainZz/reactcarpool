@@ -43,6 +43,8 @@ class MembersScreen extends React.Component {
     allCarpoolsObject.forEach(
       carpoolsArray => {
         carpool = carpoolsArray[1]
+        console.log(carpool)
+        console.log(activeCarpool)
         if (carpool.CarpoolKey === activeCarpool) {
           let member = {}
           member.id      = carpool.UserKey

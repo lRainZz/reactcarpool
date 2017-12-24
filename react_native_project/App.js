@@ -468,6 +468,21 @@ class CarpoolApp extends React.Component {
             ZipCode: zipCode
           });
           //Set globals default
+
+          JSONExport_Users = {
+            [KEY]: {
+              key: KEY,
+              Email: email,
+              FullName: fullName,
+              Password: password,
+              ZipCode: zipCode
+            }
+          }
+          //Set globals
+          if (GLOBALS.Users[KEY] == null){
+            GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
+          }
+
           date = new Date();
           CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
           GLOBALS.Options.UseImperialUnits = false;
