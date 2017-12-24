@@ -216,11 +216,6 @@ class CarpoolFunctions extends React.Component {
           title='Test_Carpools'  
         />
         <Button
-          onPress={this.inviteToCarpool.bind(this,'Test1'/*Email von dem Einzuladenden*/, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey von dem Carpool in den der Benutzer eingeladen werden soll*/)}
-          title="Invite someone to carpool"
-          color="green"
-        />
-        <Button
           onPress={this.joinCarpool.bind(this, '-L-vet94Duh-qAQgxdwo'/*CarpoolKey von dem Carpool dem der Benutzer joinen will*/)}
           title="Ask to join Carpool"
           color="green"
