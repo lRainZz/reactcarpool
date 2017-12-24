@@ -12,6 +12,8 @@ import * as firebase from 'firebase';
 
 import sha256 from 'sha256';
 
+import moment from 'moment'
+
 
 
 //own modules
@@ -148,6 +150,8 @@ class MembersScreen extends React.Component {
                   Creator: '0',
                   Date: CurrentDate,
                 });
+
+                Toast.show('Invite send successfully.')
               }else{
                 Toast.show('User is already a member of the carpool.')
               }
@@ -166,7 +170,7 @@ class MembersScreen extends React.Component {
   _getNewId = () => {
     let Time = (new Date).getTime();
     let Id = sha256(String((Math.round(Math.random() * 1000000) + Time))); //generates Key from random value and epoche timestamp
-    return Id 
+    return Id;
   }
 
   
