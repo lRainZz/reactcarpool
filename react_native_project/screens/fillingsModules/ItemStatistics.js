@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 
 import ValueUnit from './valueUnit';
 
+const GLOBALS = require ('../../globals');
+
 
 // class
 
@@ -24,10 +26,11 @@ class FillingsItemStatistic extends React.Component {
 
   render () {
     const { filling, outerStyle } = this.props
+    const imperial = GLOBALS.Options.UseImperialUnits
 
-    const distanceUnit = (/* optionImperial*/ true) ? 'KM': 'MI'
-    const volumeUnit   = (/* optionImperial*/ true) ? 'L' : 'GAL'
-    const priceUnit    = (/* optionImperial*/ true) ? '€' : '$'
+    const distanceUnit = (imperial) ? 'KM': 'MI'
+    const volumeUnit   = (imperial) ? 'L' : 'GAL'
+    const priceUnit    = (imperial) ? '€' : '$'
     const dayUnit      = 'DAYS' // (/* optionImperial*/ true) ? 'Tagen' : 'days'
 
     return (

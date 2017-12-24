@@ -78,7 +78,7 @@ class AddFillingsView extends React.Component {
     const { onSubmit, onCancel, submitText } = this.props
     const { filling, isDateTimePickerVisible } = this.state
     const Touchable = (Platform.OS == 'android') ? TouchableNativeFeedback : TouchableOpacity
-    const imperial = GLOBALS.UseImperialUnits
+    const imperial = GLOBALS.Options.UseImperialUnits
 
     const distanceUnit    = (imperial) ? 'KM'   : 'MI'
     const volumeUnit      = (imperial) ? 'L'    : 'GAL'
