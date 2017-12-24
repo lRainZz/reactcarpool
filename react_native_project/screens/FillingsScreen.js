@@ -286,7 +286,7 @@ class FillingsScreen extends React.Component {
 
   render () {
     const { fillingsArray, addFillingsVisible, fabVisible, editFilling } = this.state
-    const fillingsAvailable = (fillingsArray !== null)
+    const fillingsAvailable = (fillingsArray.length !== 0)
     const fabVisibleStyle   = (fabVisible) ? {} : {height: 0, width: 0}
     const containerFlex = (fillingsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 

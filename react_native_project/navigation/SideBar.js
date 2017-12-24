@@ -12,26 +12,25 @@ import { Image, Text, StyleSheet, Platform, Button } from 'react-native';
 
 // class:
 
-const routes = ['Home', 'Carpools','Options', 'Test_Carpools'];
+const routes = ['Home', 'Carpools','Options', 'Test_Carpools', 'Invites'];
 
 class SideBar extends React.Component {
   render() {
     return (
       <Container>
         <Content>
-          {/* sidebar top design */}
+
           <Image
             source={require('../res/react_carpool_sidebar_background.png')}
             style={styles.background}>
 
-            {/* logo */}
             <Image
               square
               style={styles.logo}
               source={require('../res/react_carpool_logo.png')}
             />
           </Image>
-          {/* Sidebar Content */}
+
           <List
             dataArray={routes}
             renderRow={data => {
@@ -47,8 +46,6 @@ class SideBar extends React.Component {
               );
             }}
           />
-
-          {/* Logout (?) */}
         </Content>
       </Container>
     );

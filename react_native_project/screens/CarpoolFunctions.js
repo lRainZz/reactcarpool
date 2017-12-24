@@ -29,67 +29,6 @@ class CarpoolFunctions extends React.Component {
     return Id 
   }
 
-  createNewCarpool = async (CarpoolName, MaxPlace) => 
-  {
-    try
-    {      
-      // Get a key for a new Carpool.
-      KEY = this._getNewId();
-      firebase.database().ref('Carpools/' + KEY).set({
-        key: KEY,
-        CarpoolName: CarpoolName,
-        MaxPlace: MaxPlace
-      });
-      
-      // Get a key for a new UserCarpool.
-      UserCarpoolKEY = this._getNewId();
-      date = new Date();
-      CurrentDate = moment(date).format('YYYY-MM-DD HH:mm:ss');
-      firebase.database().ref('UserCarpools/' + UserCarpoolKEY).set({
-        key: UserCarpoolKEY,
-        CarpoolKey: KEY,
-        UserKey: GLOBALS.UserKey,
-        Invite: '0',
-        Join: '0',
-        Creator: '1',
-        Date: CurrentDate,
-      });
-
-      //Generate Files in global.js
-      JSONExport_Carpool = {
-        [KEY]: {
-          key: KEY,
-          MaxPlace: MaxPlace
-        }
-      }
-
-      JSONExport_UserCarpools = {
-        [UserCarpoolKEY]: {
-          key: UserCarpoolKEY,
-          CarpoolKey: KEY,
-          UserKey: GLOBALS.UserKey,
-          Invite: '0',
-          Join: '0',
-          Creator: '1',
-          Date: CurrentDate
-        }
-      }
-
-      JSONExport_Creator = {
-        [CarpoolKey]: {
-          CarpoolKey: KEY
-        }
-      }
-      //Set globals
-      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
-      GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
-    }catch(error)
-    {
-      console.error(error);
-    }
-  }
-
   joinCarpool = async (CarpoolKey) => 
   {
     try
@@ -197,45 +136,6 @@ class CarpoolFunctions extends React.Component {
     }catch(error)
     {
       console.log(error);
-    }
-  }
-
-  _answerInvOrJoin = async (CarpoolObject, Accept) => //Accept is true or false
-  {
-    let CarpoolKey = CarpoolObject.CarpoolKey;
-    let UserCarpoolKey = CarpoolObject.UserCarpoolKey;
-
-    if (Accept){
-      firebase.database().ref('UserCarpools/' + UserCarpoolKey).update({
-        Invite: '0',
-        Join: '0'
-      });
-
-        JSONExport_Carpool = {
-          [CarpoolKey]: {
-            key: CarpoolKey,
-            CarpoolName: CarpoolObject.CarpoolName,
-            MaxPlace: CarpoolObject.MaxPlace
-          }
-        }
-
-        JSONExport_UserCarpools = {
-          [UserCarpoolKey]: {
-            key: UserCarpoolKey,
-            CarpoolKey: CarpoolKey,
-            UserKey: GLOBALS.UserKey,
-            Invite: '0',
-            Join: '0',
-            Creator: '0',
-            Date: CarpoolObject.CurrentDate
-          }
-        }
-      
-      //Set globals
-      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
-    }else{
-      firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
     }
   }
 

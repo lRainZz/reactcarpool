@@ -172,7 +172,7 @@ class MembersScreen extends React.Component {
   
   render () {
     const { membersArray, allowedToInvite } = this.state
-    const membersAvailable = (membersArray !== null)
+    const membersAvailable = (membersArray.length !== 0)
     const containerFlex = (membersAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
     

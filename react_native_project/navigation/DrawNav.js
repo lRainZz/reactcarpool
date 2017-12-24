@@ -15,6 +15,8 @@ import CarpoolsScreen from '../screens/CarpoolsScreen';
 
 import CarpoolFunctions from '../screens/CarpoolFunctions';
 
+import InvitesScreen from '../screens/InvitesScreen'
+
 import SideBar from './SideBar';
 
 
@@ -35,6 +37,9 @@ const DrawNav = DrawerNavigator(
           screenProps={{rootNavigation: screenProps.rootNavigation}} 
           navigation={navigation}  
         />
+    },
+    Invites: {
+      screen: InvitesScreen
     },
     Options: {
       screen: OptionsScreen
