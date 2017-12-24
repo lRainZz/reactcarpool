@@ -114,7 +114,9 @@ class CarpoolApp extends React.Component {
                   }
                 } 
                 //Set globals
-                GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
+                if (GLOBALS.Users[Userkey] == null){
+                  GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
+                }
 
 
                 await firebase.database().ref('/Options/' + Userkey).once('value')
@@ -138,7 +140,6 @@ class CarpoolApp extends React.Component {
                   GLOBALS.Options.UseLastCarpool = UseLastCarpool;
                   GLOBALS.Options.UseAutoPayment = UseAutoPayment;
                   GLOBALS.Options.UseDarkTheme = UseDarkTheme;
-                  GLOBALS.UserOptions = {...GLOBALS.UserOptions, ...JSONExport_Options};
 
                   let MaxCounterCP = 0;
                   let CounterCP = 0;
@@ -164,7 +165,9 @@ class CarpoolApp extends React.Component {
                         }
                       }
                       //Set globals
-                      GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
+                      if (GLOBALS.Users[Ukey] == null){
+                        GLOBALS.Users = {...GLOBALS.Users, ...JSONExport_Users};
+                      }
                     })).then(
                       response => {
                         //Check if Carpool exists
@@ -206,7 +209,9 @@ class CarpoolApp extends React.Component {
                                             }
                                           }
                                           //Set globals
-                                          GLOBALS.Invites = {...GLOBALS.Invites, ...JSONExport_Invites};
+                                          if (GLOBALS.Invites[UserCarpoolKey] == null){
+                                            GLOBALS.Invites = {...GLOBALS.Invites, ...JSONExport_Invites};
+                                          }
 
                                         });
                                       });
@@ -249,7 +254,9 @@ class CarpoolApp extends React.Component {
                                           }
                                         }
                                         //Set globals
-                                        GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+                                        if (GLOBALS.Carpools[CarpoolKey] == null){
+                                          GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+                                        }
                                         firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
                                         .then((snapshot4) =>
                                         {
@@ -268,7 +275,9 @@ class CarpoolApp extends React.Component {
                                               }
                                             }
                                             //Set globals
-                                            GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+                                            if (GLOBALS.UserCarpools[UserCarpoolKEY] == null){
+                                              GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+                                            }
 
                                             if (childSnapshot3.child('Creator').val() == '1'){
                                               JSONExport_Creator = {
@@ -277,7 +286,9 @@ class CarpoolApp extends React.Component {
                                                 }
                                               }
                                               //Set globals
-                                              GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};                                
+                                              if (GLOBALS.Creator[CarpoolKey] == null){
+                                                GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
+                                              }
                                             }
 
                                             firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
@@ -313,7 +324,9 @@ class CarpoolApp extends React.Component {
                                                     }
                                                   }
                                                   // Set globals
-                                                  GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
+                                                  if (GLOBALS.Fillings[Fillingid] == null){
+                                                    GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Fillings};
+                                                  }
                                                 })).then(
                                                   response => {
                                                     if(CounterCP == MaxCounterCP){

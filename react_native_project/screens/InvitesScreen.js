@@ -73,8 +73,23 @@ class InvitesScreen extends React.Component {
         }
       
       //Set globals
-      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+      if (GLOBALS.Carpools[CarpoolKey] == null){
+
+        let UCarpools = GLOBALS.Carpools
+        delete UCarpools[CarpoolKey]
+        GLOBALS.Carpools = UCarpools
+
+        GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+      }
+      if (GLOBALS.UserCarpools[UserCarpoolKey] == null){
+
+        let UUserCarpools = GLOBALS.UserCarpools
+        delete UUserCarpools[UserCarpoolKey]
+        GLOBALS.UserCarpools = UUserCarpools
+
+        GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+      }
+
     }else{
       firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
     }

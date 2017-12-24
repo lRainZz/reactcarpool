@@ -219,7 +219,7 @@ class FillingsScreen extends React.Component {
     
     //Generate Files in global.js
     JSONExport_Filling = {
-      [id]: {
+      [Filling.id]: {
         id:          Filling.id,
         CarpoolKey:  CarpoolKey,
         tripmeter:   Filling.tripmeter,
@@ -231,7 +231,14 @@ class FillingsScreen extends React.Component {
     }
 
     //Set globals
-    GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Filling}
+      if (GLOBALS.Fillings[Filling.id] == null){
+
+        let UFillings = GLOBALS.Fillings
+        delete UFillings[Filling.id]
+        GLOBALS.Fillings = UFillings
+
+        GLOBALS.Fillings = {...GLOBALS.Fillings, ...JSONExport_Filling}
+      }
 
     console.log('Adding filling, FirebaseGLOBALS done: ' + JSON.stringify(JSONExport_Filling))
   }

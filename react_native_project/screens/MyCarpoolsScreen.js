@@ -287,9 +287,16 @@ class MyCarpoolsScreen extends React.Component {
         }
       }
       //Set globals
-      GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
-      GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
-      GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
+      if (GLOBALS.Carpools[KEY] == null){
+        GLOBALS.Carpools = {...GLOBALS.Carpools, ...JSONExport_Carpool};
+      }
+      if (GLOBALS.UserCarpools[UserCarpoolKEY] == null){
+        GLOBALS.UserCarpools = {...GLOBALS.UserCarpools, ...JSONExport_UserCarpools};
+      }
+      if (GLOBALS.Creator[KEY] == null){
+        GLOBALS.Creator = {...GLOBALS.Creator, ...JSONExport_Creator};
+      }
+
     }catch(error)
     {
       console.error(error);
