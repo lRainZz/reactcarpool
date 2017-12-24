@@ -78,6 +78,24 @@ class InvitesScreen extends React.Component {
     }else{
       firebase.database().ref('UserCarpools').child(UserCarpoolKey).remove();
     }
+
+    let invites = GLOBALS.Invites
+    delete invites[CarpoolKey]
+    GLOBALS.Invites = invites
+
+    let stateInvites = this.state.inviteArray
+
+    stateInvites.forEach(
+      invite => {
+        if (invite.CarpoolKey === CarpoolKey) {
+          let index = stateInvites.indexOf(invite)
+
+          stateInvite.splice(index, 1)
+        }
+      }
+    )
+
+    this.setState({inviteArray: stateInvites})
   }
 
   render () {
