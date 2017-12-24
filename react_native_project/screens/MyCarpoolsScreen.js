@@ -69,16 +69,17 @@ class MyCarpoolsScreen extends React.Component {
   _setActiveCarpool = (id) => {
     GLOBALS.Options.ActiveCarpoolId = id
 
-    let Key = this._getNewId();
+    
 
     firebase.database().ref().child('ActiveCarpool').orderByChild('UserKey').equalTo(GLOBALS.UserKey).once('value')
     .then((ActiveCarpoolSnapshot) =>
     {
       if (ActiveCarpoolSnapshot.val()){
-        firebase.database().ref('ActiveCarpool/' + Key).update({
+        firebase.database().ref('ActiveCarpool/' + GLOBALS.Options.ActiveCarpoolId).update({
           CarpoolKey:  id
         });
       }else{
+        let Key = this._getNewId();
         firebase.database().ref('ActiveCarpool/' + Key).set({
           key:          Key,
           CarpoolKey:  id,
