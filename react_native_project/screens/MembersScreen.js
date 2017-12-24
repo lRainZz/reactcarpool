@@ -123,13 +123,13 @@ class MembersScreen extends React.Component {
       .then((snapshot) =>
       {
         if (snapshot.val()){
-          snapshot.forEach(function(childSnapshot) {
+          snapshot.forEach((childSnapshot) => {
             var InviteKEY = childSnapshot.key;
             //Check for all Users in Carpool
             firebase.database().ref().child('UserCarpools').orderByChild('CarpoolKey').equalTo(CarpoolKey).once('value')
             .then((snapshot2) =>
             {
-              snapshot2.forEach(function(childSnapshot2) {
+              snapshot2.forEach((childSnapshot2) => {
                 if (InviteKEY == childSnapshot2.child('UserKey').val()){
                   isInvitable = false;
                 }
