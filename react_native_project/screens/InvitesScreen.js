@@ -90,7 +90,7 @@ class InvitesScreen extends React.Component {
         if (invite.CarpoolKey === CarpoolKey) {
           let index = stateInvites.indexOf(invite)
 
-          stateInvite.splice(index, 1)
+          stateInvites.splice(index, 1)
         }
       }
     )
