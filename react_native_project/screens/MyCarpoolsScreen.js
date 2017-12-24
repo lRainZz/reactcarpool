@@ -298,7 +298,7 @@ class MyCarpoolsScreen extends React.Component {
 
   render () {
     const { carpoolsArray, fabVisible, addCarpoolsVisible, editCarpool } = this.state
-    const carpoolsAvailable = (carpoolsArray !==  null)
+    const carpoolsAvailable = (carpoolsArray.length !== 0)
     const containerFlex = (carpoolsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
     return(

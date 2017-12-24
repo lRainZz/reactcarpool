@@ -124,7 +124,7 @@ class AvailableCarpoolsScreen extends React.Component {
   }
   
   render () {
-    const carpoolsAvailable = (carpoolsArray.length !== 0)
+    const carpoolsAvailable = (carpoolsArray !== null)
     const { carpoolsArray } = this.state
     const containerFlex = (carpoolsAvailable) ? { } : {justifyContent: 'center', alignItems: 'center'}
 
