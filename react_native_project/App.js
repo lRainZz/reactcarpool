@@ -233,7 +233,6 @@ class CarpoolApp extends React.Component {
                                     CounterCP++;
                                     CarpoolKey = snapshot2.child(childSnapshot2.key).child("CarpoolKey").val();
                                     
-                                    console.log(CarpoolKey)
                                     firebase.database().ref().child('Carpools').orderByChild('key').equalTo(CarpoolKey).once('value')
                                     .then((snapshot3) =>
                                     {

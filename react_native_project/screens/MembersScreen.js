@@ -28,16 +28,6 @@ const GLOBALS = require('../globals');
 class MembersScreen extends React.Component {
   state = {
     membersArray: null,
-    // [
-    //   {
-    //     id: 0,
-    //     name: 'John Doe'
-    //   },
-    //   {
-    //     id: 1,
-    //     name: 'Jane Doe'
-    //   }
-    // ],
 
     inputMember: false,
     inputMemberObject: null
@@ -55,7 +45,6 @@ class MembersScreen extends React.Component {
         carpool = carpoolsArray[1]
         if (carpool.CarpoolKey === activeCarpool) {
           let member = {}
-          console.log(carpool)
           member.id      = carpool.UserKey
           member.isAdmin = (carpool.Creator == 1)
 

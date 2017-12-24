@@ -37,24 +37,6 @@ class FillingsScreen extends React.Component {
     inputFillingObject: null,
 
     fillingsArray: null
-      // [
-      //   {  
-      //     "id"         : 1,
-      //     'tripmeter'  : 1000,
-      //     'consumption': 7.0,
-      //     'fuelPrice'  : 1.309,
-      //     'drivenDays' : 4,
-      //     'date'       : '08.01.2017'
-      //   },
-      //   {
-      //     'id'         : 0,
-      //     'tripmeter'  : 860,
-      //     'consumption': 7.3,
-      //     'fuelPrice'  : 1.309,
-      //     'drivenDays' : 4,
-      //     'date'       : '01.01.2017'
-      //   }
-      // ]
   }
 
   componentWillMount () {
@@ -62,7 +44,6 @@ class FillingsScreen extends React.Component {
   }
 
   _loadFillingsFromGlobals = () => {
-    console.log(GLOBALS.Fillings)
     let allFillingsObject = Object.entries(GLOBALS.Fillings)
     let loadArray         = [];
     let activeCarpool     = GLOBALS.Options.ActiveCarpoolId
