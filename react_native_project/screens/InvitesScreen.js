@@ -4,9 +4,11 @@ import React from 'react';
 
 import { FlatList, ScrollView, StyleSheet, Text, View, Platform } from 'react-native';
 
-import { CheckBox } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 
 import * as firebase from 'firebase';
+
+import PropTypes from 'prop-types'
 
 
 // own modules:
@@ -34,12 +36,12 @@ class InvitesScreen extends React.Component {
       }
     )
 
-    console.log(invites)
+    console.log(loadArray)
 
     this.setState({inviteArray: loadArray})
   }
 
-  _answerInvOrJoin = async (CarpoolObject, Accept) => //Accept is true or false
+  _answerInvOrJoin = (CarpoolObject, Accept) => //Accept is true or false
   {
     let CarpoolKey = CarpoolObject.CarpoolKey;
     let UserCarpoolKey = CarpoolObject.UserCarpoolKey;
@@ -86,7 +88,7 @@ class InvitesScreen extends React.Component {
 
     return (
       <View
-      style={{flex: 1}}
+        style={{flex: 1}}
       >
         <Header
           onHeadButtonPress={() => this.props.navigation.navigate('DrawerToggle')}
@@ -102,9 +104,9 @@ class InvitesScreen extends React.Component {
             >{'NO INVITES YET'}</Text>
           )}
 
-          {(!inviteAvailable) && (
+          {(inviteAvailable) && (
             <ScrollView>
-              < FlatList
+              <FlatList
                 style={styles.listContainer}
                 extraData={this.state}
                 data={inviteArray}
@@ -126,6 +128,11 @@ class InvitesScreen extends React.Component {
 }
 
 class InviteItem extends React.Component {
+  static propTypes = {
+    joinFunction: PropTypes.func,
+    carpool:      PropTypes.object
+  }
+  
   _handleJoin = (accept) => { 
     this.props.joinFunction(this.props.carpool, accept)
   }
@@ -138,46 +145,46 @@ class InviteItem extends React.Component {
       animation={'slideInDown'}
       delay={0}
       duration={300}
-    >
-      <View
-        style={styles.headerContainer}
       >
         <View
-          style={styles.settingsContainer}
+          style={styles.headerContainer}
         >
-          <Icon
-            name={'clear'}
-            size={40}
-            color={'#FBC02D'}
-            style={styles.settings}
-            onPress={() => this._handleJoin(false)}
-          />
-        </View>
+          <View
+            style={styles.settingsContainer}
+          >
+            <Icon
+              name={'clear'}
+              size={40}
+              color={'#F44336'}
+              style={styles.settings}
+              onPress={() => this._handleJoin(false)}
+            />
+          </View>
 
-        <View
-          style={styles.titleContainer}
-        >
-          <Text
-            style={[styles.font, styles.headerText]}
-          >{carpool.CarpoolName}</Text>
-        </View>
+          <View
+            style={styles.titleContainer}
+          >
+            <Text
+              style={[styles.font, styles.headerText]}
+            >{carpool.CarpoolName}</Text>
+          </View>
 
-        <View
-          style={styles.settingsContainer}
-        >
-          <Icon
-            name={'done'}
-            size={40}
-            color={'#FBC02D'}
-            style={styles.settings}
-            onPress={() => this._handleJoin(true)}
-          />
+          <View
+            style={styles.settingsContainer}
+          >
+            <Icon
+              name={'done'}
+              size={40}
+              color={'#4CAF50'}
+              style={styles.settings}
+              onPress={() => this._handleJoin(true)}
+            />
+          </View>
         </View>
+        <View 
+          style={styles.seperator}
+        />
       </View>
-      <View 
-        style={styles.seperator}
-      />
-    </View>
     );
   }
 }
@@ -203,7 +210,8 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#9E9E9E'
+    color: '#9E9E9E',
+    textAlign: 'center'
   },
   titleContainer: {
     flex: 9
