@@ -22,7 +22,7 @@ class CreateCarpoolStack extends React.Component {
     let valid = this._validateCarpool(updateObject);
     
     if (!valid) {
-      Toast.show('The name if your carpool should be 5 characters, at least.', Toast.LONG);
+      Toast.show('The name of your carpool should be 5 characters, at least.', Toast.LONG);
     } else {
       await AsyncStorage.setItem('inputCarpool', 'true');
       await AsyncStorage.setItem('inputCarpoolObject', JSON.stringify(updateObject));
