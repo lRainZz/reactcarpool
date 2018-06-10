@@ -89,3 +89,35 @@
 > * Install new dependencies via "npm intall --save [package name]", thus not global and with dependency-reference in the package.json  
 > * When isntalling via npm fails on EPERM: error on renaming / moving, disable Antivirus / Windows Defender or try npm cache lean, as well as deleting all "package-lock.js"  
 >  
+
+
+
+## Usage examples ##
+> 
+> Creating a new user
+> 
+![Creating a new user](https://github.com/lRainZz/reactcarpool/blob/master/Create-User.gif)
+>
+>
+> 
+> Creating a new carpool
+> 
+![Creating a new carpool](https://github.com/lRainZz/reactcarpool/blob/master/Create-Carpool.gif)
+>
+>
+> 
+> Creating a new filling
+> 
+![Creating a new filling](https://github.com/lRainZz/reactcarpool/blob/master/Create-Filling.gif)
+>
+>
+> 
+> Login and inviting
+> 
+![Login and inviting](https://github.com/lRainZz/reactcarpool/blob/master/Login-and-Invite.gif)
+>
+>
+>
+> Aceepting an invite
+> 
+![Accepting an invite](https://github.com/lRainZz/reactcarpool/blob/master/Accept-Invite.gif)
